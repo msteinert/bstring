@@ -37,9 +37,10 @@
  * This file is the C unit test for the bstraux module of Bstrlib.
  */
 
-#include <stdio.h>
 #include "bstrlib.h"
 #include "bstraux.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 static int tWrite (const void * buf, size_t elsize, size_t nelem, void * parm) {
 bstring b = (bstring) parm;
@@ -427,5 +428,5 @@ int ret = 0;
 
 	printf ("# test failures: %d\n", ret);
 
-	return 0;
+	return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }

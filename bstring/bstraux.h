@@ -32,7 +32,6 @@
  */
 
 /**
- * \file
  * \brief C example that implements trivial additional functions
  *
  * This file is not a necessary part of the core bstring library itself, but

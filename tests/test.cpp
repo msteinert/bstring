@@ -1630,5 +1630,5 @@ int ret = 0;
 
 	printf ("# test failures: %d\n", ret);
 
-	return 0;
+	return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }

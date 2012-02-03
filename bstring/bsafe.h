@@ -32,7 +32,6 @@
  */
 
 /**
- * \file
  * \brief C runtime stubs to abort usage of unsafe C functions
  *
  * This is an optional module that can be used to help enforce a safety

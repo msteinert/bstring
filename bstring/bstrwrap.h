@@ -32,7 +32,6 @@
  */
 
 /**
- * \file
  * \brief C++ header file for CBString
  *
  * This file is the C++ wrapper for the bstring functions.
