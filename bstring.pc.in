@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/bstring
+
+Name: Bstring
+Description: The Better String Library
+Version: @VERSION@
+Requires:
+Requires.private:
+Libs: -L${libdir} -lbstring
+CFlags: -I${includedir}

@@ -18,6 +18,7 @@
 aclocal.m4
 autom4te.cache
 build
+bstring-*.tar.gz
 config.cache
 config.guess
 config.h
@@ -40,3 +41,7 @@ Makefile.in
 missing
 stamp-h1
 tags
+tests/bstest
+tests/cpptest
+tests/test
+tests/testaux

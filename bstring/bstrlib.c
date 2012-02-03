@@ -40,6 +40,9 @@
 # define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdio.h>
 #include <stddef.h>
 #include <stdarg.h>
@@ -2763,38 +2766,8 @@ struct genBstrList g;
 	return g.bl;
 }
 
-#if defined (__TURBOC__) && !defined (__BORLANDC__)
-# ifndef BSTRLIB_NOVSNP
-#  define BSTRLIB_NOVSNP
-# endif
-#endif
-
-/* Give WATCOM C/C++, MSVC some latitude for their non-support of vsnprintf */
-#if defined(__WATCOMC__) || defined(_MSC_VER)
-#define exvsnprintf(r,b,n,f,a) {r = _vsnprintf (b,n,f,a);}
-#else
-#ifdef BSTRLIB_NOVSNP
-/* This is just a hack.  If you are using a system without a vsnprintf, it is
-   not recommended that bformat be used at all. */
-#define exvsnprintf(r,b,n,f,a) {vsprintf (b,f,a); r = -1;}
-#define START_VSNBUFF (256)
-#else
-
-#ifdef __GNUC__
-/* Something is making gcc complain about this prototype not being here, so
-   I've just gone ahead and put it in. */
-extern int vsnprintf (char *buf, size_t count, const char *format, va_list arg);
-#endif
-
 #define exvsnprintf(r,b,n,f,a) {r = vsnprintf (b,n,f,a);}
-#endif
-#endif
-
-#if !defined (BSTRLIB_NOVSNP)
-
-#ifndef START_VSNBUFF
 #define START_VSNBUFF (16)
-#endif
 
 /* On IRIX vsnprintf returns n-1 when the operation would overflow the target
    buffer, WATCOM and MSVC both return -1, while C99 requires that the
@@ -2999,5 +2972,3 @@ int n, r, l;
 	if (n > BSTR_ERR-1) n = BSTR_ERR-1;
 	return n;
 }
-
-#endif

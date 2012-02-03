@@ -41,6 +41,9 @@
 # define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -550,38 +553,8 @@ unsigned int d = 0;
 	return d;
 }
 
-#ifdef __TURBOC__
-# ifndef BSTRLIB_NOVSNP
-#  define BSTRLIB_NOVSNP
-# endif
-#endif
-
-/* Give WATCOM C/C++, MSVC some latitude for their non-support of vsnprintf */
-#if defined(__WATCOMC__) || defined(_MSC_VER)
-#define exvsnprintf(r,b,n,f,a) {r = _vsnprintf (b,n,f,a);}
-#else
-#ifdef BSTRLIB_NOVSNP
-/* This is just a hack.  If you are using a system without a vsnprintf, it is
-   not recommended that bformat be used at all. */
-#define exvsnprintf(r,b,n,f,a) {vsprintf (b,f,a); r = -1;}
-#define START_VSNBUFF (256)
-#else
-
-#if defined (__GNUC__) && !defined (__PPC__)
-/* Something is making gcc complain about this prototype not being here, so
-   I've just gone ahead and put it in. */
-extern "C" {
-extern int vsnprintf (char *buf, size_t count, const char *format, va_list arg);
-}
-#endif
-
 #define exvsnprintf(r,b,n,f,a) {r = vsnprintf (b,n,f,a);}
-#endif
-#endif
-
-#ifndef START_VSNBUFF
 #define START_VSNBUFF (16)
-#endif
 
 /*
  * Yeah I'd like to just call a vformat function or something, but because of

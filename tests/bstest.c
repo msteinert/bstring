@@ -1331,7 +1331,6 @@ int ret = 0;
 static int test20 (void) {
 int ret = 0;
 
-#if !defined (BSTRLIB_NOVSNP)
 int rv;
 bstring b, c;
 
@@ -1442,8 +1441,6 @@ bstring b, c;
 	bdestroy (b);
 
 	printf ("\t# failures: %d\n", ret);
-#endif
-
 	return ret;
 }
 

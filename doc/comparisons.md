@@ -276,17 +276,17 @@ closely approximates the existing C API semantics. On this point we should
 compare this "closeness" with Bstrlib:
 
 <table>
-<tr><th></th><th>Bstrlib</th><th>Managed String Library</th></tr>
-<tr><td>Pointer arithmetic</td><td>Segment arithmetic</td><td>N/A</td></tr>
-<tr><td>Use in C Std lib</td><td>data, or bdata{e}</td><td>getstr_m(x,*) ... free(x)</td></tr>
-<tr><td>String literals</td><td>bsStatic, bsStaticBlk</td><td>strcreate_m()</td></tr>
-<tr><td>Transparency</td><td>Complete</td><td>None</td></tr>
+<tr><th></th>                   <th>Bstrlib</th>                <th>Managed String Library</th></tr>
+<tr><td>Pointer arithmetic</td> <td>Segment arithmetic</td>     <td>N/A</td></tr>
+<tr><td>Use in C Std lib</td>   <td>data, or bdata{e}</td>      <td>getstr_m(x,*) ... free(x)</td></tr>
+<tr><td>String literals</td>    <td>bsStatic, bsStaticBlk</td>  <td>strcreate_m()</td></tr>
+<tr><td>Transparency</td>       <td>Complete</td>               <td>None</td></tr>
 </table>
 
-Its pretty clear that the semantic mapping from C strings to Bstrlib is fairly
-straightforward, and that in general semantic capabilities are the same or
-superior in Bstrlib. On the other hand the Managed String Library is either
-missing semantics or changes things fairly significantly.
+It's pretty clear that the semantic mapping from C strings to Bstrlib is
+fairly straightforward, and that in general semantic capabilities are the
+same or superior in Bstrlib. On the other hand the Managed String Library
+is either missing semantics or changes things fairly significantly.
 
 Comparison With Annexia's c2lib Library
 ---------------------------------------

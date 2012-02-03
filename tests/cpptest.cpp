@@ -42,6 +42,8 @@
 #include "bstraux.h"
 /* #include "bsafe.h" */
 
+using namespace Bstrlib;
+
 static struct tagbstring x = bsStatic ("test");
 
 void cTest (void) {
@@ -712,7 +714,7 @@ void test10 (void) {
 	printf ("%s", b->data);
 	bSecureDestroy (b);
 
-	b = bCTime (&tloc);
+	b = bAscTime (localtime(&tloc));
 	printf ("%s", b->data);
 	bSecureDestroy (b);
 }

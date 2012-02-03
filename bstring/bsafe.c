@@ -38,6 +38,9 @@
  * compiler, WATCOM C/C++ v11.x and Microsoft Visual C++.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include "bsafe.h"

@@ -47,6 +47,8 @@
 #include "bstrlib.h"
 #include "bstrwrap.h"
 
+using namespace Bstrlib;
+
 // Exceptions must be turned on in the compiler to successfully run
 // this test.  The compiler must also support STL.
 
@@ -54,7 +56,7 @@
 static bstring dumpOut[dumpOutQty];
 static unsigned int rot = 0;
 
-char * dumpBstring (const bstring b) {
+const char * dumpBstring (const bstring b) {
 	rot = (rot + 1) % (unsigned) dumpOutQty;
 	if (dumpOut[rot] == NULL) {
 		dumpOut[rot] = bfromcstr ("");
@@ -718,7 +720,6 @@ int ret = 0;
 int test12 (void) {
 int ret = 0;
 
-#ifndef BSTRLIB_NOVSNP
 	printf ("TEST: format(), formata() methods\n");
 
 	try {
@@ -769,7 +770,6 @@ int ret = 0;
 	}
 
 	printf ("\t# failures: %d\n", ret);
-#endif
 	return ret;
 }
 

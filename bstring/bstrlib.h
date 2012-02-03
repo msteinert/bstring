@@ -51,15 +51,9 @@ extern "C" {
 #include <limits.h>
 #include <ctype.h>
 
-#if !defined(BSTRLIB_VSNP_OK) && !defined(BSTRLIB_NOVSNP)
-#if defined(__TURBOC__) && !defined(__BORLANDC__)
-#define BSTRLIB_NOVSNP
-#endif
-#endif
-
-#define BSTR_ERR(-1)
-#define BSTR_OK(0)
-#define BSTR_BS_BUFF_LENGTH_GET(0)
+#define BSTR_ERR (-1)
+#define BSTR_OK (0)
+#define BSTR_BS_BUFF_LENGTH_GET (0)
 
 typedef struct tagbstring *bstring;
 
@@ -878,7 +872,6 @@ int
 btrimws(bstring b);
 
 /* *printf format functions */
-#if !defined(BSTRLIB_NOVSNP)
 /**
  * Takes the same parameters as printf(), but rather than outputting
  * results to stdio, it forms a bstring which contains what would have been
@@ -895,9 +888,6 @@ btrimws(bstring b);
  * \code
  * b0 = bformat ("Hello, %s", b1->data);
  * \endcode
- *
- * Note that if the BSTRLIB_NOVSNP macro has been set when bstrlib has been
- * compiled the bformat function is not present.
  */
 bstring
 bformat(const char *fmt, ...);
@@ -919,9 +909,6 @@ bformat(const char *fmt, ...);
  * \code
  * bformata (b0 = bfromcstr ("Hello"), ", %s", b1->data);
  * \endcode
- *
- * Note that if the BSTRLIB_NOVSNP macro has been set when bstrlib has been
- * compiled the bformata function is not present.
  */
 int
 bformata(bstring b, const char *fmt, ...);
@@ -942,9 +929,6 @@ bformata(bstring b, const char *fmt, ...);
  * \code
  * bassignformat (b0 = bfromcstr ("Hello"), ", %s", b1->data);
  * \endcode
- *
- * Note that if the BSTRLIB_NOVSNP macro has been set when bstrlib has been
- * compiled the bassignformat function is not present.
  */
 int
 bassignformat(bstring b, const char *fmt, ...);
@@ -972,9 +956,6 @@ bassignformat(bstring b, const char *fmt, ...);
  * interface and semantics (length limitations, and unusual return codes)
  * are fairly atypical. The real purpose for this function is to provide an
  * engine for the bvformata macro.
- *
- * Note that if the BSTRLIB_NOVSNP macro has been set when bstrlib has been
- * compiled the bvcformata function is not present.
  */
 int
 bvcformata(bstring b, int count, const char *fmt, va_list arglist);
@@ -1002,11 +983,6 @@ bvcformata(bstring b, int count, const char *fmt, va_list arglist);
  *     bdestroy (b);
  * }
  * \endcode
- *
- * Note that if the BSTRLIB_NOVSNP macro was set when bstrlib had been
- * compiled the bvformata macro will not link properly. If the
- * BSTRLIB_NOVSNP macro has been set, the bvformata macro will not be
- * available.
  */
 #define bvformata(ret, b, fmt, lastarg) \
 do { \
@@ -1030,7 +1006,6 @@ do { \
 	} \
 	ret = bstrtmp_r; \
 } while (0);
-#endif /* !defined(BSTRLIB_NOVSNP) */
 
 typedef int (*bNgetc)(void *parm);
 
@@ -1378,11 +1353,9 @@ struct tagbstring {
 /**
  */
 #define bsStaticMlen(q, m) \
-do { \
-	(m), (int)sizeof(q) - 1, (unsigned char *)("" q "") \
-} while (0);
+	{ (m), (int)sizeof(q) - 1, (unsigned char *)("" q "") }
 
-#if defined(_MSC_VER)
+#if defined (_MSC_VER)
 /* There are many versions of MSVC which emit __LINE__ as a non-constant. */
 /**
  * The bsStatic macro allows for static declarations of literal string
@@ -1397,12 +1370,12 @@ do { \
  * tagbstring has no effect.
  */
 #define bsStatic(q) bsStaticMlen(q, -32)
-#endif /* defined(_MSC_VER) */
+#endif /* defined (_MSC_VER) */
 
 #ifndef bsStatic
 /**
  */
-#define bsStatic(q) bsStaticMlen(q,-__LINE__)
+#define bsStatic(q) bsStaticMlen(q, -__LINE__)
 #endif /* bsStatic */
 
 /* Static constant block parameter pair */
@@ -1424,7 +1397,7 @@ do { \
  * because the length of the inline string is known as a compile time
  * constant. Also note that seperate struct tagbstring declarations for
  */
-#define bsStaticBlkParms(q)\
+#define bsStaticBlkParms(q) \
 	((void *)("" q "")), ((int)sizeof(q) -1)
 
 /* Reference building macros */

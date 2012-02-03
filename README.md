@@ -154,8 +154,9 @@ in mind:
    fact, `'\0'` is a legitimate non-terminating character for a bstring to
    contain.
 
-4. For read only parameters bstring functions do not check the mlen, i.e., the
-   minimal correctness requirements are reduced to `(slen >= 0 && data != NULL)`.
+4. For read only parameters bstring functions do not check the `mlen`, i.e.,
+   the minimal correctness requirements are reduced to
+   `(slen >= 0 && data != NULL)`.
 
 Better Pointer Arithmetic
 -------------------------
@@ -357,10 +358,7 @@ fully abstracted, i.e., hand generated CBStrings are not supported (though
 conversion from a struct tagbstring is allowed) and all detectable errors are
 manifest as thrown exceptions.
 
-* The C++ class definitions are all under the namespace Bstrlib. `bstrwrap.h`
-  enables this namespace (with a using namespace Bstrlib; directive at the
-  end) unless the macro `BSTRLIB_DONT_ASSUME_NAMESPACE` has been defined
-  before it is included.
+* The C++ class definitions are all under the namespace `Bstrlib`.
 
 * Erroneous accesses results in an exception being thrown. The exception
   parameter is of type "struct CBStringException" which is derived from
@@ -519,28 +517,32 @@ used to conditionally compile support for each of this:
 * `BSTRLIB_CAN_USE_STL`
 
     Defining this will enable the used of the Standard Template Library.
-    Defining `BSTRLIB_CAN_USE_STL` overrides the `BSTRLIB_CANNOT_USE_STL` macro.
+    Defining `BSTRLIB_CAN_USE_STL` overrides the `BSTRLIB_CANNOT_USE_STL`
+    macro.
 
 * `BSTRLIB_CANNOT_USE_STL`
 
     Defining this will disable the use of the Standard Template Library.
-    Defining `BSTRLIB_CAN_USE_STL` overrides the `BSTRLIB_CANNOT_USE_STL` macro.
+    Defining `BSTRLIB_CAN_USE_STL` overrides the `BSTRLIB_CANNOT_USE_STL`
+    macro.
 
 * `BSTRLIB_CAN_USE_IOSTREAM`
 
-    Defining this will enable the used of streams from `std::iostream`. Defining
-    `BSTRLIB_CAN_USE_IOSTREAM` overrides the `BSTRLIB_CANNOT_USE_IOSTREAM` macro.
+    Defining this will enable the used of streams from `std::iostream`.
+    Defining `BSTRLIB_CAN_USE_IOSTREAM` overrides the
+    `BSTRLIB_CANNOT_USE_IOSTREAM` macro.
 
 * `BSTRLIB_CANNOT_USE_IOSTREAM`
 
-    Defining this will disable the use of streams from `std::iostream`. Defining
-    `BSTRLIB_CAN_USE_IOSTREAM` overrides the `BSTRLIB_CANNOT_USE_IOSTREAM` macro.
+    Defining this will disable the use of streams from `std::iostream`.
+    Defining `BSTRLIB_CAN_USE_IOSTREAM` overrides the
+    `BSTRLIB_CANNOT_USE_IOSTREAM` macro.
 
 * `BSTRLIB_THROWS_EXCEPTIONS`
 
     Defining this will enable the exception handling within bstring. Defining
-    `BSTRLIB_THROWS_EXCEPTIONS` overrides the `BSTRLIB_DOESNT_THROWS_EXCEPTIONS`
-    macro.
+    `BSTRLIB_THROWS_EXCEPTIONS` overrides the
+    `BSTRLIB_DOESNT_THROWS_EXCEPTIONS` macro.
 
 * `BSTRLIB_DOESNT_THROW_EXCEPTIONS`
 
@@ -551,38 +553,17 @@ used to conditionally compile support for each of this:
 > Note: these macros must be defined consistently throughout all modules that
   use CBStrings including bstrwrap.cpp.
 
-Some older C compilers do not support functions such as `vsnprintf`. This is
-handled by the following macro variables:
-
-* `BSTRLIB_NOVSNP`
-
-    Defining this indicates that the compiler does not support `vsnprintf`.
-    This will cause `bformat` and `bformata` to not be declared. Note that
-    for some compilers, such as Turbo C, this is set automatically. Defining
-    `BSTRLIB_NOVSNP` overrides the `BSTRLIB_VSNP_OK` macro.
-
-* `BSTRLIB_VSNP_OK`
-
-    Defining this will disable the autodetection of compilers the do not
-    support of compilers that do not support `vsnprintf`. Defining
-    `BSTRLIB_NOVSNP` overrides the `BSTRLIB_VSNP_OK` macro.
-
 Semantic Compilation Options
 ----------------------------
 
 Bstrlib comes with very few compilation options for changing the semantics of
 of the library. These are described below.
 
-* `BSTRLIB_DONT_ASSUME_NAMESPACE`
-
-    Defining this before including bstrwrap.h will disable the automatic
-    enabling of the Bstrlib namespace for the C++ declarations.
-
-* `BSTRLIB_DONT_USE_VIRTUAL_DESTRUCTOR`
+* `BSTRLIB_DONT_USE_VIRTUAL_DESTRUCTOR`, --disable-virtual-destructor
 
     Defining this will make the CBString destructor non-virtual.
 
-* `BSTRLIB_MEMORY_DEBUG`
+* `BSTRLIB_MEMORY_DEBUG`, --enable-memory-debug
 
     Defining this will cause the bstrlib modules bstrlib.c and bstrwrap.cpp
     to invoke a `#include "memdbg.h"`. memdbg.h has to be supplied by the user.
@@ -623,32 +604,32 @@ First let us give a table of C library functions and the alternative bstring
 functions and CBString methods that should be used instead of them.
 
 <table>
-<tr><th>C-library</th><th>Bstringalternative</th><th>CBStringalternative</th></tr>
-<tr><td>gets</td><td>bgets</td><td>::gets</td></tr>
-<tr><td>strcpy</td><td>bassign</td><td>= operator</td></tr>
-<tr><td>strncpy</td><td>bassignmidstr</td><td>::midstr</td></tr>
-<tr><td>strcat</td><td>bconcat</td><td>+= operator</td></tr>
-<tr><td>strncat</td><td>bconcat+btrunc</td><td>+= operator + ::trunc</td></tr>
-<tr><td>strtok</td><td>bsplit,bsplits</td><td>::split</td></tr>
-<tr><td>sprintf</td><td>bformat</td><td>::format</td></tr>
-<tr><td>snprintf</td><td>bformat + btrunc</td><td>::format + ::trunc</td></tr>
-<tr><td>vsprintf</td><td>bvformata</td><td>bvformata</td></tr>
-<tr><td>vsnprintf</td><td>bvformata + btrunc</td><td>bvformata+btrunc</td></tr>
-<tr><td>vfprintf</td><td>bvformata + fputs</td><td>use bvformata + fputs</td></tr>
-<tr><td>strcmp</td><td>biseq, bstrcmp</td><td>comparison operators</td></tr>
-<tr><td>strncmp</td><td>bstrncmp, memcmp</td><td>bstrncmp, memcmp</td></tr>
-<tr><td>strlen</td><td>slen, blength</td><td>::length</td></tr>
-<tr><td>strdup</td><td>bstrcpy</td><td>constructor</td></tr>
-<tr><td>strset</td><td>bpattern</td><td>::fill</td></tr>
-<tr><td>strstr</td><td>binstr</td><td>::find</td></tr>
-<tr><td>strpbrk</td><td>binchr</td><td>::findchr</td></tr>
-<tr><td>stricmp</td><td>bstricmp</td><td>cast & use bstricmp</td></tr>
-<tr><td>strlwr</td><td>btolower</td><td>cast & use btolower</td></tr>
-<tr><td>strupr</td><td>btoupper</td><td> cast & use btoupper</td></tr>
-<tr><td>strrev</td><td>bReverse (aux module)</td><td>cast & use bReverse</td></tr>
-<tr><td>strchr</td><td>bstrchr</td><td>cast & use bstrchr</td></tr>
-<tr><td>strspnp</td><td>usestrspn</td><td>usestrspn</td></tr>
-<tr><td>ungetc</td><td>bsunread</td><td>bsunread</td></tr>
+<tr><th>C-library</th>  <th>Bstring Alternative</th>    <th>CBString alternative</th></tr>
+<tr><td>gets</td>       <td>bgets</td>                  <td>::gets</td></tr>
+<tr><td>strcpy</td>     <td>bassign</td>                <td>= operator</td></tr>
+<tr><td>strncpy</td>    <td>bassignmidstr</td>          <td>::midstr</td></tr>
+<tr><td>strcat</td>     <td>bconcat</td>                <td>+= operator</td></tr>
+<tr><td>strncat</td>    <td>bconcat+btrunc</td>         <td>+= operator + ::trunc</td></tr>
+<tr><td>strtok</td>     <td>bsplit,bsplits</td>         <td>::split</td></tr>
+<tr><td>sprintf</td>    <td>bformat</td>                <td>::format</td></tr>
+<tr><td>snprintf</td>   <td>bformat + btrunc</td>       <td>::format + ::trunc</td></tr>
+<tr><td>vsprintf</td>   <td>bvformata</td>              <td>bvformata</td></tr>
+<tr><td>vsnprintf</td>  <td>bvformata + btrunc</td>     <td>bvformata+btrunc</td></tr>
+<tr><td>vfprintf</td>   <td>bvformata + fputs</td>      <td>use bvformata + fputs</td></tr>
+<tr><td>strcmp</td>     <td>biseq, bstrcmp</td>         <td>comparison operators</td></tr>
+<tr><td>strncmp</td>    <td>bstrncmp, memcmp</td>       <td>bstrncmp, memcmp</td></tr>
+<tr><td>strlen</td>     <td>slen, blength</td>          <td>::length</td></tr>
+<tr><td>strdup</td>     <td>bstrcpy</td>                <td>constructor</td></tr>
+<tr><td>strset</td>     <td>bpattern</td>               <td>::fill</td></tr>
+<tr><td>strstr</td>     <td>binstr</td>                 <td>::find</td></tr>
+<tr><td>strpbrk</td>    <td>binchr</td>                 <td>::findchr</td></tr>
+<tr><td>stricmp</td>    <td>bstricmp</td>               <td>cast & use bstricmp</td></tr>
+<tr><td>strlwr</td>     <td>btolower</td>               <td>cast & use btolower</td></tr>
+<tr><td>strupr</td>     <td>btoupper</td>               <td>cast & use btoupper</td></tr>
+<tr><td>strrev</td>     <td>bReverse (aux module)</td>  <td>cast & use bReverse</td></tr>
+<tr><td>strchr</td>     <td>bstrchr</td>                <td>cast & use bstrchr</td></tr>
+<tr><td>strspnp</td>    <td>usestrspn</td>              <td>usestrspn</td></tr>
+<tr><td>ungetc</td>     <td>bsunread</td>               <td>bsunread</td></tr>
 </table>
 
 The top 9 C functions listed here are troublesome in that they impose memory
@@ -663,15 +644,15 @@ The substitute for `strncat` can be performed with higher performance by
 using the `blk2tbstr` macro to create a presized second operand for `bconcat`.
 
 <table>
-<tr><th>C-library</th><th>Bstring alternative</th><th>CBString alternative</th></tr>
-<tr><td>strspn</td><td>strspn acceptable</td><td>strspn acceptable</td></tr>
-<tr><td>strcspn</td><td>strcspn acceptable</td><td>strcspn acceptable</td></tr>
-<tr><td>strnset</td><td>strnset acceptable</td><td>strnset acceptable</td></tr>
-<tr><td>printf</td><td>printf acceptable</td><td>printf acceptable</td></tr>
-<tr><td>puts</td><td>puts acceptable</td><td>puts acceptable</td></tr>
-<tr><td>fprintf</td><td>fprintf acceptable</td><td>fprintf acceptable</td></tr>
-<tr><td>fputs</td><td>fputs acceptable</td><td>fputs acceptable</td></tr>
-<tr><td>memcmp</td><td>memcmp acceptable</td><td>memcmp acceptable</td></tr>
+<tr><th>C-library</th>  <th>Bstring alternative</th>    <th>CBString alternative</th></tr>
+<tr><td>strspn</td>     <td>strspn acceptable</td>      <td>strspn acceptable</td></tr>
+<tr><td>strcspn</td>    <td>strcspn acceptable</td>     <td>strcspn acceptable</td></tr>
+<tr><td>strnset</td>    <td>strnset acceptable</td>     <td>strnset acceptable</td></tr>
+<tr><td>printf</td>     <td>printf acceptable</td>      <td>printf acceptable</td></tr>
+<tr><td>puts</td>       <td>puts acceptable</td>        <td>puts acceptable</td></tr>
+<tr><td>fprintf</td>    <td>fprintf acceptable</td>     <td>fprintf acceptable</td></tr>
+<tr><td>fputs</td>      <td>fputs acceptable</td>       <td>fputs acceptable</td></tr>
+<tr><td>memcmp</td>     <td>memcmp acceptable</td>      <td>memcmp acceptable</td></tr>
 </table>
 
 Remember that Bstring (and CBstring) functions will automatically append the
@@ -681,9 +662,9 @@ on them. Note that `bstrcmp` is not the same as `memcmp` in exactly the same
 way that `strcmp` is not the same as `memcmp`.
 
 <table>
-<tr><th>C-library</th><th>Bstring alternative</th><th>CBString alternative</th><tr>
-<tr><td>fread</td><td>balloc + fread</td><td>::alloc + fread</td></tr>
-<tr><td>fgets</td><td>balloc + fgets</td><td>::alloc + fgets</td></tr>
+<tr><th>C-library</th>  <th>Bstring alternative</th>    <th>CBString alternative</th><tr>
+<tr><td>fread</td>      <td>balloc + fread</td>         <td>::alloc + fread</td></tr>
+<tr><td>fgets</td>      <td>balloc + fgets</td>         <td>::alloc + fgets</td></tr>
 </table>
 
 These are odd ones because of the exact sizing of the buffer required. The
@@ -1176,20 +1157,11 @@ The wrappers themselves are trivial:
 These have not been supplied in bstrlib or bstraux to prevent unnecessary
 linking with file I/O functions.
 
-2. `vsnprintf` is not available on all compilers. Because of this, the
-   `bformat` and `bformata` functions (and format and formata methods) are not
-   guaranteed to work properly. For those compilers that don't have
-   `vsnprintf`, the `BSTRLIB_NOVSNP` macro should be set before compiling
-   bstrlib, and the format functions/method will be disabled.
-
-   The more recent ANSI C standards have specified the required inclusion of a
-   `vsnprintf` function.
-
-3. The `bstrlib` function names are not unique in the first 6 characters. This
+2. The `bstrlib` function names are not unique in the first 6 characters. This
    is only an issue for older C compiler environments which do not store more
    than 6 characters for function names.
 
-4. The `bsafe` module defines macros and function names which are part of the
+3. The `bsafe` module defines macros and function names which are part of the
    C library. This simply overrides the definition as expected on all
    platforms tested, however it is not sanctioned by the ANSI standard. This
    module is clearly optional and should be omitted on platforms which

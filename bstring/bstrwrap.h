@@ -456,9 +456,5 @@ struct CBStringList : public std::vector<CBString> {
 
 } // namespace Bstrlib
 
-#if !defined (BSTRLIB_DONT_ASSUME_NAMESPACE)
-using namespace Bstrlib;
-#endif
-
 #endif
 #endif // BSTRWRAP_H

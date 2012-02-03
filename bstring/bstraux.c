@@ -43,6 +43,9 @@
  * functions.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -967,7 +970,7 @@ int bSetChar (bstring b, int pos, char c) {
  *
  */
 bstring bSecureInput (int maxlen, int termchar, bNgetc vgetchar, void * vgcCtx) {
-int i, m, c;
+size_t i, m, c;
 bstring b, t;
 
 	if (!vgetchar) return NULL;

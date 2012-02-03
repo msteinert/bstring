@@ -55,42 +55,6 @@ Porting Issues
 Bstrlib has been written completely in ANSI/ISO C and ISO C++, however, there
 are still a few porting issues. These are described below.
 
-### The `vsnprintf` function
-
-Unfortunately, the earlier ANSI/ISO C standards did not include this function.
-If the compiler of interest does not support this function then the
-`BSTRLIB_NOVSNP` should be defined via something like:
-
-    #if !defined (BSTRLIB_VSNP_OK) && !defined (BSTRLIB_NOVSNP)
-    #if defined (__TURBOC__) || defined (__COMPILERVENDORSPECIFICMACRO__)
-    #define BSTRLIB_NOVSNP
-    #endif
-    #endif
-
-which appears at the top of bstrlib.h. Note that the `bformat` functions
-will not be declared or implemented if the `BSTRLIB_NOVSNP` macro is set. If
-the compiler has renamed `vsnprintf` to some other named function, then
-search for the definition of the `exvsnprintf` macro in bstrlib.c file and be
-sure its defined appropriately:
-
-    #if defined (__COMPILERVENDORSPECIFICMACRO__)
-    #define exvsnprintf(r, b, n, f, a) \
-    do { \
-        r = __compiler_specific_vsnprintf(b, n, f, a); \
-    } while (0);
-    #else
-    #define exvsnprintf(r, b, n, f, a) \
-    do { \
-        r = vsnprintf(b, n, f, a); \
-    } while (0);
-    #endif
-
-Take notice of the return value being captured in the variable `r`. It is
-assumed that `r` exceeds `n` if and only if the underlying vsnprintf function
-has determined what the true maximal output length would be for output if the
-buffer were large enough to hold it. Non-modern implementations must output a
-lesser number (the macro can and should be modified to ensure this).
-
 ### Weak C++ Compiler
 
 C++ is a much more complicated language to implement than C. This has lead
