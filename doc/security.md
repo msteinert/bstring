@@ -86,14 +86,7 @@ anyone using a system which is not 2s complement based.
 Bstrlib implements runtime enforced constant and read-only string semantics,
 i.e., bstrings which are declared as constant via the `bsStatic` macro cannot
 be modified or deallocated directly through the Bstrlib API, and this cannot
-be subverted by casting or other type coercion. This is independent of the
-use of the `const_bstring` data type.
-
-The Bstrlib C API uses the type `const_bstring` to specify bstring parameters
-whose contents do not change. Although the C language cannot enforce this,
-this is nevertheless guaranteed by the implementation of the Bstrlib library
-of C functions. The C++ API enforces the const attribute on CBString types
-correctly.
+be subverted by casting or other type coercion.
 
 ### Aliased Bstring Support
 

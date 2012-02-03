@@ -227,7 +227,7 @@ example:
 
 Which we can compare with a more Bstrlib way of doing things:
 
-    bstring bCreateWithFilter (const char * cstr, const_bstring filter) {
+    bstring bCreateWithFilter (const char * cstr, const bstring filter) {
       bstring b = bfromcstr (cstr);
       if (BSTR_ERR != bninchr (b, filter) && NULL != b) {
         fprintf (stderr, "Filter violation.\n");

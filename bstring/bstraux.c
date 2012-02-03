@@ -233,12 +233,12 @@ static size_t readNothing (void *buff, size_t elsize, size_t nelem, void *parm) 
 	return 0; /* Immediately indicate EOF. */
 }
 
-/*  struct bStream * bsFromBstr (const_bstring b);
+/*  struct bStream * bsFromBstr (const bstring b);
  *
  *  Create a bStream whose contents are a copy of the bstring passed in.
  *  This allows the use of all the bStream APIs with bstrings.
  */
-struct bStream * bsFromBstr (const_bstring b) {
+struct bStream * bsFromBstr (const bstring b) {
 struct bStream * s = bsopen ((bNread) readNothing, NULL);
 	bsunread (s, b); /* Push the bstring data into the empty bStream. */
 	return s;
@@ -269,7 +269,7 @@ static struct bStream * bsFromBstrRef (struct tagbstring * t) {
 	return bsopen ((bNread) readRef, t);
 }
 
-/*  char * bStr2NetStr (const_bstring b)
+/*  char * bStr2NetStr (const bstring b)
  *
  *  Convert a bstring to a netstring.  See
  *  http://cr.yp.to/proto/netstrings.txt for a description of netstrings.
@@ -279,7 +279,7 @@ static struct bStream * bsFromBstrRef (struct tagbstring * t) {
  *        2) If the returned value is non-NULL, then it also '\0' terminated
  *           in the character position one past the "," terminator.
  */
-char * bStr2NetStr (const_bstring b) {
+char * bStr2NetStr (const bstring b) {
 char strnum[sizeof (b->slen) * 3 + 1];
 bstring s;
 unsigned char * buff;
@@ -330,11 +330,11 @@ bstring b;
 
 static char b64ETable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-/*  bstring bBase64Encode (const_bstring b)
+/*  bstring bBase64Encode (const bstring b)
  *
  *  Generate a base64 encoding.  See: RFC1341
  */
-bstring bBase64Encode (const_bstring b) {
+bstring bBase64Encode (const bstring b) {
 int i, c0, c1, c2, c3;
 bstring out;
 
@@ -414,12 +414,12 @@ static int base64DecodeSymbol (unsigned char alpha) {
    else                   return B64_ERR;
 }
 
-/*  bstring bBase64DecodeEx (const_bstring b, int * boolTruncError)
+/*  bstring bBase64DecodeEx (const bstring b, int * boolTruncError)
  *
  *  Decode a base64 block of data.  All MIME headers are assumed to have been
  *  removed.  See: RFC1341
  */
-bstring bBase64DecodeEx (const_bstring b, int * boolTruncError) {
+bstring bBase64DecodeEx (const bstring b, int * boolTruncError) {
 int i, v;
 unsigned char c0, c1, c2;
 bstring out;
@@ -601,7 +601,7 @@ int i, llen, otlen, ret, c0, c1, c2, c3, d0, d1, d2, d3;
 	return ret;
 }
 
-/*  bstring bUuDecodeEx (const_bstring src, int * badlines)
+/*  bstring bUuDecodeEx (const bstring src, int * badlines)
  *
  *  Performs a UUDecode of a block of data.  If there are errors in the
  *  decoding, they are counted up and returned in "badlines", if badlines is
@@ -615,7 +615,7 @@ int i, llen, otlen, ret, c0, c1, c2, c3, d0, d1, d2, d3;
 #pragma warning(disable:4204)
 #endif
 
-bstring bUuDecodeEx (const_bstring src, int * badlines) {
+bstring bUuDecodeEx (const bstring src, int * badlines) {
 struct tagbstring t;
 struct bStream * s;
 struct bStream * d;
@@ -743,12 +743,12 @@ struct bStream * sOut;
 
 #define UU_ENCODE_BYTE(b) (char) (((b) == 0) ? '`' : ((b) + ' '))
 
-/*  bstring bUuEncode (const_bstring src)
+/*  bstring bUuEncode (const bstring src)
  *
  *  Performs a UUEncode of a block of data.  The "begin" and "end" lines are
  *  not appended.
  */
-bstring bUuEncode (const_bstring src) {
+bstring bUuEncode (const bstring src) {
 bstring out;
 int i, j, jm;
 unsigned int c0, c1, c2;
@@ -781,13 +781,13 @@ unsigned int c0, c1, c2;
 	return out;
 }
 
-/*  bstring bYEncode (const_bstring src)
+/*  bstring bYEncode (const bstring src)
  *
  *  Performs a YEncode of a block of data.  No header or tail info is
  *  appended.  See: http://www.yenc.org/whatis.htm and
  *  http://www.yenc.org/yenc-draft.1.3.txt
  */
-bstring bYEncode (const_bstring src) {
+bstring bYEncode (const bstring src) {
 int i;
 bstring out;
 unsigned char c;
@@ -811,14 +811,14 @@ unsigned char c;
 	return out;
 }
 
-/*  bstring bYDecode (const_bstring src)
+/*  bstring bYDecode (const bstring src)
  *
  *  Performs a YDecode of a block of data.  See:
  *  http://www.yenc.org/whatis.htm and http://www.yenc.org/yenc-draft.1.3.txt
  */
 #define MAX_OB_LEN (64)
 
-bstring bYDecode (const_bstring src) {
+bstring bYDecode (const bstring src) {
 int i;
 bstring out;
 unsigned char c;
@@ -1065,13 +1065,13 @@ int bwsWriteFlush (struct bwriteStream * ws) {
 	return 0;
 }
 
-/*  int bwsWriteBstr (struct bwriteStream * ws, const_bstring b)
+/*  int bwsWriteBstr (struct bwriteStream * ws, const bstring b)
  *
  *  Send a bstring to a bwriteStream.  If the stream is at EOF BSTR_ERR is
  *  returned.  Note that there is no deterministic way to determine the exact
  *  cut off point where the core stream stopped accepting data.
  */
-int bwsWriteBstr (struct bwriteStream * ws, const_bstring b) {
+int bwsWriteBstr (struct bwriteStream * ws, const bstring b) {
 struct tagbstring t;
 int l;
 

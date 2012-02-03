@@ -1488,7 +1488,7 @@ int p, i;
 	}
 }
 
-static int streamSplitCb (void * parm, int ofs, const_bstring entry) {
+static int streamSplitCb (void * parm, int ofs, const bstring entry) {
 CBStringList * r = (CBStringList *) parm;
 
 	ofs = ofs;

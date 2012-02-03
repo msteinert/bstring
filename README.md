@@ -112,17 +112,6 @@ on both the header and data buffer of any bstring parameter. Functions which
 return bstring's create new bstrings. The string memory is freed by a
 `bdestroy` call (or using the `bstrFree` macro).
 
-The following related typedef is also provided:
-
-    typedef const struct tagbstring *const_bstring;
-
-which is also considered exposed. These are directly bstring compatible (no
-casting required) but are just used for parameters which are meant to be
-non-mutable. So in general, bstring parameters which are read as input but
-not meant to be modified will be declared as `const_bstring`, and bstring
-parameters which may be modified will be declared as bstring. This convention
-is recommended for user written functions as well.
-
 Since bstrings maintain interoperability with C library char-buffer style
 strings, all functions which modify, update or create bstrings also append a
 `'\0'` character into the position `slen + 1`. This trailing `'\0'` character

@@ -294,14 +294,14 @@ int i;
 	return b;
 }
 
-/*  char * bstr2cstr (const_bstring s, char z)
+/*  char * bstr2cstr (const bstring s, char z)
  *
  *  Create a '\0' terminated char * buffer which is equal to the contents of
  *  the bstring s, except that any contained '\0' characters are converted
  *  to the character in z. This returned value should be freed with a
  *  bcstrfree () call, by the calling application.
  */
-char * bstr2cstr (const_bstring b, char z) {
+char * bstr2cstr (const bstring b, char z) {
 int i, l;
 char * r;
 
@@ -338,11 +338,11 @@ int bcstrfree (char * s) {
 	return BSTR_ERR;
 }
 
-/*  int bconcat (bstring b0, const_bstring b1)
+/*  int bconcat (bstring b0, const bstring b1)
  *
  *  Concatenate the bstring b1 to the bstring b0.
  */
-int bconcat (bstring b0, const_bstring b1) {
+int bconcat (bstring b0, const bstring b1) {
 int len, d;
 bstring aux = (bstring) b1;
 
@@ -431,11 +431,11 @@ int nl;
 	return BSTR_OK;
 }
 
-/*  bstring bstrcpy (const_bstring b)
+/*  bstring bstrcpy (const bstring b)
  *
  *  Create a copy of the bstring b.
  */
-bstring bstrcpy (const_bstring b) {
+bstring bstrcpy (const bstring b) {
 bstring b0;
 int i,j;
 
@@ -471,11 +471,11 @@ int i,j;
 	return b0;
 }
 
-/*  int bassign (bstring a, const_bstring b)
+/*  int bassign (bstring a, const bstring b)
  *
  *  Overwrite the string a with the contents of string b.
  */
-int bassign (bstring a, const_bstring b) {
+int bassign (bstring a, const bstring b) {
 	if (b == NULL || b->data == NULL || b->slen < 0)
 		return BSTR_ERR;
 	if (b->slen != 0) {
@@ -491,13 +491,13 @@ int bassign (bstring a, const_bstring b) {
 	return BSTR_OK;
 }
 
-/*  int bassignmidstr (bstring a, const_bstring b, int left, int len)
+/*  int bassignmidstr (bstring a, const bstring b, int left, int len)
  *
  *  Overwrite the string a with the middle of contents of string b
  *  starting from position left and running for a length len.  left and
  *  len are clamped to the ends of b as with the function bmidstr.
  */
-int bassignmidstr (bstring a, const_bstring b, int left, int len) {
+int bassignmidstr (bstring a, const bstring b, int left, int len) {
 	if (b == NULL || b->data == NULL || b->slen < 0)
 		return BSTR_ERR;
 
@@ -615,7 +615,7 @@ int i, len;
 	return BSTR_OK;
 }
 
-/*  int bstricmp (const_bstring b0, const_bstring b1)
+/*  int bstricmp (const bstring b0, const bstring b1)
  *
  *  Compare two strings without differentiating between case.  The return
  *  value is the difference of the values of the characters where the two
@@ -624,7 +624,7 @@ int i, len;
  *  different, then a difference from 0 is given, but if the first extra
  *  character is '\0', then it is taken to be the value UCHAR_MAX+1.
  */
-int bstricmp (const_bstring b0, const_bstring b1) {
+int bstricmp (const bstring b0, const bstring b1) {
 int i, v, n;
 
 	if (bdata (b0) == NULL || b0->slen < 0 ||
@@ -651,7 +651,7 @@ int i, v, n;
 	return BSTR_OK;
 }
 
-/*  int bstrnicmp (const_bstring b0, const_bstring b1, int n)
+/*  int bstrnicmp (const bstring b0, const bstring b1, int n)
  *
  *  Compare two strings without differentiating between case for at most n
  *  characters.  If the position where the two strings first differ is
@@ -661,7 +661,7 @@ int i, v, n;
  *  first extra character is '\0', then it is taken to be the value
  *  UCHAR_MAX+1.
  */
-int bstrnicmp (const_bstring b0, const_bstring b1, int n) {
+int bstrnicmp (const bstring b0, const bstring b1, int n) {
 int i, v, m;
 
 	if (bdata (b0) == NULL || b0->slen < 0 ||
@@ -691,7 +691,7 @@ int i, v, m;
 	return - (int) (UCHAR_MAX + 1);
 }
 
-/*  int biseqcaseless (const_bstring b0, const_bstring b1)
+/*  int biseqcaseless (const bstring b0, const bstring b1)
  *
  *  Compare two strings for equality without differentiating between case.
  *  If the strings differ other than in case, 0 is returned, if the strings
@@ -699,7 +699,7 @@ int i, v, m;
  *  the length of the strings are different, this function is O(1).  '\0'
  *  termination characters are not treated in any special way.
  */
-int biseqcaseless (const_bstring b0, const_bstring b1) {
+int biseqcaseless (const bstring b0, const bstring b1) {
 int i, n;
 
 	if (bdata (b0) == NULL || b0->slen < 0 ||
@@ -715,7 +715,7 @@ int i, n;
 	return 1;
 }
 
-/*  int bisstemeqcaselessblk (const_bstring b0, const void * blk, int len)
+/*  int bisstemeqcaselessblk (const bstring b0, const void * blk, int len)
  *
  *  Compare beginning of string b0 with a block of memory of length len
  *  without differentiating between case for equality.  If the beginning of b0
@@ -724,7 +724,7 @@ int i, n;
  *  error, -1 is returned.  '\0' characters are not treated in any special
  *  way.
  */
-int bisstemeqcaselessblk (const_bstring b0, const void * blk, int len) {
+int bisstemeqcaselessblk (const bstring b0, const void * blk, int len) {
 int i;
 
 	if (bdata (b0) == NULL || b0->slen < 0 || NULL == blk || len < 0)
@@ -812,14 +812,14 @@ int i, j;
 	return BSTR_OK;
 }
 
-/*  int biseq (const_bstring b0, const_bstring b1)
+/*  int biseq (const bstring b0, const bstring b1)
  *
  *  Compare the string b0 and b1.  If the strings differ, 0 is returned, if
  *  the strings are the same, 1 is returned, if there is an error, -1 is
  *  returned.  If the length of the strings are different, this function is
  *  O(1).  '\0' termination characters are not treated in any special way.
  */
-int biseq (const_bstring b0, const_bstring b1) {
+int biseq (const bstring b0, const bstring b1) {
 	if (b0 == NULL || b1 == NULL || b0->data == NULL || b1->data == NULL ||
 		b0->slen < 0 || b1->slen < 0) return BSTR_ERR;
 	if (b0->slen != b1->slen) return BSTR_OK;
@@ -827,7 +827,7 @@ int biseq (const_bstring b0, const_bstring b1) {
 	return !bstr__memcmp (b0->data, b1->data, b0->slen);
 }
 
-/*  int bisstemeqblk (const_bstring b0, const void * blk, int len)
+/*  int bisstemeqblk (const bstring b0, const void * blk, int len)
  *
  *  Compare beginning of string b0 with a block of memory of length len for
  *  equality.  If the beginning of b0 differs from the memory block (or if b0
@@ -835,7 +835,7 @@ int biseq (const_bstring b0, const_bstring b1) {
  *  if there is an error, -1 is returned.  '\0' characters are not treated in
  *  any special way.
  */
-int bisstemeqblk (const_bstring b0, const void * blk, int len) {
+int bisstemeqblk (const bstring b0, const void * blk, int len) {
 int i;
 
 	if (bdata (b0) == NULL || b0->slen < 0 || NULL == blk || len < 0)
@@ -849,7 +849,7 @@ int i;
 	return 1;
 }
 
-/*  int biseqcstr (const_bstring b, const char *s)
+/*  int biseqcstr (const bstring b, const char *s)
  *
  *  Compare the bstring b and char * string s.  The C string s must be '\0'
  *  terminated at exactly the length of the bstring b, and the contents
@@ -860,7 +860,7 @@ int i;
  *  other.  If the strings are equal 1 is returned, if they are unequal 0 is
  *  returned and if there is a detectable error BSTR_ERR is returned.
  */
-int biseqcstr (const_bstring b, const char * s) {
+int biseqcstr (const bstring b, const char * s) {
 int i;
 	if (b == NULL || s == NULL || b->data == NULL || b->slen < 0) return BSTR_ERR;
 	for (i=0; i < b->slen; i++) {
@@ -869,7 +869,7 @@ int i;
 	return s[i] == '\0';
 }
 
-/*  int biseqcstrcaseless (const_bstring b, const char *s)
+/*  int biseqcstrcaseless (const bstring b, const char *s)
  *
  *  Compare the bstring b and char * string s.  The C string s must be '\0'
  *  terminated at exactly the length of the bstring b, and the contents
@@ -881,7 +881,7 @@ int i;
  *  1 is returned, if they are unequal regardless of case 0 is returned and
  *  if there is a detectable error BSTR_ERR is returned.
  */
-int biseqcstrcaseless (const_bstring b, const char * s) {
+int biseqcstrcaseless (const bstring b, const char * s) {
 int i;
 	if (b == NULL || s == NULL || b->data == NULL || b->slen < 0) return BSTR_ERR;
 	for (i=0; i < b->slen; i++) {
@@ -893,7 +893,7 @@ int i;
 	return s[i] == '\0';
 }
 
-/*  int bstrcmp (const_bstring b0, const_bstring b1)
+/*  int bstrcmp (const bstring b0, const bstring b1)
  *
  *  Compare the string b0 and b1.  If there is an error, SHRT_MIN is returned,
  *  otherwise a value less than or greater than zero, indicating that the
@@ -907,7 +907,7 @@ int i;
  *  standard C library counter part strcmp, the comparison does not proceed
  *  past any '\0' termination characters encountered.
  */
-int bstrcmp (const_bstring b0, const_bstring b1) {
+int bstrcmp (const bstring b0, const bstring b1) {
 int i, v, n;
 
 	if (b0 == NULL || b1 == NULL || b0->data == NULL || b1->data == NULL ||
@@ -927,7 +927,7 @@ int i, v, n;
 	return BSTR_OK;
 }
 
-/*  int bstrncmp (const_bstring b0, const_bstring b1, int n)
+/*  int bstrncmp (const bstring b0, const bstring b1, int n)
  *
  *  Compare the string b0 and b1 for at most n characters.  If there is an
  *  error, SHRT_MIN is returned, otherwise a value is returned as if b0 and
@@ -937,7 +937,7 @@ int i, v, n;
  *  part strcmp, the comparison does not proceed past any '\0' termination
  *  characters encountered.
  */
-int bstrncmp (const_bstring b0, const_bstring b1, int n) {
+int bstrncmp (const bstring b0, const bstring b1, int n) {
 int i, v, m;
 
 	if (b0 == NULL || b1 == NULL || b0->data == NULL || b1->data == NULL ||
@@ -960,14 +960,14 @@ int i, v, m;
 	return -1;
 }
 
-/*  bstring bmidstr (const_bstring b, int left, int len)
+/*  bstring bmidstr (const bstring b, int left, int len)
  *
  *  Create a bstring which is the substring of b starting from position left
  *  and running for a length len (clamped by the end of the bstring b.)  If
  *  b is detectably invalid, then NULL is returned.  The section described
  *  by (left, len) is clamped to the boundaries of b.
  */
-bstring bmidstr (const_bstring b, int left, int len) {
+bstring bmidstr (const bstring b, int left, int len) {
 
 	if (b == NULL || b->slen < 0 || b->data == NULL) return NULL;
 
@@ -1038,7 +1038,7 @@ int bdestroy (bstring b) {
 	return BSTR_OK;
 }
 
-/*  int binstr (const_bstring b1, int pos, const_bstring b2)
+/*  int binstr (const bstring b1, int pos, const bstring b2)
  *
  *  Search for the bstring b2 in b1 starting from position pos, and searching
  *  forward.  If it is found then return with the first position where it is
@@ -1047,7 +1047,7 @@ int bdestroy (bstring b) {
  *  search algorithm.  Because of this there are many degenerate cases where
  *  this can take much longer than it needs to.
  */
-int binstr (const_bstring b1, int pos, const_bstring b2) {
+int binstr (const bstring b1, int pos, const bstring b2) {
 int j, ii, ll, lf;
 unsigned char * d0;
 unsigned char c0;
@@ -1125,7 +1125,7 @@ register int i;
 	return BSTR_ERR;
 }
 
-/*  int binstrr (const_bstring b1, int pos, const_bstring b2)
+/*  int binstrr (const bstring b1, int pos, const bstring b2)
  *
  *  Search for the bstring b2 in b1 starting from position pos, and searching
  *  backward.  If it is found then return with the first position where it is
@@ -1134,7 +1134,7 @@ register int i;
  *  search algorithm.  Because of this there are many degenerate cases where
  *  this can take much longer than it needs to.
  */
-int binstrr (const_bstring b1, int pos, const_bstring b2) {
+int binstrr (const bstring b1, int pos, const bstring b2) {
 int j, i, l;
 unsigned char * d0, * d1;
 
@@ -1172,7 +1172,7 @@ unsigned char * d0, * d1;
 	return BSTR_ERR;
 }
 
-/*  int binstrcaseless (const_bstring b1, int pos, const_bstring b2)
+/*  int binstrcaseless (const bstring b1, int pos, const bstring b2)
  *
  *  Search for the bstring b2 in b1 starting from position pos, and searching
  *  forward but without regard to case.  If it is found then return with the
@@ -1181,7 +1181,7 @@ unsigned char * d0, * d1;
  *  things like the Boyer-Moore search algorithm.  Because of this there are
  *  many degenerate cases where this can take much longer than it needs to.
  */
-int binstrcaseless (const_bstring b1, int pos, const_bstring b2) {
+int binstrcaseless (const bstring b1, int pos, const bstring b2) {
 int j, i, l, ll;
 unsigned char * d0, * d1;
 
@@ -1220,7 +1220,7 @@ unsigned char * d0, * d1;
 	return BSTR_ERR;
 }
 
-/*  int binstrrcaseless (const_bstring b1, int pos, const_bstring b2)
+/*  int binstrrcaseless (const bstring b1, int pos, const bstring b2)
  *
  *  Search for the bstring b2 in b1 starting from position pos, and searching
  *  backward but without regard to case.  If it is found then return with the
@@ -1229,7 +1229,7 @@ unsigned char * d0, * d1;
  *  things like the Boyer-Moore search algorithm.  Because of this there are
  *  many degenerate cases where this can take much longer than it needs to.
  */
-int binstrrcaseless (const_bstring b1, int pos, const_bstring b2) {
+int binstrrcaseless (const bstring b1, int pos, const bstring b2) {
 int j, i, l;
 unsigned char * d0, * d1;
 
@@ -1268,12 +1268,12 @@ unsigned char * d0, * d1;
 }
 
 
-/*  int bstrchrp (const_bstring b, int c, int pos)
+/*  int bstrchrp (const bstring b, int c, int pos)
  *
  *  Search for the character c in b forwards from the position pos
  *  (inclusive).
  */
-int bstrchrp (const_bstring b, int c, int pos) {
+int bstrchrp (const bstring b, int c, int pos) {
 unsigned char * p;
 
 	if (b == NULL || b->data == NULL || b->slen <= pos || pos < 0) return BSTR_ERR;
@@ -1282,12 +1282,12 @@ unsigned char * p;
 	return BSTR_ERR;
 }
 
-/*  int bstrrchrp (const_bstring b, int c, int pos)
+/*  int bstrrchrp (const bstring b, int c, int pos)
  *
  *  Search for the character c in b backwards from the position pos in string
  *  (inclusive).
  */
-int bstrrchrp (const_bstring b, int c, int pos) {
+int bstrrchrp (const bstring b, int c, int pos) {
 int i;
 
 	if (b == NULL || b->data == NULL || b->slen <= pos || pos < 0) return BSTR_ERR;
@@ -1320,7 +1320,7 @@ struct charField { unsigned char content[CFCLEN]; };
 #endif
 
 /* Convert a bstring to charField */
-static int buildCharField (struct charField * cf, const_bstring b) {
+static int buildCharField (struct charField * cf, const bstring b) {
 int i;
 	if (b == NULL || b->data == NULL || b->slen <= 0) return BSTR_ERR;
 	memset ((void *) cf->content, 0, sizeof (struct charField));
@@ -1345,13 +1345,13 @@ int i;
 	return BSTR_ERR;
 }
 
-/*  int binchr (const_bstring b0, int pos, const_bstring b1);
+/*  int binchr (const bstring b0, int pos, const bstring b1);
  *
  *  Search for the first position in b0 starting from pos or after, in which
  *  one of the characters in b1 is found and return it.  If such a position
  *  does not exist in b0, then BSTR_ERR is returned.
  */
-int binchr (const_bstring b0, int pos, const_bstring b1) {
+int binchr (const bstring b0, int pos, const bstring b1) {
 struct charField chrs;
 	if (pos < 0 || b0 == NULL || b0->data == NULL ||
 	    b0->slen <= pos) return BSTR_ERR;
@@ -1370,13 +1370,13 @@ int i;
 	return BSTR_ERR;
 }
 
-/*  int binchrr (const_bstring b0, int pos, const_bstring b1);
+/*  int binchrr (const bstring b0, int pos, const bstring b1);
  *
  *  Search for the last position in b0 no greater than pos, in which one of
  *  the characters in b1 is found and return it.  If such a position does not
  *  exist in b0, then BSTR_ERR is returned.
  */
-int binchrr (const_bstring b0, int pos, const_bstring b1) {
+int binchrr (const bstring b0, int pos, const bstring b1) {
 struct charField chrs;
 	if (pos < 0 || b0 == NULL || b0->data == NULL || b1 == NULL ||
 	    b0->slen < pos) return BSTR_ERR;
@@ -1386,13 +1386,13 @@ struct charField chrs;
 	return binchrrCF (b0->data, pos, &chrs);
 }
 
-/*  int bninchr (const_bstring b0, int pos, const_bstring b1);
+/*  int bninchr (const bstring b0, int pos, const bstring b1);
  *
  *  Search for the first position in b0 starting from pos or after, in which
  *  none of the characters in b1 is found and return it.  If such a position
  *  does not exist in b0, then BSTR_ERR is returned.
  */
-int bninchr (const_bstring b0, int pos, const_bstring b1) {
+int bninchr (const bstring b0, int pos, const bstring b1) {
 struct charField chrs;
 	if (pos < 0 || b0 == NULL || b0->data == NULL ||
 	    b0->slen <= pos) return BSTR_ERR;
@@ -1401,13 +1401,13 @@ struct charField chrs;
 	return binchrCF (b0->data, b0->slen, pos, &chrs);
 }
 
-/*  int bninchrr (const_bstring b0, int pos, const_bstring b1);
+/*  int bninchrr (const bstring b0, int pos, const bstring b1);
  *
  *  Search for the last position in b0 no greater than pos, in which none of
  *  the characters in b1 is found and return it.  If such a position does not
  *  exist in b0, then BSTR_ERR is returned.
  */
-int bninchrr (const_bstring b0, int pos, const_bstring b1) {
+int bninchrr (const bstring b0, int pos, const bstring b1) {
 struct charField chrs;
 	if (pos < 0 || b0 == NULL || b0->data == NULL ||
 	    b0->slen < pos) return BSTR_ERR;
@@ -1424,7 +1424,7 @@ struct charField chrs;
  *  appended as necessary to make up the gap between the end of b0 and pos.
  *  If b1 is NULL, it behaves as if it were a 0-length string.
  */
-int bsetstr (bstring b0, int pos, const_bstring b1, unsigned char fill) {
+int bsetstr (bstring b0, int pos, const bstring b1, unsigned char fill) {
 int d, newlen;
 ptrdiff_t pd;
 bstring aux = (bstring) b1;
@@ -1479,7 +1479,7 @@ bstring aux = (bstring) b1;
  *  make up the gap between the end of b1 and pos.  Unlike bsetstr, binsert
  *  does not allow b2 to be NULL.
  */
-int binsert (bstring b1, int pos, const_bstring b2, unsigned char fill) {
+int binsert (bstring b1, int pos, const bstring b2, unsigned char fill) {
 int d, l;
 ptrdiff_t pd;
 bstring aux = (bstring) b2;
@@ -1526,7 +1526,7 @@ bstring aux = (bstring) b2;
  *  Replace a section of a string from pos for a length len with the string b2.
  *  fill is used is pos > b1->slen.
  */
-int breplace (bstring b1, int pos, int len, const_bstring b2,
+int breplace (bstring b1, int pos, int len, const bstring b2,
 			  unsigned char fill) {
 int pl, ret;
 ptrdiff_t pd;
@@ -1574,11 +1574,11 @@ bstring aux = (bstring) b2;
  *  in the most efficient way possible.
  */
 
-typedef int (*instr_fnptr) (const_bstring s1, int pos, const_bstring s2);
+typedef int (*instr_fnptr) (const bstring s1, int pos, const bstring s2);
 
 #define INITIAL_STATIC_FIND_INDEX_COUNT 32
 
-static int findreplaceengine (bstring b, const_bstring find, const_bstring repl, int pos, instr_fnptr instr) {
+static int findreplaceengine (bstring b, const bstring find, const bstring repl, int pos, instr_fnptr instr) {
 int i, ret, slen, mlen, delta, acc;
 int * d;
 int static_d[INITIAL_STATIC_FIND_INDEX_COUNT+1]; /* This +1 is unnecessary, but it shuts up LINT. */
@@ -1718,23 +1718,23 @@ bstring auxr = (bstring) repl;
 	return ret;
 }
 
-/*  int bfindreplace (bstring b, const_bstring find, const_bstring repl,
+/*  int bfindreplace (bstring b, const bstring find, const bstring repl,
  *                    int pos)
  *
  *  Replace all occurrences of a find string with a replace string after a
  *  given point in a bstring.
  */
-int bfindreplace (bstring b, const_bstring find, const_bstring repl, int pos) {
+int bfindreplace (bstring b, const bstring find, const bstring repl, int pos) {
 	return findreplaceengine (b, find, repl, pos, binstr);
 }
 
-/*  int bfindreplacecaseless (bstring b, const_bstring find, const_bstring repl,
+/*  int bfindreplacecaseless (bstring b, const bstring find, const bstring repl,
  *                    int pos)
  *
  *  Replace all occurrences of a find string, ignoring case, with a replace
  *  string after a given point in a bstring.
  */
-int bfindreplacecaseless (bstring b, const_bstring find, const_bstring repl, int pos) {
+int bfindreplacecaseless (bstring b, const bstring find, const bstring repl, int pos) {
 	return findreplaceengine (b, find, repl, pos, binstrcaseless);
 }
 
@@ -2071,7 +2071,7 @@ struct tagbstring x;
  *  This function may read additional characters from the core stream that
  *  are not returned, but will be retained for subsequent read operations.
  */
-int bsreadlnsa (bstring r, struct bStream * s, const_bstring term) {
+int bsreadlnsa (bstring r, struct bStream * s, const bstring term) {
 int i, l, ret, rlo;
 unsigned char * b;
 struct tagbstring x;
@@ -2221,7 +2221,7 @@ int bsreadln (bstring r, struct bStream * s, char terminator) {
  *  This function may read additional characters from the core stream that
  *  are not returned, but will be retained for subsequent read operations.
  */
-int bsreadlns (bstring r, struct bStream * s, const_bstring term) {
+int bsreadlns (bstring r, struct bStream * s, const bstring term) {
 	if (s == NULL || s->buff == NULL || r == NULL || term == NULL
 	 || term->data == NULL || r->mlen <= 0) return BSTR_ERR;
 	if (term->slen == 1) return bsreadln (r, s, term->data[0]);
@@ -2247,13 +2247,13 @@ int bsread (bstring r, struct bStream * s, int n) {
 	return bsreada (r, s, n);
 }
 
-/*  int bsunread (struct bStream * s, const_bstring b)
+/*  int bsunread (struct bStream * s, const bstring b)
  *
  *  Insert a bstring into the bStream at the current position.  These
  *  characters will be read prior to those that actually come from the core
  *  stream.
  */
-int bsunread (struct bStream * s, const_bstring b) {
+int bsunread (struct bStream * s, const bstring b) {
 	if (s == NULL || s->buff == NULL) return BSTR_ERR;
 	return binsert (s->buff, 0, b, (unsigned char) '?');
 }
@@ -2268,13 +2268,13 @@ int bspeek (bstring r, const struct bStream * s) {
 	return bassign (r, s->buff);
 }
 
-/*  bstring bjoin (const struct bstrList * bl, const_bstring sep);
+/*  bstring bjoin (const struct bstrList * bl, const bstring sep);
  *
  *  Join the entries of a bstrList into one bstring by sequentially
  *  concatenating them with the sep string in between.  If there is an error
  *  NULL is returned, otherwise a bstring with the correct result is returned.
  */
-bstring bjoin (const struct bstrList * bl, const_bstring sep) {
+bstring bjoin (const struct bstrList * bl, const bstring sep) {
 bstring b;
 int i, c, v;
 
@@ -2316,8 +2316,8 @@ int i, c, v;
 
 #define BSSSC_BUFF_LEN (256)
 
-/*  int bssplitscb (struct bStream * s, const_bstring splitStr,
- *	int (* cb) (void * parm, int ofs, const_bstring entry), void * parm)
+/*  int bssplitscb (struct bStream * s, const bstring splitStr,
+ *	int (* cb) (void * parm, int ofs, const bstring entry), void * parm)
  *
  *  Iterate the set of disjoint sequential substrings read from a stream
  *  divided by any of the characters in splitStr.  An empty splitStr causes
@@ -2333,8 +2333,8 @@ int i, c, v;
  *  return with a negative value, otherwise bssplitscb will continue in an
  *  undefined manner.
  */
-int bssplitscb (struct bStream * s, const_bstring splitStr,
-	int (* cb) (void * parm, int ofs, const_bstring entry), void * parm) {
+int bssplitscb (struct bStream * s, const bstring splitStr,
+	int (* cb) (void * parm, int ofs, const bstring entry), void * parm) {
 struct charField chrs;
 bstring buff;
 int i, p, ret;
@@ -2382,8 +2382,8 @@ int i, p, ret;
 	return ret;
 }
 
-/*  int bssplitstrcb (struct bStream * s, const_bstring splitStr,
- *	int (* cb) (void * parm, int ofs, const_bstring entry), void * parm)
+/*  int bssplitstrcb (struct bStream * s, const bstring splitStr,
+ *	int (* cb) (void * parm, int ofs, const bstring entry), void * parm)
  *
  *  Iterate the set of disjoint sequential substrings read from a stream
  *  divided by the entire substring splitStr.  An empty splitStr causes
@@ -2399,8 +2399,8 @@ int i, p, ret;
  *  return with a negative value, otherwise bssplitscb will continue in an
  *  undefined manner.
  */
-int bssplitstrcb (struct bStream * s, const_bstring splitStr,
-	int (* cb) (void * parm, int ofs, const_bstring entry), void * parm) {
+int bssplitstrcb (struct bStream * s, const bstring splitStr,
+	int (* cb) (void * parm, int ofs, const bstring entry), void * parm) {
 bstring buff;
 int i, p, ret;
 
@@ -2530,7 +2530,7 @@ size_t nsz;
 	return BSTR_OK;
 }
 
-/*  int bsplitcb (const_bstring str, unsigned char splitChar, int pos,
+/*  int bsplitcb (const bstring str, unsigned char splitChar, int pos,
  *	int (* cb) (void * parm, int ofs, int len), void * parm)
  *
  *  Iterate the set of disjoint sequential substrings over str divided by the
@@ -2545,7 +2545,7 @@ size_t nsz;
  *  cb function destroys str, then it *must* return with a negative value,
  *  otherwise bsplitcb will continue in an undefined manner.
  */
-int bsplitcb (const_bstring str, unsigned char splitChar, int pos,
+int bsplitcb (const bstring str, unsigned char splitChar, int pos,
 	int (* cb) (void * parm, int ofs, int len), void * parm) {
 int i, p, ret;
 
@@ -2563,7 +2563,7 @@ int i, p, ret;
 	return BSTR_OK;
 }
 
-/*  int bsplitscb (const_bstring str, const_bstring splitStr, int pos,
+/*  int bsplitscb (const bstring str, const bstring splitStr, int pos,
  *	int (* cb) (void * parm, int ofs, int len), void * parm)
  *
  *  Iterate the set of disjoint sequential substrings over str divided by any
@@ -2579,7 +2579,7 @@ int i, p, ret;
  *  cb function destroys str, then it *must* return with a negative value,
  *  otherwise bsplitscb will continue in an undefined manner.
  */
-int bsplitscb (const_bstring str, const_bstring splitStr, int pos,
+int bsplitscb (const bstring str, const bstring splitStr, int pos,
 	int (* cb) (void * parm, int ofs, int len), void * parm) {
 struct charField chrs;
 int i, p, ret;
@@ -2607,7 +2607,7 @@ int i, p, ret;
 	return BSTR_OK;
 }
 
-/*  int bsplitstrcb (const_bstring str, const_bstring splitStr, int pos,
+/*  int bsplitstrcb (const bstring str, const bstring splitStr, int pos,
  *	int (* cb) (void * parm, int ofs, int len), void * parm)
  *
  *  Iterate the set of disjoint sequential substrings over str divided by the
@@ -2623,7 +2623,7 @@ int i, p, ret;
  *  cb function destroys str, then it *must* return with a negative value,
  *  otherwise bsplitscb will continue in an undefined manner.
  */
-int bsplitstrcb (const_bstring str, const_bstring splitStr, int pos,
+int bsplitstrcb (const bstring str, const bstring splitStr, int pos,
 	int (* cb) (void * parm, int ofs, int len), void * parm) {
 int i, p, ret;
 
@@ -2679,12 +2679,12 @@ struct genBstrList * g = (struct genBstrList *) parm;
 	return BSTR_OK;
 }
 
-/*  struct bstrList * bsplit (const_bstring str, unsigned char splitChar)
+/*  struct bstrList * bsplit (const bstring str, unsigned char splitChar)
  *
  *  Create an array of sequential substrings from str divided by the character
  *  splitChar.
  */
-struct bstrList * bsplit (const_bstring str, unsigned char splitChar) {
+struct bstrList * bsplit (const bstring str, unsigned char splitChar) {
 struct genBstrList g;
 
 	if (str == NULL || str->data == NULL || str->slen < 0) return NULL;
@@ -2707,12 +2707,12 @@ struct genBstrList g;
 	return g.bl;
 }
 
-/*  struct bstrList * bsplitstr (const_bstring str, const_bstring splitStr)
+/*  struct bstrList * bsplitstr (const bstring str, const bstring splitStr)
  *
  *  Create an array of sequential substrings from str divided by the entire
  *  substring splitStr.
  */
-struct bstrList * bsplitstr (const_bstring str, const_bstring splitStr) {
+struct bstrList * bsplitstr (const bstring str, const bstring splitStr) {
 struct genBstrList g;
 
 	if (str == NULL || str->data == NULL || str->slen < 0) return NULL;
@@ -2735,13 +2735,13 @@ struct genBstrList g;
 	return g.bl;
 }
 
-/*  struct bstrList * bsplits (const_bstring str, bstring splitStr)
+/*  struct bstrList * bsplits (const bstring str, bstring splitStr)
  *
  *  Create an array of sequential substrings from str divided by any of the
  *  characters in splitStr.  An empty splitStr causes a single entry bstrList
  *  containing a copy of str to be returned.
  */
-struct bstrList * bsplits (const_bstring str, const_bstring splitStr) {
+struct bstrList * bsplits (const bstring str, const bstring splitStr) {
 struct genBstrList g;
 
 	if (     str == NULL ||      str->slen < 0 ||      str->data == NULL ||

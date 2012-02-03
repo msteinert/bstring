@@ -48,7 +48,7 @@
 static bstring dumpOut[16];
 static int rot = 0;
 
-static char * dumpBstring (const struct tagbstring * b) {
+static char * dumpBstring (const const bstring b) {
 	rot = (rot + 1) % (unsigned)16;
 	if (dumpOut[rot] == NULL) {
 		dumpOut[rot] = bfromcstr ("");
@@ -206,7 +206,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test2_0 (const_bstring b, char z, const unsigned char * res) {
+static int test2_0 (const bstring b, char z, const unsigned char * res) {
 char * s = bstr2cstr (b, z);
 int ret = 0;
 	if (s == NULL) {
@@ -242,7 +242,7 @@ struct tagbstring xxxxxBstring = bsStatic ("xxxxx");
 static int test2 (void) {
 int ret = 0;
 
-	printf ("TEST: char * bstr2cstr (const_bstring s, char z);\n");
+	printf ("TEST: char * bstr2cstr (const bstring s, char z);\n");
 
 	/* tests with NULL */
 	ret += test2_0 (NULL, (char) '?', NULL);
@@ -257,7 +257,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test3_0 (const_bstring b) {
+static int test3_0 (const bstring b) {
 bstring b0 = bstrcpy (b);
 int ret = 0;
 	printf (".\tbstrcpy (%s) = %s\n", dumpBstring (b), dumpBstring (b0));
@@ -275,7 +275,7 @@ int ret = 0;
 static int test3 (void) {
 int ret = 0;
 
-	printf ("TEST: bstring bstrcpy (const_bstring b1);\n");
+	printf ("TEST: bstring bstrcpy (const bstring b1);\n");
 
 	/* tests with NULL to make sure that there is NULL propogation */
 	ret += test3_0 (NULL);
@@ -290,7 +290,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test4_0 (const_bstring b, int left, int len, const char * res) {
+static int test4_0 (const bstring b, int left, int len, const char * res) {
 bstring b0 = bmidstr (b, left, len);
 int ret = 0;
 	printf (".\tbmidstr (%s, %d, %d) = %s\n", dumpBstring (b), left, len, dumpBstring (b0));
@@ -320,7 +320,7 @@ int ret = 0;
 static int test4 (void) {
 int ret = 0;
 
-	printf ("TEST: bstring bmidstr (const_bstring b, int left, int len);\n");
+	printf ("TEST: bstring bmidstr (const bstring b, int left, int len);\n");
 
 	/* tests with NULL to make sure that there is NULL propogation */
 	ret += test4_0 (NULL,  0,  0, NULL);
@@ -346,7 +346,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test5_0 (bstring b0, const_bstring b1, const char * res) {
+static int test5_0 (bstring b0, const bstring b1, const char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -430,7 +430,7 @@ int i, ret;
 static int test5 (void) {
 int ret = 0;
 
-	printf ("TEST: int bconcat (bstring b0, const_bstring b1);\n");
+	printf ("TEST: int bconcat (bstring b0, const bstring b1);\n");
 
 	/* tests with NULL */
 	ret += test5_0 (NULL, NULL, NULL);
@@ -506,7 +506,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test7x8_0 (char * fnname, int (* fnptr) (const struct tagbstring *, const struct tagbstring *), const struct tagbstring * b0, const struct tagbstring * b1, int res) {
+static int test7x8_0 (char * fnname, int (* fnptr) (const const bstring, const const bstring), const const bstring b0, const const bstring b1, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = fnptr (b0, b1)));
@@ -517,11 +517,11 @@ int rv, ret = 0;
 	return ret;
 }
 
-static int test7x8 (char * fnname, int (* fnptr) (const struct tagbstring *, const struct tagbstring *),
+static int test7x8 (char * fnname, int (* fnptr) (const const bstring, const const bstring),
              int retFail, int retLT, int retGT, int retEQ) {
 int ret = 0;
 
-	printf ("TEST: int %s (const_bstring b0, const_bstring b1);\n", fnname);
+	printf ("TEST: int %s (const bstring b0, const bstring b1);\n", fnname);
 
 	/* tests with NULL */
 	ret += test7x8_0 (fnname, fnptr, NULL, NULL, retFail);
@@ -562,7 +562,7 @@ int ret = 0;
 #define test7() test7x8 ("biseq", biseq, -1, 0, 0, 1)
 #define test8() test7x8 ("bstrcmp", bstrcmp, SHRT_MIN, -1, 1, 0)
 
-static int test9_0 (const_bstring b0, const_bstring b1, int n, int res) {
+static int test9_0 (const bstring b0, const bstring b1, int n, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = bstrncmp (b0, b1, n)));
@@ -576,7 +576,7 @@ int rv, ret = 0;
 static int test9 (void) {
 int ret = 0;
 
-	printf ("TEST: int bstrncmp (const_bstring b0, const_bstring b1, int n);\n");
+	printf ("TEST: int bstrncmp (const bstring b0, const bstring b1, int n);\n");
 
 	/* tests with NULL */
 	ret += test9_0 (NULL, NULL, 0, SHRT_MIN);
@@ -635,7 +635,7 @@ bstring c = bstrcpy (&shortBstring);
 bstring b = bstrcpy (&emptyBstring);
 int ret = 0;
 
-	printf ("TEST: int bdestroy (const_bstring b);\n");
+	printf ("TEST: int bdestroy (const bstring b);\n");
 	/* tests with NULL */
 	ret += test10_0 (NULL, BSTR_ERR, 1);
 
@@ -661,7 +661,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test11_0 (bstring s1, int pos, const_bstring s2, int res) {
+static int test11_0 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbinstr (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -674,7 +674,7 @@ int rv, ret = 0;
 	return ret;
 }
 
-static int test11_1 (bstring s1, int pos, const_bstring s2, int res) {
+static int test11_1 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbinstrcaseless (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -691,7 +691,7 @@ static int test11 (void) {
 bstring b, c;
 int ret = 0;
 
-	printf ("TEST: int binstr (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int binstr (const bstring s1, int pos, const bstring s2);\n");
 	ret += test11_0 (NULL, 0, NULL, BSTR_ERR);
 	ret += test11_0 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test11_0 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -743,7 +743,7 @@ int ret = 0;
 	bdestroy (c);
 	bdestroy (b);
 
-	printf ("TEST: int binstrcaseless (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int binstrcaseless (const bstring s1, int pos, const bstring s2);\n");
 	ret += test11_1 (NULL, 0, NULL, BSTR_ERR);
 	ret += test11_1 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test11_1 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -771,7 +771,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test12_0 (bstring s1, int pos, const_bstring s2, int res) {
+static int test12_0 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbinstrr (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -784,7 +784,7 @@ int rv, ret = 0;
 	return ret;
 }
 
-static int test12_1 (bstring s1, int pos, const_bstring s2, int res) {
+static int test12_1 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbinstrrcaseless (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -801,7 +801,7 @@ static int test12 (void) {
 bstring b;
 int ret = 0;
 
-	printf ("TEST: int binstrr (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int binstrr (const bstring s1, int pos, const bstring s2);\n");
 	ret += test12_0 (NULL, 0, NULL, BSTR_ERR);
 	ret += test12_0 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test12_0 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -825,7 +825,7 @@ int ret = 0;
 	ret += test12_0 (&longBstring, 0, &shortBstring, BSTR_ERR);
 	ret += test12_0 (&longBstring, 20, &shortBstring, 10);
 
-	printf ("TEST: int binstrrcaseless (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int binstrrcaseless (const bstring s1, int pos, const bstring s2);\n");
 	ret += test12_1 (NULL, 0, NULL, BSTR_ERR);
 	ret += test12_1 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test12_1 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -853,7 +853,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test13_0 (bstring s1, int pos, const_bstring s2, int res) {
+static int test13_0 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbinchr (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -871,7 +871,7 @@ bstring b;
 int ret = 0;
 struct tagbstring multipleOs = bsStatic ("ooooo");
 
-	printf ("TEST: int binchr (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int binchr (const bstring s1, int pos, const bstring s2);\n");
 	ret += test13_0 (NULL, 0, NULL, BSTR_ERR);
 	ret += test13_0 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test13_0 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -899,7 +899,7 @@ struct tagbstring multipleOs = bsStatic ("ooooo");
 	return ret;
 }
 
-static int test14_0 (bstring s1, int pos, const_bstring s2, int res) {
+static int test14_0 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbinchrr (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -916,7 +916,7 @@ static int test14 (void) {
 bstring b;
 int ret = 0;
 
-	printf ("TEST: int binchrr (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int binchrr (const bstring s1, int pos, const bstring s2);\n");
 	ret += test14_0 (NULL, 0, NULL, BSTR_ERR);
 	ret += test14_0 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test14_0 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -944,7 +944,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test15_0 (bstring b0, int pos, const_bstring b1, unsigned char fill, char * res) {
+static int test15_0 (bstring b0, int pos, const bstring b1, unsigned char fill, char * res) {
 bstring b2;
 int rv, ret = 0, linenum = 0;
 
@@ -995,7 +995,7 @@ int rv, ret = 0, linenum = 0;
 
 static int test15 (void) {
 int ret = 0;
-	printf ("TEST: int bsetstr (bstring b0, int pos, const_bstring b1, unsigned char fill);\n");
+	printf ("TEST: int bsetstr (bstring b0, int pos, const bstring b1, unsigned char fill);\n");
 	/* tests with NULL */
 	ret += test15_0 (NULL, 0, NULL, (unsigned char) '?', NULL);
 	ret += test15_0 (NULL, 0, &emptyBstring, (unsigned char) '?', NULL);
@@ -1023,7 +1023,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test16_0 (bstring b0, int pos, const_bstring b1, unsigned char fill, char * res) {
+static int test16_0 (bstring b0, int pos, const bstring b1, unsigned char fill, char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -1073,7 +1073,7 @@ int rv, ret = 0;
 
 static int test16 (void) {
 int ret = 0;
-	printf ("TEST: int binsert (bstring b0, int pos, const_bstring b1, unsigned char fill);\n");
+	printf ("TEST: int binsert (bstring b0, int pos, const bstring b1, unsigned char fill);\n");
 	/* tests with NULL */
 	ret += test16_0 (NULL, 0, NULL, (unsigned char) '?', NULL);
 	ret += test16_0 (NULL, 0, &emptyBstring, (unsigned char) '?', NULL);
@@ -1492,7 +1492,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test21_1 (bstring b, const_bstring sc, int ns) {
+static int test21_1 (bstring b, const bstring sc, int ns) {
 struct bstrList * l;
 int ret = 0;
 
@@ -1542,7 +1542,7 @@ struct tagbstring is = bsStatic ("is");
 struct tagbstring ng = bsStatic ("ng");
 int ret = 0;
 
-	printf ("TEST: struct bstrList * bsplit (const_bstring str, unsigned char splitChar);\n");
+	printf ("TEST: struct bstrList * bsplit (const bstring str, unsigned char splitChar);\n");
 	/* tests with NULL */
 	ret += test21_0 (NULL, (char) '?', 0);
 	ret += test21_0 (&badBstring1, (char) '?', 0);
@@ -1555,7 +1555,7 @@ int ret = 0;
 	ret += test21_0 (&shortBstring, (char) 'b', 2);
 	ret += test21_0 (&longBstring, (char) 'o', 9);
 
-	printf ("TEST: struct bstrList * bsplitstr (bstring str, const_bstring splitStr);\n");
+	printf ("TEST: struct bstrList * bsplitstr (bstring str, const bstring splitStr);\n");
 
 	ret += test21_1 (NULL, NULL, 0);
 	ret += test21_1 (&badBstring1, &emptyBstring, 0);
@@ -1610,7 +1610,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test22_0 (const_bstring b, const_bstring sep, int ns, ...) {
+static int test22_0 (const bstring b, const bstring sep, int ns, ...) {
 va_list arglist;
 struct bstrList * l;
 int ret = 0;
@@ -1672,7 +1672,7 @@ struct tagbstring b=bsStatic("b");
 struct tagbstring bs=bsStatic("bs");
 struct tagbstring uo=bsStatic("uo");
 
-	printf ("TEST: extern struct bstrList * bsplits (const_bstring str, const_bstring splitStr);\n");
+	printf ("TEST: extern struct bstrList * bsplits (const bstring str, const bstring splitStr);\n");
 	/* tests with NULL */
 	ret += test22_0 (NULL, &o, 0);
 	ret += test22_0 (&o, NULL, 0);
@@ -1749,7 +1749,7 @@ static int test23_aux_open (struct sbstr * sb, bstring b) {
 	return 0;
 }
 
-static int test23_aux_splitcb (void * parm, int ofs, const struct tagbstring * entry) {
+static int test23_aux_splitcb (void * parm, int ofs, const const bstring entry) {
 bstring b = (bstring) parm;
 
 	ofs = ofs;
@@ -1764,7 +1764,7 @@ struct tagBss {
 	bstring b;
 };
 
-static int test23_aux_splitcbx (void * parm, int ofs, const struct tagbstring * entry) {
+static int test23_aux_splitcbx (void * parm, int ofs, const const bstring entry) {
 struct tagBss * p = (struct tagBss *) parm;
 
 	ofs = ofs;
@@ -1934,7 +1934,7 @@ int l, ret = 0;
 	return ret;
 }
 
-static int test24_0 (bstring s1, int pos, const_bstring s2, int res) {
+static int test24_0 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbninchr (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -1951,7 +1951,7 @@ static int test24 (void) {
 bstring b;
 int ret = 0;
 
-	printf ("TEST: int bninchr (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int bninchr (const bstring s1, int pos, const bstring s2);\n");
 	ret += test24_0 (NULL, 0, NULL, BSTR_ERR);
 	ret += test24_0 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test24_0 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -1977,7 +1977,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test25_0 (bstring s1, int pos, const_bstring s2, int res) {
+static int test25_0 (bstring s1, int pos, const bstring s2, int res) {
 int rv, ret = 0;
 
 	printf (".\tbninchrr (%s, %d, %s) = ", dumpBstring (s1), pos, dumpBstring (s2));
@@ -1994,7 +1994,7 @@ static int test25 (void) {
 bstring b;
 int ret = 0;
 
-	printf ("TEST: int bninchrr (const_bstring s1, int pos, const_bstring s2);\n");
+	printf ("TEST: int bninchrr (const bstring s1, int pos, const bstring s2);\n");
 	ret += test25_0 (NULL, 0, NULL, BSTR_ERR);
 	ret += test25_0 (&emptyBstring, 0, NULL, BSTR_ERR);
 	ret += test25_0 (NULL, 0, &emptyBstring, BSTR_ERR);
@@ -2015,7 +2015,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test26_0 (bstring b0, int pos, int len, const_bstring b1, unsigned char fill, char * res) {
+static int test26_0 (bstring b0, int pos, int len, const bstring b1, unsigned char fill, char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -2064,7 +2064,7 @@ int rv, ret = 0;
 
 static int test26 (void) {
 int ret = 0;
-	printf ("TEST: int breplace (bstring b0, int pos, int len, const_bstring b1, unsigned char fill);\n");
+	printf ("TEST: int breplace (bstring b0, int pos, int len, const bstring b1, unsigned char fill);\n");
 	/* tests with NULL */
 	ret += test26_0 (NULL, 0, 0, NULL, (unsigned char) '?', NULL);
 	ret += test26_0 (NULL, 0, 0, &emptyBstring, (unsigned char) '?', NULL);
@@ -2088,7 +2088,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test27_0 (bstring b0, const_bstring b1, const char * res) {
+static int test27_0 (bstring b0, const bstring b1, const char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -2135,7 +2135,7 @@ int rv, ret = 0;
 static int test27 (void) {
 int ret = 0;
 
-	printf ("TEST: int bassign (bstring b0, const_bstring b1);\n");
+	printf ("TEST: int bassign (bstring b0, const bstring b1);\n");
 
 	/* tests with NULL */
 	ret += test27_0 (NULL, NULL, NULL);
@@ -2210,7 +2210,7 @@ int rv, ret = 0;
 static int test28 (void) {
 int ret = 0;
 
-	printf ("TEST: int bstrchr (const_bstring s1, int c);\n");
+	printf ("TEST: int bstrchr (const bstring s1, int c);\n");
 	ret += test28_0 (NULL, 0, BSTR_ERR);
 	ret += test28_0 (&badBstring1, 'b', BSTR_ERR);
 	ret += test28_0 (&badBstring2, 's', BSTR_ERR);
@@ -2224,7 +2224,7 @@ int ret = 0;
 	ret += test28_0 (&xxxxxBstring, 'b', BSTR_ERR);
 	ret += test28_0 (&longBstring, 'i', 2);
 
-	printf ("TEST: int bstrrchr (const_bstring s1, int c);\n");
+	printf ("TEST: int bstrrchr (const bstring s1, int c);\n");
 	ret += test28_1 (NULL, 0, BSTR_ERR);
 	ret += test28_1 (&badBstring1, 'b', BSTR_ERR);
 	ret += test28_1 (&badBstring2, 's', BSTR_ERR);
@@ -2238,7 +2238,7 @@ int ret = 0;
 	ret += test28_1 (&xxxxxBstring, 'b', BSTR_ERR);
 	ret += test28_1 (&longBstring, 'i', 82);
 
-	printf ("TEST: int bstrchrp (const_bstring s1, int c, int pos);\n");
+	printf ("TEST: int bstrchrp (const bstring s1, int c, int pos);\n");
 	ret += test28_2 (NULL, 0, 0, BSTR_ERR);
 	ret += test28_2 (&badBstring1, 'b', 0, BSTR_ERR);
 	ret += test28_2 (&badBstring2, 's', 0, BSTR_ERR);
@@ -2252,7 +2252,7 @@ int ret = 0;
 	ret += test28_2 (&shortBstring, 's', 0, 4);
 	ret += test28_2 (&shortBstring, 'q', 0, BSTR_ERR);
 
-	printf ("TEST: int bstrrchrp (const_bstring s1, int c, int pos);\n");
+	printf ("TEST: int bstrrchrp (const bstring s1, int c, int pos);\n");
 	ret += test28_3 (NULL, 0, 0, BSTR_ERR);
 	ret += test28_3 (&badBstring1, 'b', 0, BSTR_ERR);
 	ret += test28_3 (&badBstring2, 's', 0, BSTR_ERR);
@@ -2404,7 +2404,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test31_0 (bstring b0, const_bstring find, const_bstring replace, int pos, char * res) {
+static int test31_0 (bstring b0, const bstring find, const bstring replace, int pos, char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -2448,7 +2448,7 @@ int rv, ret = 0;
 	return ret;
 }
 
-static int test31_1 (bstring b0, const_bstring find, const_bstring replace, int pos, char * res) {
+static int test31_1 (bstring b0, const bstring find, const bstring replace, int pos, char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -2507,7 +2507,7 @@ struct tagbstring t7 = bsStatic ("xx" LOTS_OF_S "xx");
 struct tagbstring t8 = bsStatic ("S");
 struct tagbstring t9 = bsStatic ("LONG");
 
-	printf ("TEST: int bfindreplace (bstring b, const_bstring f, const_bstring r, int pos);\n");
+	printf ("TEST: int bfindreplace (bstring b, const bstring f, const bstring r, int pos);\n");
 	/* tests with NULL */
 	ret += test31_0 (NULL, NULL, NULL, 0, NULL);
 	ret += test31_0 (&shortBstring, NULL, &t1, 0, (char *) shortBstring.data);
@@ -2526,7 +2526,7 @@ struct tagbstring t9 = bsStatic ("LONG");
 	ret += test31_0 (&t6, &t2, &t5, 0, "sssstsssst");
 	ret += test31_0 (&t7, &t2, &t5, 0, "xx" LOTS_OF_S LOTS_OF_S "xx");
 
-	printf ("TEST: int bfindreplacecaseless (bstring b, const_bstring f, const_bstring r, int pos);\n");
+	printf ("TEST: int bfindreplacecaseless (bstring b, const bstring f, const bstring r, int pos);\n");
 	/* tests with NULL */
 	ret += test31_1 (NULL, NULL, NULL, 0, NULL);
 	ret += test31_1 (&shortBstring, NULL, &t1, 0, (char *) shortBstring.data);
@@ -2550,7 +2550,7 @@ struct tagbstring t9 = bsStatic ("LONG");
 	return ret;
 }
 
-static int test32_0 (const_bstring b, const char * s, int res) {
+static int test32_0 (const bstring b, const char * s, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = biseqcstr (b, s)));
@@ -2561,7 +2561,7 @@ int rv, ret = 0;
 	return ret;
 }
 
-static int test32_1 (const_bstring b, const char * s, int res) {
+static int test32_1 (const bstring b, const char * s, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = biseqcstrcaseless (b, s)));
@@ -2576,7 +2576,7 @@ int rv, ret = 0;
 static int test32 (void) {
 int ret = 0;
 
-	printf ("TEST: int biseqcstr (const_bstring b, const char * s);\n");
+	printf ("TEST: int biseqcstr (const bstring b, const char * s);\n");
 
 	/* tests with NULL */
 	ret += test32_0 (NULL, NULL, BSTR_ERR);
@@ -2598,7 +2598,7 @@ int ret = 0;
 		bdestroy (b);
 	}
 
-	printf ("TEST: int biseqcstrcaseless (const_bstring b, const char * s);\n");
+	printf ("TEST: int biseqcstrcaseless (const bstring b, const char * s);\n");
 
 	/* tests with NULL */
 	ret += test32_1 (NULL, NULL, BSTR_ERR);
@@ -2749,7 +2749,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test35_0 (const_bstring b0, const_bstring b1, int res) {
+static int test35_0 (const bstring b0, const bstring b1, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = bstricmp (b0, b1)));
@@ -2766,7 +2766,7 @@ struct tagbstring t0 = bsStatic ("bOgUs");
 struct tagbstring t1 = bsStatic ("bOgUR");
 struct tagbstring t2 = bsStatic ("bOgUt");
 
-	printf ("TEST: int bstricmp (const_bstring b0, const_bstring b1);\n");
+	printf ("TEST: int bstricmp (const bstring b0, const bstring b1);\n");
 
 	/* tests with NULL */
 	ret += test35_0 (NULL, NULL, SHRT_MIN);
@@ -2791,7 +2791,7 @@ struct tagbstring t2 = bsStatic ("bOgUt");
 	return ret;
 }
 
-static int test36_0 (const_bstring b0, const_bstring b1, int n, int res) {
+static int test36_0 (const bstring b0, const bstring b1, int n, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = bstrnicmp (b0, b1, n)));
@@ -2808,7 +2808,7 @@ struct tagbstring t0 = bsStatic ("bOgUs");
 struct tagbstring t1 = bsStatic ("bOgUR");
 struct tagbstring t2 = bsStatic ("bOgUt");
 
-	printf ("TEST: int bstrnicmp (const_bstring b0, const_bstring b1);\n");
+	printf ("TEST: int bstrnicmp (const bstring b0, const bstring b1);\n");
 
 	/* tests with NULL */
 	ret += test36_0 (NULL, NULL, 0, SHRT_MIN);
@@ -2841,7 +2841,7 @@ struct tagbstring t2 = bsStatic ("bOgUt");
 	return ret;
 }
 
-static int test37_0 (const_bstring b0, const_bstring b1, int res) {
+static int test37_0 (const bstring b0, const bstring b1, int res) {
 int rv, ret = 0;
 
 	ret += (res != (rv = biseqcaseless (b0, b1)));
@@ -2858,7 +2858,7 @@ struct tagbstring t0 = bsStatic ("bOgUs");
 struct tagbstring t1 = bsStatic ("bOgUR");
 struct tagbstring t2 = bsStatic ("bOgUt");
 
-	printf ("TEST: int biseqcaseless (const_bstring b0, const_bstring b1);\n");
+	printf ("TEST: int biseqcaseless (const bstring b0, const bstring b1);\n");
 
 	/* tests with NULL */
 	ret += test37_0 (NULL, NULL, BSTR_ERR);
@@ -2973,7 +2973,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test39_0 (const_bstring b, const_bstring lt, const_bstring rt, const_bstring t) {
+static int test39_0 (const bstring b, const bstring lt, const bstring rt, const bstring t) {
 bstring r;
 int ret = 0;
 
@@ -3029,7 +3029,7 @@ struct tagbstring t5 = bsStatic ("");
 	return ret;
 }
 
-static int test40_0 (bstring b0, const_bstring b1, int left, int len, const char * res) {
+static int test40_0 (bstring b0, const bstring b1, int left, int len, const char * res) {
 bstring b2;
 int rv, ret = 0;
 
@@ -3076,7 +3076,7 @@ int rv, ret = 0;
 static int test40 (void) {
 int ret = 0;
 
-	printf ("TEST: int bassignmidstr (bstring b0, const_bstring b1, int left, int len);\n");
+	printf ("TEST: int bassignmidstr (bstring b0, const bstring b1, int left, int len);\n");
 
 	/* tests with NULL */
 	ret += test40_0 (NULL, NULL, 0, 1, NULL);
@@ -3139,7 +3139,7 @@ int ret = 0;
 static int test41 (void) {
 int ret = 0;
 
-	printf ("TEST: int bmid2tbstr (struct tagbstring &t, const_bstring b1, int left, int len);\n");
+	printf ("TEST: int bmid2tbstr (struct tagbstring &t, const bstring b1, int left, int len);\n");
 
 	/* tests with NULL */
 	ret += test41_0 (NULL, 0, 1, NULL);
@@ -3163,7 +3163,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test42_0 (const_bstring bi, int len, const char * res) {
+static int test42_0 (const bstring bi, int len, const char * res) {
 bstring b;
 int rv, ret = 0;
 
@@ -3358,7 +3358,7 @@ int ret = 0;
 	return ret;
 }
 
-static int test46_0 (const_bstring r, bstring b, int count, const char * fmt, ...) {
+static int test46_0 (const bstring r, bstring b, int count, const char * fmt, ...) {
 int ret;
 va_list arglist;
 
@@ -3373,7 +3373,7 @@ va_list arglist;
 	return ret;
 }
 
-static int test46_1 (bstring b, const char * fmt, const_bstring r, ...) {
+static int test46_1 (bstring b, const char * fmt, const bstring r, ...) {
 int ret;
 
 	printf (".\tbvformata (&, %s, \"%s\", ...) -> ", dumpBstring (b), fmt);

@@ -71,7 +71,7 @@ extern "C" {
 #define bUuDecode(b)                 (bUuDecodeEx ((b), NULL))
 
 /* Unusual functions */
-extern struct bStream * bsFromBstr (const_bstring b);
+extern struct bStream * bsFromBstr (const bstring b);
 extern bstring bTail (bstring b, int n);
 extern bstring bHead (bstring b, int n);
 extern int bSetCstrChar (bstring a, int pos, char c);
@@ -91,21 +91,21 @@ extern int bJustifyMargin (bstring b, int width, int space);
 extern int bJustifyCenter (bstring b, int width, int space);
 
 /* Esoteric standards specific functions */
-extern char * bStr2NetStr (const_bstring b);
+extern char * bStr2NetStr (const bstring b);
 extern bstring bNetStr2Bstr (const char * buf);
-extern bstring bBase64Encode (const_bstring b);
-extern bstring bBase64DecodeEx (const_bstring b, int * boolTruncError);
+extern bstring bBase64Encode (const bstring b);
+extern bstring bBase64DecodeEx (const bstring b, int * boolTruncError);
 extern struct bStream * bsUuDecode (struct bStream * sInp, int * badlines);
-extern bstring bUuDecodeEx (const_bstring src, int * badlines);
-extern bstring bUuEncode (const_bstring src);
-extern bstring bYEncode (const_bstring src);
-extern bstring bYDecode (const_bstring src);
+extern bstring bUuDecodeEx (const bstring src, int * badlines);
+extern bstring bUuEncode (const bstring src);
+extern bstring bYEncode (const bstring src);
+extern bstring bYDecode (const bstring src);
 
 /* Writable stream */
 typedef int (* bNwrite) (const void * buf, size_t elsize, size_t nelem, void * parm);
 
 struct bwriteStream * bwsOpen (bNwrite writeFn, void * parm);
-int bwsWriteBstr (struct bwriteStream * stream, const_bstring b);
+int bwsWriteBstr (struct bwriteStream * stream, const bstring b);
 int bwsWriteBlk (struct bwriteStream * stream, void * blk, int len);
 int bwsWriteFlush (struct bwriteStream * stream);
 int bwsIsEOF (const struct bwriteStream * stream);
