@@ -277,10 +277,10 @@ compare this "closeness" with Bstrlib:
 
 <table>
 <tr><th></th><th>Bstrlib</th><th>Managed String Library</th></tr>
-<tr><td>Pointer arithmetic</td<td>Segment arithmetic</td><td>N/A</td></tr>
-<tr><td>Use in C Std lib</td<td>data, or bdata{e}</td><td>getstr_m(x,*) ... free(x)</td></tr>
-<tr><td>String literals</td<td>bsStatic, bsStaticBlk</td<td>strcreate_m()</td></tr>
-<tr><td>Transparency</td<td>Complete</td<td>None</td>/tr>
+<tr><td>Pointer arithmetic</td><td>Segment arithmetic</td><td>N/A</td></tr>
+<tr><td>Use in C Std lib</td><td>data, or bdata{e}</td><td>getstr_m(x,*) ... free(x)</td></tr>
+<tr><td>String literals</td><td>bsStatic, bsStaticBlk</td><td>strcreate_m()</td></tr>
+<tr><td>Transparency</td><td>Complete</td><td>None</td></tr>
 </table>
 
 Its pretty clear that the semantic mapping from C strings to Bstrlib is fairly
@@ -358,7 +358,7 @@ initializer) in any event.
 wxString Class
 --------------
 
-This is the string class used in the (wxWindows project)[http://www.wxwindows.org/manuals/2.4.2/wx368.htm#wxstring].
+This is the string class used in the [wxWindows project](http://www.wxwindows.org/manuals/2.4.2/wx368.htm#wxstring).
 
 This C++ library is similar to CBString. However, it is littered with
 trivial functions (`IsAscii`, `UpperCase`, `RemoveLast` etc.)

@@ -155,9 +155,7 @@ in mind:
    contain.
 
 4. For read only parameters bstring functions do not check the mlen, i.e., the
-   minimal correctness requirements are reduced to:
-
-    (slen >= 0 && data != NULL)
+   minimal correctness requirements are reduced to `(slen >= 0 && data != NULL)`.
 
 Better Pointer Arithmetic
 -------------------------
@@ -1259,7 +1257,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
 Alternatively, the contents of this file may be used under the terms of
-GNU General Public License Version 2(the "GPL").
+GNU General Public License Version 2 (the "GPL").
 
 Acknowledgements
 ----------------
