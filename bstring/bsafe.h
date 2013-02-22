@@ -43,24 +43,43 @@
 #ifndef BSTRLIB_BSAFE_H
 #define BSTRLIB_BSAFE_H
 
+#if __GNUC__ >= 4
+#define BSAFE_PUBLIC \
+	__attribute__ ((visibility ("default")))
+#define BSAFE_PRIVATE \
+	__attribute__ ((visibility ("hidden")))
+#else
+#define BSAFE_PUBLIC
+#define BSAFE_PRIVATE
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #if !defined (__GNUC__) && (!defined(_MSC_VER) || (_MSC_VER <= 1310))
 /* This is caught in the linker, so its not necessary for gcc. */
-extern char * (gets) (char * buf);
+char *
+gets(char * buf);
 #endif
 
-extern char * (strncpy) (char *dst, const char *src, size_t n);
-extern char * (strncat) (char *dst, const char *src, size_t n);
-extern char * (strtok) (char *s1, const char *s2);
-extern char * (strdup) (const char *s);
+BSAFE_PUBLIC char *
+strcpy(char *dst, const char *src);
 
-#undef strcpy
-#undef strcat
-#define strcpy(a,b) bsafe_strcpy(a,b)
-#define strcat(a,b) bsafe_strcat(a,b)
+BSAFE_PUBLIC char *
+strcat(char *dst, const char *src);
+
+BSAFE_PUBLIC char *
+strncpy(char *dst, const char *src, size_t n);
+
+BSAFE_PUBLIC char *
+strncat(char *dst, const char *src, size_t n);
+
+BSAFE_PUBLIC char *
+strtok(char *s1, const char *s2);
+
+BSAFE_PUBLIC char *
+strdup(const char *s);
 
 #ifdef __cplusplus
 }

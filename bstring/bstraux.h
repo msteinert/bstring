@@ -71,46 +71,105 @@ extern "C" {
 #define bUuDecode(b)                 (bUuDecodeEx ((b), NULL))
 
 /* Unusual functions */
-extern struct bStream * bsFromBstr (const bstring b);
-extern bstring bTail (bstring b, int n);
-extern bstring bHead (bstring b, int n);
-extern int bSetCstrChar (bstring a, int pos, char c);
-extern int bSetChar (bstring b, int pos, char c);
-extern int bFill (bstring a, char c, int len);
-extern int bReplicate (bstring b, int n);
-extern int bReverse (bstring b);
-extern int bInsertChrs (bstring b, int pos, int len, unsigned char c, unsigned char fill);
-extern bstring bStrfTime (const char * fmt, const struct tm * timeptr);
+BSTR_PUBLIC struct bStream *
+bsFromBstr(const bstring b);
+
+BSTR_PUBLIC bstring
+bTail(bstring b, int n);
+
+BSTR_PUBLIC bstring
+bHead(bstring b, int n);
+
+BSTR_PUBLIC int
+bSetCstrChar(bstring a, int pos, char c);
+
+BSTR_PUBLIC int
+bSetChar(bstring b, int pos, char c);
+
+BSTR_PUBLIC int
+bFill(bstring a, char c, int len);
+
+BSTR_PUBLIC int
+bReplicate(bstring b, int n);
+
+BSTR_PUBLIC int
+bReverse(bstring b);
+
+BSTR_PUBLIC int
+bInsertChrs(bstring b, int pos, int len, unsigned char c, unsigned char fill);
+
+BSTR_PUBLIC bstring
+bStrfTime(const char * fmt, const struct tm * timeptr);
+
 #define bAscTime(t) (bStrfTime ("%c\n", (t)))
+
 #define bCTime(t)   ((t) ? bAscTime (localtime (t)) : NULL)
 
 /* Spacing formatting */
-extern int bJustifyLeft (bstring b, int space);
-extern int bJustifyRight (bstring b, int width, int space);
-extern int bJustifyMargin (bstring b, int width, int space);
-extern int bJustifyCenter (bstring b, int width, int space);
+BSTR_PUBLIC int
+bJustifyLeft(bstring b, int space);
+
+BSTR_PUBLIC int
+bJustifyRight(bstring b, int width, int space);
+
+BSTR_PUBLIC int
+bJustifyMargin(bstring b, int width, int space);
+
+BSTR_PUBLIC int
+bJustifyCenter(bstring b, int width, int space);
 
 /* Esoteric standards specific functions */
-extern char * bStr2NetStr (const bstring b);
-extern bstring bNetStr2Bstr (const char * buf);
-extern bstring bBase64Encode (const bstring b);
-extern bstring bBase64DecodeEx (const bstring b, int * boolTruncError);
-extern struct bStream * bsUuDecode (struct bStream * sInp, int * badlines);
-extern bstring bUuDecodeEx (const bstring src, int * badlines);
-extern bstring bUuEncode (const bstring src);
-extern bstring bYEncode (const bstring src);
-extern bstring bYDecode (const bstring src);
+BSTR_PUBLIC char *
+bStr2NetStr(const bstring b);
+
+BSTR_PUBLIC bstring
+bNetStr2Bstr(const char * buf);
+
+BSTR_PUBLIC bstring
+bBase64Encode(const bstring b);
+
+BSTR_PUBLIC bstring
+bBase64DecodeEx(const bstring b, int * boolTruncError);
+
+BSTR_PUBLIC struct bStream *
+bsUuDecode(struct bStream * sInp, int * badlines);
+
+BSTR_PUBLIC bstring
+bUuDecodeEx(const bstring src, int * badlines);
+
+BSTR_PUBLIC bstring
+bUuEncode(const bstring src);
+
+BSTR_PUBLIC bstring
+bYEncode(const bstring src);
+
+BSTR_PUBLIC bstring
+bYDecode(const bstring src);
 
 /* Writable stream */
-typedef int (* bNwrite) (const void * buf, size_t elsize, size_t nelem, void * parm);
+typedef int
+(* bNwrite)(const void * buf, size_t elsize, size_t nelem, void * parm);
 
-struct bwriteStream * bwsOpen (bNwrite writeFn, void * parm);
-int bwsWriteBstr (struct bwriteStream * stream, const bstring b);
-int bwsWriteBlk (struct bwriteStream * stream, void * blk, int len);
-int bwsWriteFlush (struct bwriteStream * stream);
-int bwsIsEOF (const struct bwriteStream * stream);
-int bwsBuffLength (struct bwriteStream * stream, int sz);
-void * bwsClose (struct bwriteStream * stream);
+BSTR_PUBLIC struct bwriteStream *
+bwsOpen(bNwrite writeFn, void * parm);
+
+BSTR_PUBLIC int
+bwsWriteBstr(struct bwriteStream * stream, const bstring b);
+
+BSTR_PUBLIC int
+bwsWriteBlk(struct bwriteStream * stream, void * blk, int len);
+
+BSTR_PUBLIC int
+bwsWriteFlush(struct bwriteStream * stream);
+
+BSTR_PUBLIC int
+bwsIsEOF(const struct bwriteStream * stream);
+
+BSTR_PUBLIC int
+bwsBuffLength(struct bwriteStream * stream, int sz);
+
+BSTR_PUBLIC void *
+bwsClose(struct bwriteStream * stream);
 
 /* Security functions */
 #define bSecureDestroy(b) {	                                            \
@@ -128,8 +187,9 @@ bstring bstr__tmp = (b);	                                            \
 	    (t).mlen = -1;                                                            \
 	}                                                                             \
 }
-extern bstring bSecureInput (int maxlen, int termchar,
-                             bNgetc vgetchar, void * vgcCtx);
+
+BSTR_PUBLIC bstring
+bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void * vgcCtx);
 
 #ifdef __cplusplus
 }

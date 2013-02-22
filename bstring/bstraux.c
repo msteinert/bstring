@@ -976,24 +976,35 @@ bstring b, t;
 	if (!vgetchar) return NULL;
 
 	b = bfromcstralloc (INIT_SECURE_INPUT_LENGTH, "");
-	if ((c = UCHAR_MAX + 1) == termchar) c++;
+	if ((c = UCHAR_MAX + 1) == (size_t)termchar) {
+		c++;
+	}
 
 	for (i=0; ; i++) {
-		if (termchar == c || (maxlen > 0 && i >= maxlen)) c = EOF;
-		else c = vgetchar (vgcCtx);
+		if ((size_t)termchar == c ||
+		    (maxlen > 0 && i >= (size_t)maxlen)) {
+			c = EOF;
+		} else {
+			c = vgetchar (vgcCtx);
+		}
 
-		if (EOF == c) break;
+		if ((size_t)EOF == c) {
+			break;
+		}
 
-		if (i+1 >= b->mlen) {
+		if (i+1 >= (size_t)b->mlen) {
 
 			/* Double size, but deal with unusual case of numeric
 			   overflows */
 
-			if ((m = b->mlen << 1)   <= b->mlen &&
-			    (m = b->mlen + 1024) <= b->mlen &&
-			    (m = b->mlen + 16)   <= b->mlen &&
-			    (m = b->mlen + 1)    <= b->mlen) t = NULL;
-			else t = bfromcstralloc (m, "");
+			if ((m = b->mlen << 1) <= (size_t)b->mlen &&
+			    (m = b->mlen + 1024) <= (size_t)b->mlen &&
+			    (m = b->mlen + 16) <= (size_t)b->mlen &&
+			    (m = b->mlen + 1) <= (size_t)b->mlen) {
+				t = NULL;
+			} else {
+				t = bfromcstralloc (m, "");
+			}
 
 			if (t) memcpy (t->data, b->data, i);
 			bSecureDestroy (b); /* Cleanse previous buffer */

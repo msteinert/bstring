@@ -406,7 +406,7 @@ int i;
 	return ret;
 }
 
-int main (int argc, char * argv[]) {
+int main (void) {
 int ret = 0;
 
 	printf ("Direct case testing of bstraux functions\n");

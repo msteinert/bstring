@@ -42,6 +42,16 @@
 #ifndef BSTRLIB_H
 #define BSTRLIB_H
 
+#if __GNUC__ >= 4
+#define BSTR_PUBLIC \
+	__attribute__ ((visibility ("default")))
+#define BSTR_PRIVATE \
+	__attribute__ ((visibility ("hidden")))
+#else
+#define BSTR_PUBLIC
+#define BSTR_PRIVATE
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -80,7 +90,7 @@ struct tagbstring {
  * }
  * \endcode
  */
-bstring
+BSTR_PUBLIC bstring
 bfromcstr(const char *str);
 
 /**
@@ -100,7 +110,7 @@ bfromcstr(const char *str);
  * defined so long as b was successfully created, since it will have been
  * allocated with at least 64 characters.
  */
-bstring
+BSTR_PUBLIC bstring
 bfromcstralloc(int mlen, const char *str);
 
 /**
@@ -109,7 +119,7 @@ bfromcstralloc(int mlen, const char *str);
  * creates a copy of the data in blk, rather than simply referencing it.
  * Compare with the blk2tbstr macro. If an error occurs NULL is returned.
  */
-bstring
+BSTR_PUBLIC bstring
 blk2bstr(const void *blk, int len);
 
 /**
@@ -118,7 +128,7 @@ blk2bstr(const void *blk, int len);
  * character in z. This returned value should be freed with bcstrfree(), by
  * the caller. If an error occurs NULL is returned.
  */
-char *
+BSTR_PUBLIC char *
 bstr2cstr(const bstring s, char z);
 
 /**
@@ -130,14 +140,14 @@ bstr2cstr(const bstring s, char z);
  * that allows higher level code to be independent from these macro
  * redefinitions.
  */
-int
+BSTR_PUBLIC int
 bcstrfree(char *s);
 
 /**
  * Make a copy of the passed in bstring. The copied bstring is returned if
  * there is no error, otherwise NULL is returned.
  */
-bstring
+BSTR_PUBLIC bstring
 bstrcpy(const bstring b1);
 
 /**
@@ -145,7 +155,7 @@ bstrcpy(const bstring b1);
  * bstring a must be a well defined and writable bstring. If an error
  * occurs BSTR_ERR is returned and a is not overwritten.
  */
-int
+BSTR_PUBLIC int
 bassign(bstring a, const bstring b);
 
 /**
@@ -155,7 +165,7 @@ bassign(bstring a, const bstring b);
  * the bstring a must be a well defined and writable bstring. If an error
  * occurs BSTR_ERR is returned and a is not overwritten.
  */
-int
+BSTR_PUBLIC int
 bassignmidstr(bstring a, const bstring b, int left, int len);
 
 /**
@@ -163,7 +173,7 @@ bassignmidstr(bstring a, const bstring b, int left, int len);
  * the bstring a must be a well defined and writable bstring. If an error
  * occurs BSTR_ERR is returned and a may be partially overwritten.
  */
-int
+BSTR_PUBLIC int
 bassigncstr(bstring a, const char *str);
 
 /**
@@ -173,7 +183,7 @@ bassigncstr(bstring a, const char *str);
  * the bstring a must be a well defined and writable bstring. If an error
  * occurs BSTR_ERR is returned and a is not overwritten.
  */
-int
+BSTR_PUBLIC int
 bassignblk(bstring a, const void *s, int len);
 
 /* Destroy function */
@@ -193,7 +203,7 @@ bassignblk(bstring a, const void *s, int len);
  * CBString destructor.)  Instead just use the ordinary C++ language
  * facilities to dealloc a CBString.
  */
-int
+BSTR_PUBLIC int
 bdestroy(bstring b);
 
 /* Space allocation hinting functions */
@@ -226,7 +236,7 @@ bdestroy(bstring b);
  * This function will return with BSTR_ERR if b is not detected as a valid
  * bstring or length is not greater than 0, otherwise BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 balloc(bstring s, int len);
 
 /**
@@ -252,7 +262,7 @@ balloc(bstring s, int len);
  * defined so long as the ballocmin call was successfully, since it will
  * ensure that b has been allocated with at least 64 characters.
  */
-int
+BSTR_PUBLIC int
 ballocmin(bstring b, int len);
 
 /* Substring extraction */
@@ -263,7 +273,7 @@ ballocmin(bstring b, int len);
  * there was no error, the value of this constructed bstring is returned
  * otherwise NULL is returned.
  */
-bstring
+BSTR_PUBLIC bstring
 bmidstr(const bstring b, int left, int len);
 
 /*Various standard manipulations */
@@ -273,7 +283,7 @@ bmidstr(const bstring b, int left, int len);
  * is returned if the operation is successful, otherwise BSTR_ERR is
  * returned.
  */
-int
+BSTR_PUBLIC int
 bconcat(bstring b0, const bstring b1);
 
 /**
@@ -281,7 +291,7 @@ bconcat(bstring b0, const bstring b1);
  * is returned if the operation is successful, otherwise BSTR_ERR is
  * returned.
  */
-int
+BSTR_PUBLIC int
 bconchar(bstring b0, char c);
 
 /**
@@ -289,7 +299,7 @@ bconchar(bstring b0, char c);
  * BSTR_OK is returned if the operation is successful, otherwise BSTR_ERR is
  * returned.
  */
-int
+BSTR_PUBLIC int
 bcatcstr(bstring b, const char *s);
 
 /**
@@ -297,7 +307,7 @@ bcatcstr(bstring b, const char *s);
  * value BSTR_OK is returned if the operation is successful, otherwise
  * BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 bcatblk(bstring b, const void *s, int len);
 
 /**
@@ -306,7 +316,7 @@ bcatblk(bstring b, const void *s, int len);
  * make up the gap between the end of s1 and pos. The value BSTR_OK is
  * returned if the operation is successful, otherwise BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 binsert(bstring s1, int pos, const bstring s2, unsigned char fill);
 
 /**
@@ -316,7 +326,7 @@ binsert(bstring s1, int pos, const bstring s2, unsigned char fill);
  * end of s1 and the position pos + len (exclusive). The value BSTR_OK is
  * returned if the operation is successful, otherwise BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 binsertch(bstring s1, int pos, int len, unsigned char fill);
 
 /**
@@ -325,7 +335,7 @@ binsertch(bstring s1, int pos, int len, unsigned char fill);
  * is appended as necessary to make up the gap between the end of b1 and
  * pos.
  */
-int
+BSTR_PUBLIC int
 breplace(bstring b1, int pos, int len, const bstring b2, unsigned char fill);
 
 /**
@@ -335,7 +345,7 @@ breplace(bstring b1, int pos, int len, const bstring b2, unsigned char fill);
  * is clamped to boundaries of the bstring b. The value BSTR_OK is returned
  * if the operation is successful, otherwise BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 bdelete(bstring s1, int pos, int len);
 
 /**
@@ -346,7 +356,7 @@ bdelete(bstring s1, int pos, int len);
  * BSTR_OK is returned if the operation is successful, otherwise BSTR_ERR is
  * returned.
  */
-int
+BSTR_PUBLIC int
 bsetstr(bstring b0, int pos, const bstring b1, unsigned char fill);
 
 /**
@@ -354,7 +364,7 @@ bsetstr(bstring b0, int pos, const bstring b1, unsigned char fill);
  * with BSTR_ERR if b is not detected as a valid bstring or n is less than
  * 0, otherwise BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 btrunc(bstring b, int n);
 
 /*Scan/search functions */
@@ -367,7 +377,7 @@ btrunc(bstring b, int n);
  * 0 is given, but if the first extra character is '\0', then it is taken to
  * be the value UCHAR_MAX + 1.
  */
-int
+BSTR_PUBLIC int
 bstricmp(const bstring b0, const bstring b1);
 
 /**
@@ -379,7 +389,7 @@ bstricmp(const bstring b0, const bstring b1);
  * first extra character is '\0', then it is taken to be the value
  * UCHAR_MAX + 1.
  */
-int
+BSTR_PUBLIC int
 bstrnicmp(const bstring b0, const bstring b1, int n);
 
 /**
@@ -389,7 +399,7 @@ bstrnicmp(const bstring b0, const bstring b1, int n);
  * the length of the bstrings are different, this function is O(1). '\0'
  * termination characters are not treated in any special way.
  */
-int
+BSTR_PUBLIC int
 biseqcaseless(const bstring b0, const bstring b1);
 
 /**
@@ -399,7 +409,7 @@ biseqcaseless(const bstring b0, const bstring b1);
  * 0 is returned, if the bstrings are the same, 1 is returned, if there is an
  * error, -1 is returned.
  */
-int
+BSTR_PUBLIC int
 bisstemeqcaselessblk(const bstring b0, const void *blk, int len);
 
 /**
@@ -412,7 +422,7 @@ bisstemeqcaselessblk(const bstring b0, const void *blk, int len);
  * Note that the semantics of biseq are not completely compatible with
  * bstrcmp because of its different treatment of the '\0' character.
  */
-int
+BSTR_PUBLIC int
 biseq(const bstring b0, const bstring b1);
 
 /**
@@ -421,7 +431,7 @@ biseq(const bstring b0, const bstring b1);
  * is too short), 0 is returned, if the bstrings are the same, 1 is returned,
  * if there is an error, -1 is returned.
  */
-int
+BSTR_PUBLIC int
 bisstemeqblk(const bstring b0, const void *blk, int len);
 
 /**
@@ -434,7 +444,7 @@ bisstemeqblk(const bstring b0, const void *blk, int len);
  * other. If they are equal 1 is returned, if they are unequal 0 is
  * returned and if there is a detectable error BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 biseqcstr(const bstring b, const char *s);
 
 /**
@@ -448,7 +458,7 @@ biseqcstr(const bstring b, const char *s);
  * returned, if they are unequal regardless of case 0 is returned and if
  * there is a detectable error BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 biseqcstrcaseless(const bstring b, const char *s);
 
 /**
@@ -473,7 +483,7 @@ biseqcstrcaseless(const bstring b, const char *s);
  * biseq because of its different treatment of the '\0' termination
  * character.
  */
-int
+BSTR_PUBLIC int
 bstrcmp(const bstring b0, const bstring b1);
 
 /**
@@ -489,7 +499,7 @@ bstrcmp(const bstring b0, const bstring b1);
  * granularity than the undefined situation given in the C library function
  * strncmp. The function otherwise behaves very much like strncmp().
  */
-int
+BSTR_PUBLIC int
 bstrncmp(const bstring b0, const bstring b1, int n);
 
 /**
@@ -498,7 +508,7 @@ bstrncmp(const bstring b0, const bstring b1, int n);
  * first position after pos where it is found, otherwise it returns BSTR_ERR.
  * The algorithm used is brute force; O(m*n).
  */
-int
+BSTR_PUBLIC int
 binstr(const bstring s1, int pos, const bstring s2);
 
 /**
@@ -510,7 +520,7 @@ binstr(const bstring s1, int pos, const bstring s2);
  * position be backed up (decremented) by one position. The algorithm used
  * is brute force; O(m*n).
  */
-int
+BSTR_PUBLIC int
 binstrr(const bstring s1, int pos, const bstring s2);
 
 /**
@@ -520,7 +530,7 @@ binstrr(const bstring s1, int pos, const bstring s2);
  * found, otherwise it returns BSTR_ERR. The algorithm used is brute force;
  * O(m*n).
  */
-int
+BSTR_PUBLIC int
 binstrcaseless(const bstring s1, int pos, const bstring s2);
 
 /**
@@ -532,7 +542,7 @@ binstrcaseless(const bstring s1, int pos, const bstring s2);
  * is recommended that the position be backed up (decremented) by one
  * position. The algorithm used is brute force; O(m*n).
  */
-int
+BSTR_PUBLIC int
 binstrrcaseless(const bstring s1, int pos, const bstring s2);
 
 /**
@@ -540,7 +550,7 @@ binstrrcaseless(const bstring s1, int pos, const bstring s2);
  * (inclusive). Returns the position of the found character or BSTR_ERR if
  * it is not found.
  */
-int
+BSTR_PUBLIC int
 bstrchrp(const bstring b, int c, int pos);
 
 /**
@@ -548,7 +558,7 @@ bstrchrp(const bstring b, int c, int pos);
  * (inclusive). Returns the position of the found character or BSTR_ERR if
  * it is not found.
  */
-int
+BSTR_PUBLIC int
 bstrrchrp(const bstring b, int c, int pos);
 
 /**
@@ -573,7 +583,7 @@ bstrrchrp(const bstring b, int c, int pos);
  * time of O(b0->slen + b1->slen). If such a position does not exist in b0,
  * then BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 binchr(const bstring b0, int pos, const bstring b1);
 
 /**
@@ -582,7 +592,7 @@ binchr(const bstring b0, int pos, const bstring b1);
  * of O(b0->slen + b1->slen). If such a position does not exist in b0,
  * then BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 binchrr(const bstring b0, int pos, const bstring b1);
 
 /**
@@ -591,7 +601,7 @@ binchrr(const bstring b0, int pos, const bstring b1);
  * an execution time of O(b0->slen + b1->slen). If such a position does
  * not exist in b0, then BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 bninchr(const bstring b0, int pos, const bstring b1);
 
 /**
@@ -600,7 +610,7 @@ bninchr(const bstring b0, int pos, const bstring b1);
  * execution time of O(b0->slen + b1->slen). If such a position does not
  * exist in b0, then BSTR_ERR is returned.
  */
-int
+BSTR_PUBLIC int
 bninchrr(const bstring b0, int pos, const bstring b1);
 
 /**
@@ -623,7 +633,7 @@ bninchrr(const bstring b0, int pos, const bstring b1);
  * and data movement is bounded above by character volume equivalent to size
  * of the output bstring.
  */
-int
+BSTR_PUBLIC int
 bfindreplace(bstring b, const bstring find, const bstring repl, int pos);
 
 /**
@@ -646,7 +656,7 @@ bfindreplace(bstring b, const bstring find, const bstring repl, int pos);
  * and data movement is bounded above by character volume equivalent to size
  * of the output bstring.
  */
-int
+BSTR_PUBLIC int
 bfindreplacecaseless(bstring b, const bstring find, const bstring repl,
 		     int pos);
 
@@ -679,7 +689,7 @@ struct bstrList {
  * recommended that the C++ public std::vector<CBString> be used, since its
  * semantics are usage are more standard.
  */
-struct bstrList *
+BSTR_PUBLIC struct bstrList *
 bstrListCreate(void);
 
 /**
@@ -687,21 +697,21 @@ bstrListCreate(void);
  * function. Note that this will destroy each bstring in the ->entry array
  * as well. See bstrListCreate() above for structure of struct bstrList.
  */
-int
+BSTR_PUBLIC int
 bstrListDestroy(struct bstrList *sl);
 
 /**
  * Ensure that there is memory for at least msz number of entries for the
  * list.
  */
-int
+BSTR_PUBLIC int
 bstrListAlloc(struct bstrList *sl, int msz);
 
 /**
  * Try to allocate the minimum amount of memory for the list to include at
  * least msz entries or sl->qty whichever is greater.
  */
-int
+BSTR_PUBLIC int
 bstrListAllocMin(struct bstrList *sl, int msz);
 
 /* String split and join functions */
@@ -714,7 +724,7 @@ bstrListAllocMin(struct bstrList *sl, int msz);
  * bstrListDestroy() should be called. See bstrListCreate() above for
  * structure of struct bstrList.
  */
-struct bstrList *
+BSTR_PUBLIC struct bstrList *
 bsplit(const bstring str, unsigned char splitChar);
 
 /**
@@ -723,7 +733,7 @@ bsplit(const bstring str, unsigned char splitChar);
  * bstrList containing a copy of str to be returned. See bstrListCreate()
  * above for structure of struct bstrList.
  */
-struct bstrList *
+BSTR_PUBLIC struct bstrList *
 bsplits(const bstring str, const bstring splitStr);
 
 /**
@@ -732,7 +742,7 @@ bsplits(const bstring str, const bstring splitStr);
  * containing a copy of str to be returned. See bstrListCreate() above for
  * structure of struct bstrList.
  */
-struct bstrList *
+BSTR_PUBLIC struct bstrList *
 bsplitstr(const bstring str, const bstring splitStr);
 
 /**
@@ -748,7 +758,7 @@ bsplitstr(const bstring str, const bstring splitStr);
  * is returned, otherwise a bstring with the correct result is returned.
  * See bstrListCreate() above for structure of struct bstrList.
  */
-bstring
+BSTR_PUBLIC bstring
 bjoin(const struct bstrList *bl, const bstring sep);
 
 /**
@@ -769,7 +779,7 @@ bjoin(const struct bstrList *bl, const bstring sep);
  * This function is provided as an incremental alternative to bsplit that is
  * abortable and which does not impose additional memory allocation.
  */
-int
+BSTR_PUBLIC int
 bsplitcb(const bstring str,
 	 unsigned char splitChar,
 	 int pos,
@@ -795,7 +805,7 @@ bsplitcb(const bstring str,
  * This function is provided as an incremental alternative to bsplits that
  * is abortable and which does not impose additional memory allocation.
  */
-int
+BSTR_PUBLIC int
 bsplitscb(const bstring str,
 	  const bstring splitStr,
 	  int pos,
@@ -821,7 +831,7 @@ bsplitscb(const bstring str,
  * This function is provided as an incremental alternative to bsplitstr that
  * is abortable and which does not impose additional memory allocation.
  */
-int
+BSTR_PUBLIC int
 bsplitstrcb(const bstring str,
 	    const bstring splitStr,
 	    int pos,
@@ -835,21 +845,21 @@ bsplitstrcb(const bstring str,
  * This function operates in-place. This function will return with BSTR_ERR
  * if b is NULL or of length 0, otherwise BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 bpattern(bstring b, int len);
 
 /**
  * Convert contents of bstring to upper case. This function will return with
  * BSTR_ERR if b is NULL or of length 0, otherwise BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 btoupper(bstring b);
 
 /**
  * Convert contents of bstring to lower case. This function will return with
  * BSTR_ERR if b is NULL or of length 0, otherwise BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 btolower(bstring b);
 
 /**
@@ -857,7 +867,7 @@ btolower(bstring b);
  * function will return with BSTR_ERR if b is NULL or of length 0, otherwise
  * BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 bltrimws(bstring b);
 
 /**
@@ -865,7 +875,7 @@ bltrimws(bstring b);
  * function will return with BSTR_ERR if b is NULL or of length 0, otherwise
  * BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 brtrimws(bstring b);
 
 /**
@@ -873,7 +883,7 @@ brtrimws(bstring b);
  * will return with BSTR_ERR if b is NULL or of length 0, otherwise BSTR_OK
  * is returned.
  */
-int
+BSTR_PUBLIC int
 btrimws(bstring b);
 
 /* *printf format functions */
@@ -894,7 +904,7 @@ btrimws(bstring b);
  * b0 = bformat ("Hello, %s", b1->data);
  * \endcode
  */
-bstring
+BSTR_PUBLIC bstring
 bformat(const char *fmt, ...);
 
 /**
@@ -915,7 +925,7 @@ bformat(const char *fmt, ...);
  * bformata (b0 = bfromcstr ("Hello"), ", %s", b1->data);
  * \endcode
  */
-int
+BSTR_PUBLIC int
 bformata(bstring b, const char *fmt, ...);
 
 /**
@@ -935,7 +945,7 @@ bformata(bstring b, const char *fmt, ...);
  * bassignformat (b0 = bfromcstr ("Hello"), ", %s", b1->data);
  * \endcode
  */
-int
+BSTR_PUBLIC int
 bassignformat(bstring b, const char *fmt, ...);
 
 /**
@@ -962,7 +972,7 @@ bassignformat(bstring b, const char *fmt, ...);
  * are fairly atypical. The real purpose for this function is to provide an
  * engine for the bvformata macro.
  */
-int
+BSTR_PUBLIC int
 bvcformata(bstring b, int count, const char *fmt, va_list arglist);
 
 /**
@@ -1051,7 +1061,8 @@ typedef size_t (*bNread)(void *buff, size_t elsize, size_t nelem, void *parm);
  * not assumed to terminate the stream in addition to the terminator
  * character. This is consistent with the semantics of fgets.)
  */
-bstring bgets(bNgetc getcPtr, void *parm, char terminator);
+BSTR_PUBLIC bstring
+bgets(bNgetc getcPtr, void *parm, char terminator);
 
 /**
  * Read an entire stream into a bstring, verbatum. The readPtr function
@@ -1065,7 +1076,7 @@ bstring bgets(bNgetc getcPtr, void *parm, char terminator);
  * compatibility issue if "fread" is used directly; see the ANSI issues
  * section below.
  */
-bstring
+BSTR_PUBLIC bstring
 bread(bNread readPtr, void *parm);
 
 /**
@@ -1075,7 +1086,7 @@ bread(bNread readPtr, void *parm);
  * from getcPtr. Otherwise BSTR_ERR is returned on error, and 0 is returned
  * in other normal cases.
  */
-int
+BSTR_PUBLIC int
 bgetsa(bstring b, bNgetc getcPtr, void *parm, char terminator);
 
 /**
@@ -1085,7 +1096,7 @@ bgetsa(bstring b, bNgetc getcPtr, void *parm, char terminator);
  * from getcPtr. Otherwise BSTR_ERR is returned on error, and 0 is returned
  * in other normal cases.
  */
-int
+BSTR_PUBLIC int
 bassigngets(bstring b, bNgetc getcPtr, void *parm, char terminator);
 
 /**
@@ -1093,7 +1104,7 @@ bassigngets(bstring b, bNgetc getcPtr, void *parm, char terminator);
  * like bread, except that it appends it results to the bstring b.
  * BSTR_ERR is returned on error, otherwise 0 is returned.
  */
-int
+BSTR_PUBLIC int
 breada(bstring b, bNread readPtr, void *parm);
 
 /* Stream functions */
@@ -1103,7 +1114,7 @@ breada(bstring b, bNread readPtr, void *parm);
  * pointer and stream handle) into an open bStream suitable for the bstring
  * library streaming functions.
  */
-struct bStream *
+BSTR_PUBLIC struct bStream *
 bsopen(bNread readPtr, void *parm);
 
 /**
@@ -1111,7 +1122,7 @@ bsopen(bNread readPtr, void *parm);
  * originally used to open the given stream. If s is NULL or detectably
  * invalid, NULL will be returned.
  */
-void *
+BSTR_PUBLIC void *
 bsclose(struct bStream *s);
 
 /**
@@ -1120,7 +1131,7 @@ bsclose(struct bStream *s);
  * NULL or sz is negative, the function will return with BSTR_ERR, otherwise
  * this function returns with the previous length.
  */
-int
+BSTR_PUBLIC int
 bsbufflength(struct bStream *s, int sz);
 
 /**
@@ -1133,7 +1144,7 @@ bsbufflength(struct bStream *s, int sz);
  * will be retained for subsequent read operations. When reading from high
  * speed streams, this function can perform significantly faster than bgets.
  */
-int
+BSTR_PUBLIC int
 bsreadln(bstring b, struct bStream *s, char terminator);
 
 /**
@@ -1143,7 +1154,7 @@ bsreadln(bstring b, struct bStream *s, char terminator);
  * stream that are not returned, but will be retained for subsequent read
  * operations.
  */
-int
+BSTR_PUBLIC int
 bsreadlns(bstring r, struct bStream *s, const bstring term);
 
 /**
@@ -1153,7 +1164,7 @@ bsreadlns(bstring r, struct bStream *s, const bstring term);
  * stream is at the end of the file BSTR_ERR is returned, otherwise BSTR_OK
  * is returned.
  */
-int
+BSTR_PUBLIC int
 bsread(bstring b, struct bStream *s, int n);
 
 /**
@@ -1166,7 +1177,7 @@ bsread(bstring b, struct bStream *s, int n);
  * will be retained for subsequent read operations. When reading from high
  * speed streams, this function can perform significantly faster than bgets.
  */
-int
+BSTR_PUBLIC int
 bsreadlna(bstring b, struct bStream *s, char terminator);
 
 /**
@@ -1177,7 +1188,7 @@ bsreadlna(bstring b, struct bStream *s, char terminator);
  * additional characters from the core stream that are not returned, but
  * will be retained for subsequent read operations.
  */
-int
+BSTR_PUBLIC int
 bsreadlnsa(bstring r, struct bStream *s, const bstring term);
 
 /**
@@ -1187,7 +1198,7 @@ bsreadlnsa(bstring r, struct bStream *s, const bstring term);
  * from the core stream. When the stream is at the end of the file BSTR_ERR
  * is returned, otherwise BSTR_OK is returned.
  */
-int
+BSTR_PUBLIC int
 bsreada(bstring b, struct bStream *s, int n);
 
 /**
@@ -1195,7 +1206,7 @@ bsreada(bstring b, struct bStream *s, int n);
  * characters will be read prior to those that actually come from the core
  * stream.
  */
-int
+BSTR_PUBLIC int
 bsunread(struct bStream *s, const bstring b);
 
 /**
@@ -1203,7 +1214,7 @@ bsunread(struct bStream *s, const bstring b);
  * will be read prior to reads from the core stream, and append it to the
  * the parameter r.
  */
-int
+BSTR_PUBLIC int
 bspeek(bstring r, const struct bStream *s);
 
 /**
@@ -1229,10 +1240,11 @@ bspeek(bstring r, const struct bStream *s);
  * based functions this is abortable and does not impose additional memory
  * allocation.
  */
-int bssplitscb(struct bStream *s,
-	       const bstring splitStr,
-	       int(*cb)(void *parm, int ofs, const bstring entry),
-	       void *parm);
+BSTR_PUBLIC int
+bssplitscb(struct bStream *s,
+	   const bstring splitStr,
+	   int(*cb)(void *parm, int ofs, const bstring entry),
+	   void *parm);
 
 /**
  * Iterate the set of disjoint sequential substrings over the stream s
@@ -1257,7 +1269,7 @@ int bssplitscb(struct bStream *s,
  * based functions this is abortable and does not impose additional memory
  * allocation.
  */
-int
+BSTR_PUBLIC int
 bssplitstrcb(struct bStream *s,
 	     const bstring splitStr,
 	     int(*cb)(void *parm, int ofs, const bstring entry),
@@ -1278,7 +1290,7 @@ bssplitstrcb(struct bStream *s,
  * reached the "EOF" and an attempt has been made to read past the end of
  * the bStream.
  */
-int
+BSTR_PUBLIC int
 bseof(const struct bStream *s);
 
 /* Accessor macros */
@@ -1290,7 +1302,7 @@ bseof(const struct bStream *s);
 #define blengthe(b, e) \
 	(((b) == (void *)0 || (b)->slen < 0) \
 		? (int)(e) \
-	 	: ((b)->slen))
+		: ((b)->slen))
 
 /**
  * Returns the length of the bstring. If the bstring is NULL, the length
@@ -1306,7 +1318,7 @@ bseof(const struct bStream *s);
 #define bdataofse(b, o, e) \
 	(((b) == (void *)0 || (b)->data == (void *)0) \
 		? (char *)(e) \
-	 	: ((char *)(b)->data) + (o))
+		: ((char *)(b)->data) + (o))
 
 /**
  * Returns the char * data portion of the bstring b offset by ofs. If b is

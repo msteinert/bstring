@@ -39,22 +39,19 @@ AC_LANG([C++])
 
 # Enable C compiler flags
 AX_TRY_CFLAGS([-Wall], [AX_CFLAGS([-Wall])])
+AX_TRY_CFLAGS([-Wextra], [AX_CFLAGS([-Wextra])])
+AX_TRY_CFLAGS([-pedantic], [AX_CFLAGS([-pedantic])])
 AX_TRY_CFLAGS([-Wstrict-prototypes], [AX_CFLAGS([-Wstrict-prototypes])])
 AX_TRY_CFLAGS([-Wcast-align], [AX_CFLAGS([-Wcast-align])])
 AX_TRY_CFLAGS([-fno-common], [AX_CFLAGS([-fno-common])])
+AX_TRY_CFLAGS([-fvisibility=hidden], [AX_CFLAGS([-fvisibility=hidden])])
 
 # Enable C++ compiler flags
 AX_TRY_CXXFLAGS([-Wall], [AX_CXXFLAGS([-Wall])])
+AX_TRY_CXXFLAGS([-Wextra], [AX_CXXFLAGS([-Wextra])])
+AX_TRY_CXXFLAGS([-pedantic], [AX_CXXFLAGS([-pedantic])])
 AX_TRY_CXXFLAGS([-Wnon-virtual-dtor], [AX_CXXFLAGS([-Wnon-virtual-dtor])])
 AX_TRY_CXXFLAGS([-fno-rtti], [AX_CXXFLAGS([-fno-rtti])])
-
-# Pkg-config versioning
-series_major=major_version
-series_minor=minor_version
-series=$series_major.$series_minor
-AC_SUBST([series_major])
-AC_SUBST([series_minor])
-AC_SUBST([series])
 
 # Libtool versioning
 LT_CURRENT=m4_eval(100 * minor_version + micro_version - interface_age)
