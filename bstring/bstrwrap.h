@@ -40,7 +40,7 @@
 #ifndef BSTRWRAP_H
 #define BSTRWRAP_H
 
-/////////////////// Configuration defines //////////////////////////////
+// Configuration defines
 
 // WATCOM C/C++ has broken STL and std::iostream support.  If you have
 // ported over STLport, then you can #define BSTRLIB_CAN_USE_STL to use
@@ -72,8 +72,6 @@
 #if !defined (BSTRLIB_THROWS_EXCEPTIONS) && !defined (BSTRLIB_DOESNT_THROW_EXCEPTIONS)
 #define BSTRLIB_THROWS_EXCEPTIONS
 #endif
-
-////////////////////////////////////////////////////////////////////////
 
 #include <stdlib.h>
 #include "bstrlib.h"
