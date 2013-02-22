@@ -58,10 +58,16 @@
  *
  *  Return with a string of the last n characters of b.
  */
-bstring bTail (bstring b, int n) {
-	if (b == NULL || n < 0 || (b->mlen < b->slen && b->mlen > 0)) return NULL;
-	if (n >= b->slen) return bstrcpy (b);
-	return bmidstr (b, b->slen - n, n);
+bstring
+bTail(bstring b, int n)
+{
+	if (b == NULL || n < 0 || (b->mlen < b->slen && b->mlen > 0)) {
+		return NULL;
+	}
+	if (n >= b->slen) {
+		return bstrcpy(b);
+	}
+	return bmidstr(b, b->slen - n, n);
 }
 
 /*  bstring bHead (bstring b, int n)
@@ -615,25 +621,37 @@ int i, llen, otlen, ret, c0, c1, c2, c3, d0, d1, d2, d3;
 #pragma warning(disable:4204)
 #endif
 
-bstring bUuDecodeEx (const bstring src, int * badlines) {
-struct tagbstring t;
-struct bStream * s;
-struct bStream * d;
-bstring b;
+bstring
+bUuDecodeEx(const bstring src, int *badlines)
+{
+	struct bStream *s, *d;
+	struct tagbstring t;
+	bstring b;
 
-	if (!src) return NULL;
-	t = *src; /* Short lifetime alias to header of src */
-	s = bsFromBstrRef (&t); /* t is undefined after this */
-	if (!s) return NULL;
-	d = bsUuDecode (s, badlines);
-	b = bfromcstralloc (256, "");
-	if (NULL == b || 0 > bsread (b, d, INT_MAX)) {
-		bdestroy (b);
-		bsclose (d);
-		bsclose (s);
+	if (!src) {
 		return NULL;
 	}
+	t = *src; /* Short lifetime alias to header of src */
+	s = bsFromBstrRef(&t); /* t is undefined after this */
+	if (!s) {
+		return NULL;
+	}
+	d = bsUuDecode(s, badlines);
+	b = bfromcstralloc(256, "");
+	if (NULL == b) {
+		goto error;
+	}
+	if (0 > bsread(b, d, INT_MAX)) {
+		goto error;
+	}
+exit:
+	bsclose(d);
+	bsclose(s);
 	return b;
+error:
+	bdestroy(b);
+	b = NULL;
+	goto exit;
 }
 
 struct bsUuCtx {
@@ -1161,16 +1179,23 @@ int oldSz;
  *  originally used to open the given stream.  Note that even if the stream
  *  is at EOF it still needs to be closed with a call to bwsClose.
  */
-void * bwsClose (struct bwriteStream * ws) {
-void * parm;
-	if (NULL == ws || NULL == ws->buff || 0 >= ws->minBuffSz ||
-	    NULL == ws->writeFn) return NULL;
-	bwsWriteFlush (ws);
-	parm = ws->parm;
-	ws->parm = NULL;
-	ws->minBuffSz = -1;
-	ws->writeFn = NULL;
-	bstrFree (ws->buff);
-	free (ws);
+void *
+bwsClose(struct bwriteStream * ws)
+{
+	void *parm = NULL;
+	if (ws) {
+		if (NULL == ws->buff ||
+		    0 >= ws->minBuffSz ||
+		    NULL == ws->writeFn) {
+			return NULL;
+		}
+		bwsWriteFlush(ws);
+		parm = ws->parm;
+		ws->parm = NULL;
+		ws->minBuffSz = -1;
+		ws->writeFn = NULL;
+		bstrFree(ws->buff);
+		free(ws);
+	}
 	return parm;
 }

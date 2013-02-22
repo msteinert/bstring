@@ -1302,6 +1302,7 @@ bstring b1;
 		if (res) printf (" = \"%s\"", res);
 		printf (")\n");
 	}
+	bdestroy(b1);
 	return ret;
 }
 

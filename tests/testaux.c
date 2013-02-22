@@ -56,25 +56,24 @@ size_t i;
 	return (int) i;
 }
 
-int test0 (void) {
-struct bwriteStream * ws;
-bstring s;
-int ret = 0;
-
-	printf ("TEST: struct bwriteStream functions.\n");
-
-	ws = bwsOpen ((bNwrite) tWrite, (s = bfromcstr ("")));
-	bwsBuffLength (ws, 8);
-	ret += 8 != bwsBuffLength (ws, 0);
-	bwsWriteBlk (ws, bsStaticBlkParms ("Hello "));
-	ret += 0 == biseqcstr (s, "");
-	bwsWriteBlk (ws, bsStaticBlkParms ("World\n"));
-	ret += 0 == biseqcstr (s, "Hello Wo");
-	ret += s != bwsClose (ws);
-	ret += 0 == biseqcstr (s, "Hello World\n");
-
-	printf ("\t# failures: %d\n", ret);
-
+int
+test0(void)
+{
+	struct bwriteStream * ws;
+	bstring s;
+	int ret = 0;
+	printf("TEST: struct bwriteStream functions.\n");
+	ws = bwsOpen((bNwrite) tWrite, (s = bfromcstr ("")));
+	bwsBuffLength(ws, 8);
+	ret += 8 != bwsBuffLength(ws, 0);
+	bwsWriteBlk(ws, bsStaticBlkParms("Hello "));
+	ret += 0 == biseqcstr(s, "");
+	bwsWriteBlk(ws, bsStaticBlkParms("World\n"));
+	ret += 0 == biseqcstr(s, "Hello Wo");
+	ret += s != bwsClose(ws);
+	ret += 0 == biseqcstr(s, "Hello World\n");
+	printf("\t# failures: %d\n", ret);
+	bdestroy(s);
 	return ret;
 }
 
@@ -375,34 +374,25 @@ int c;
 	return c;
 }
 
-int test13 (void) {
-struct tagbstring t0 = bsStatic ("Random String");
-struct vfgetc vctx;
-bstring b;
-int ret = 0;
-int i;
-
-	printf ("TEST: bSecureInput, bSecureDestroy.\n");
-
-	for (i=0; i < 1000; i++) {
+int
+test13(void)
+{
+	struct tagbstring t0 = bsStatic("Random String");
+	struct vfgetc vctx;
+	bstring b;
+	int ret = 0;
+	int i;
+	printf("TEST: bSecureInput, bSecureDestroy.\n");
+	for (i = 0; i < 1000; i++) {
 		unsigned char * h;
-
 		vctx.ofs = 0;
 		vctx.base = &t0;
-
-		b = bSecureInput (INT_MAX, '\n', (bNgetc) test13_fgetc, &vctx);
-		ret += 1 != biseq (b, &t0);
+		b = bSecureInput(INT_MAX, '\n', (bNgetc)test13_fgetc, &vctx);
+		ret += 1 != biseq(b, &t0);
 		h = b->data;
-		bSecureDestroy (b);
-
-		/* WARNING! Technically unsound code follows: */
-		ret += (0 == memcmp (h, t0.data, t0.slen));
-
-		if (ret) break;
+		bSecureDestroy(b);
 	}
-
-	printf ("\t# failures: %d\n", ret);
-
+	printf("\t# failures: %d\n", ret);
 	return ret;
 }
 

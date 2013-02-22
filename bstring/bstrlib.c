@@ -1987,16 +1987,22 @@ int bseof (const struct bStream * s) {
  *  Close the bStream, and return the handle to the stream that was originally
  *  used to open the given stream.
  */
-void * bsclose (struct bStream * s) {
-void * parm;
-	if (s == NULL) return NULL;
+void *
+bsclose(struct bStream *s)
+{
+	void *parm;
+	if (s == NULL) {
+		return NULL;
+	}
 	s->readFnPtr = NULL;
-	if (s->buff) bdestroy (s->buff);
+	if (s->buff) {
+		bdestroy(s->buff);
+	}
 	s->buff = NULL;
 	parm = s->parm;
 	s->parm = NULL;
 	s->isEOF = 1;
-	bstr__free (s);
+	bstr__free(s);
 	return parm;
 }
 
@@ -2274,43 +2280,51 @@ int bspeek (bstring r, const struct bStream * s) {
  *  concatenating them with the sep string in between.  If there is an error
  *  NULL is returned, otherwise a bstring with the correct result is returned.
  */
-bstring bjoin (const struct bstrList * bl, const bstring sep) {
-bstring b;
-int i, c, v;
-
-	if (bl == NULL || bl->qty < 0) return NULL;
-	if (sep != NULL && (sep->slen < 0 || sep->data == NULL)) return NULL;
-
+bstring
+bjoin(const struct bstrList *bl, const bstring sep)
+{
+	bstring b;
+	int i, c, v;
+	if (bl == NULL || bl->qty < 0) {
+		return NULL;
+	}
+	if (sep != NULL && (sep->slen < 0 || sep->data == NULL)) {
+		return NULL;
+	}
 	for (i = 0, c = 1; i < bl->qty; i++) {
 		v = bl->entry[i]->slen;
-		if (v < 0) return NULL;	/* Invalid input */
+		if (v < 0) {
+			return NULL; /* Invalid input */
+		}
 		c += v;
-		if (c < 0) return NULL;	/* Wrap around ?? */
+		if (c < 0) {
+			return NULL; /* Wrap around ?? */
+		}
 	}
-
-	if (sep != NULL) c += (bl->qty - 1) * sep->slen;
-
-	b = (bstring) bstr__alloc (sizeof (struct tagbstring));
-	if (NULL == b) return NULL; /* Out of memory */
-	b->data = (unsigned char *) bstr__alloc (c);
+	if (sep != NULL) {
+		c += (bl->qty - 1) * sep->slen;
+	}
+	b = (bstring)bstr__alloc(sizeof(struct tagbstring));
+	if (NULL == b) {
+		return NULL; /* Out of memory */
+	}
+	b->data = (unsigned char *)bstr__alloc(c);
 	if (b->data == NULL) {
 		bstr__free (b);
 		return NULL;
 	}
-
 	b->mlen = c;
 	b->slen = c-1;
-
 	for (i = 0, c = 0; i < bl->qty; i++) {
 		if (i > 0 && sep != NULL) {
-			bstr__memcpy (b->data + c, sep->data, sep->slen);
+			bstr__memcpy(b->data + c, sep->data, sep->slen);
 			c += sep->slen;
 		}
 		v = bl->entry[i]->slen;
-		bstr__memcpy (b->data + c, bl->entry[i]->data, v);
+		bstr__memcpy(b->data + c, bl->entry[i]->data, v);
 		c += v;
 	}
-	b->data[c] = (unsigned char) '\0';
+	b->data[c] = (unsigned char)'\0';
 	return b;
 }
 
