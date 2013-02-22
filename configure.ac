@@ -19,7 +19,7 @@ m4_define([interface_age], [0])
 AC_INIT([Bstring], [major_version.minor_version.micro_version],
     [https://github.com/msteinert/bstring/issues], [bstring])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE([1.9 foreign -Wno-portability])
+AM_INIT_AUTOMAKE([1.9 subdir-objects foreign -Wno-portability])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CONFIG_SRCDIR([bstring/bstrlib.h])
 
@@ -77,11 +77,9 @@ AS_IF([test "x$enable_memory_debug" = "xyes"],
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	bsafe.pc
-	bstring/Makefile
 	bstring.pc
 	bstring++.pc
 	Makefile
-	tests/Makefile
 ])
 AC_OUTPUT
 AC_MSG_RESULT([

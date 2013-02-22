@@ -14,6 +14,8 @@
 *.swo
 *.swp
 *~
+.deps
+.dirstamp
 .libs
 /config.h.in
 Doxyfile
@@ -42,6 +44,7 @@ missing
 stamp-h1
 tags
 test-driver
+test-suite.log
 tests/bstest
 tests/bstest.log
 tests/bstest.trs
