@@ -1,7 +1,7 @@
 #                                        -*- Automake -*-
 # Process this file with automake to produce Makefile.in.
 
-INCLUDES = -I$(top_srcdir)/bstring
+AM_CPPFLAGS = -I$(top_srcdir)/bstring
 
 check_PROGRAMS = bstest cpptest test testaux
 TESTS = $(check_PROGRAMS)
