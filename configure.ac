@@ -27,15 +27,21 @@ AC_CONFIG_SRCDIR([bstring/bstrlib.h])
 LT_PREREQ([2.2])
 LT_INIT
 
-# Checks for programs
+# Check the build environment
 m4_ifdef([AC_PROG_CC_C99], [AC_PROG_CC_C99],
 	[AC_MSG_WARN([Attemping c99 workaround due to old version of autoconf])
 	AC_PROG_CC
 	AX_TRY_CFLAGS([-std=c99], [AX_CFLAGS([-std=c99])])])
-
-# Checks for programs
 AC_PROG_CXX
 AC_LANG([C++])
+AX_PROG_VALGRIND
+AX_PROG_GDB
+
+# OS-specific settings
+AS_CASE([$host_os],
+[darwin*],
+	[VALGRIND_FLAGS="--dsymutil=yes"]
+)
 
 # Enable C compiler flags
 AX_TRY_CFLAGS([-Wall], [AX_CFLAGS([-Wall])])

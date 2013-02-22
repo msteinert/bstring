@@ -37,12 +37,12 @@ pkginclude_HEADERS = \
 	bstring/bstrlib.h \
 	bstring/bstrwrap.h
 
+TESTS = $(check_PROGRAMS)
 check_PROGRAMS = \
 	tests/bstest \
 	tests/cpptest \
 	tests/test \
 	tests/testaux
-TESTS = $(check_PROGRAMS)
 
 tests_bstest_SOURCES = tests/bstest.c
 tests_bstest_CPPFLAGS = -I$(top_srcdir)/bstring
@@ -60,7 +60,12 @@ tests_testaux_SOURCES = tests/testaux.c
 tests_testaux_CPPFLAGS = -I$(top_srcdir)/bstring
 tests_testaux_LDADD = bstring/libbstring.la
 
-# install pkg-config scripts
+# Test targets
+include $(top_srcdir)/m4/valgrind.mk
+include $(top_srcdir)/m4/check.mk
+include $(top_srcdir)/m4/gdb.mk
+
+# Install pkg-config scripts
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = \
 	bsafe.pc \
