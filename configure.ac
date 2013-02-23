@@ -17,7 +17,7 @@ m4_define([interface_age], [0])
 
 # Initialize autoconf & automake
 AC_INIT([Bstring], [major_version.minor_version.micro_version],
-    [https://github.com/msteinert/bstring/issues], [bstring])
+        [https://github.com/msteinert/bstring/issues], [bstring])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.9 subdir-objects foreign -Wno-portability])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
@@ -29,9 +29,9 @@ LT_INIT
 
 # Check the build environment
 m4_ifdef([AC_PROG_CC_C99], [AC_PROG_CC_C99],
-	[AC_MSG_WARN([Attemping c99 workaround due to old version of autoconf])
-	AC_PROG_CC
-	AX_TRY_CFLAGS([-std=c99], [AX_CFLAGS([-std=c99])])])
+	 [AC_MSG_WARN([Attemping c99 workaround due to old version of autoconf])
+	  AC_PROG_CC
+	  AX_TRY_CFLAGS([-std=c99], [AX_CFLAGS([-std=c99])])])
 AC_PROG_CXX
 AC_LANG([C++])
 AX_PROG_VALGRIND
@@ -69,14 +69,23 @@ AC_SUBST([LT_AGE])
 
 # Debug option
 AC_ARG_ENABLE([memory-debug],
-	[AS_HELP_STRING([--enable-memory-debug],
-		[enable memory debugging features @<:@default=no@:>@])],,
-	[enable_memory_debug=no])
+	      [AS_HELP_STRING([--enable-memory-debug],
+	      [enable memory debugging features @<:@default=no@:>@])],,
+	      [enable_memory_debug=no])
 AS_IF([test "x$enable_memory_debug" = "xyes"],
-	[AC_DEFINE([BSTRLIB_MEMORY_DEBUG], [1],
-		[Define to 1 to enable memory debugging])])
+      [AC_DEFINE([BSTRLIB_MEMORY_DEBUG], [1],
+		 [Define to 1 to enable memory debugging])])
 
-# Output files
+# Setup unit-test environment
+PKG_CHECK_MODULES([CHECK], [check >= 0.9],
+		  [have_check=yes
+		   VALGRIND_ENVIRONMENT="CK_FORK=no"
+		   GDB_ENVIRONMENT="CK_FORK=no"],
+		  [have_check=no
+		   AC_MSG_WARN([Unable to run unit tests.])])
+AM_CONDITIONAL([HAVE_CHECK], [test "x$have_check" = "xyes"])
+
+# Output files & status
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	bsafe.pc

@@ -3,6 +3,8 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
+AM_CFLAGS = -I$(top_srcdir)/bstring
+
 lib_LTLIBRARIES = \
 	bstring/libbsafe.la \
 	bstring/libbstring.la \
@@ -38,27 +40,30 @@ pkginclude_HEADERS = \
 	bstring/bstrwrap.h
 
 TESTS = $(check_PROGRAMS)
-check_PROGRAMS = \
-	tests/bstest \
-	tests/cpptest \
-	tests/test \
-	tests/testaux
+check_PROGRAMS =
 
+if HAVE_CHECK
+check_PROGRAMS += tests/testaux
+tests_testaux_SOURCES = tests/testaux.c
+tests_testaux_CFLAGS = -I$(top_srcdir)/bstring $(CHECK_FLAGS)
+tests_testaux_LDFLAGS = $(CHECK_LIBS)
+tests_testaux_LDADD = bstring/libbstring.la
+endif
+
+check_PROGRAMS += tests/bstest
 tests_bstest_SOURCES = tests/bstest.c
-tests_bstest_CPPFLAGS = -I$(top_srcdir)/bstring
+tests_bstest_CFLAGS = -I$(top_srcdir)/bstring
 tests_bstest_LDADD = bstring/libbstring.la
 
+check_PROGRAMS += tests/cpptest
 tests_cpptest_SOURCES = tests/cpptest.cpp
-tests_cpptest_CPPFLAGS = -I$(top_srcdir)/bstring
+tests_cpptest_CXXFLAGS = -I$(top_srcdir)/bstring
 tests_cpptest_LDADD = bstring/libbstring++.la bstring/libbstring.la
 
+check_PROGRAMS += tests/test
 tests_test_SOURCES = tests/test.cpp
-tests_test_CPPFLAGS = -I$(top_srcdir)/bstring
+tests_test_CXXFLAGS = -I$(top_srcdir)/bstring
 tests_test_LDADD = bstring/libbstring++.la bstring/libbstring.la
-
-tests_testaux_SOURCES = tests/testaux.c
-tests_testaux_CPPFLAGS = -I$(top_srcdir)/bstring
-tests_testaux_LDADD = bstring/libbstring.la
 
 # Test targets
 include $(top_srcdir)/m4/valgrind.mk

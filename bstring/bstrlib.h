@@ -1465,14 +1465,13 @@ bseof(const struct bStream *s);
  * the bstring is NULL, then '\0' is returned.
  */
 #define bchar(b, p) \
-	bchare((b),(p), '\0')
+	bchare((b), (p), '\0')
 
 /* Static constant string initialization macro */
 
 /**
  */
-#define bsStaticMlen(q, m) \
-	{ (m), (int)sizeof(q) - 1, (unsigned char *)("" q "") }
+#define bsStaticMlen(q, m) { (m), (int)sizeof(q) - 1, (unsigned char *)("" q "") }
 
 #if defined (_MSC_VER)
 /* There are many versions of MSVC which emit __LINE__ as a non-constant. */

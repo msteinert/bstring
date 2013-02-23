@@ -35,14 +35,15 @@
  * This file is the core module for implementing the bstring functions.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined (_MSC_VER)
 /* These warnings from MSVC++ are totally pointless. */
 # define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 #include <stdio.h>
 #include <stddef.h>
 #include <stdarg.h>
@@ -763,51 +764,54 @@ int i, len;
 	return BSTR_OK;
 }
 
-/*
- * int brtrimws (bstring b)
- *
- * Delete whitespace contiguous from the right end of the string.
- */
-int brtrimws (bstring b) {
-int i;
-
-	if (b == NULL || b->data == NULL || b->mlen < b->slen ||
-	    b->slen < 0 || b->mlen <= 0) return BSTR_ERR;
-
+int
+brtrimws(bstring b)
+{
+	int i;
+	if (b == NULL ||
+	    b->data == NULL ||
+	    b->mlen < b->slen ||
+	    b->slen < 0 ||
+	    b->mlen <= 0) {
+		return BSTR_ERR;
+	}
 	for (i = b->slen - 1; i >= 0; i--) {
-		if (!wspace (b->data[i])) {
-			if (b->mlen > i) b->data[i+1] = (unsigned char) '\0';
+		if (!wspace(b->data[i])) {
+			if (b->mlen > i) {
+				b->data[i + 1] = (unsigned char)'\0';
+			}
 			b->slen = i + 1;
 			return BSTR_OK;
 		}
 	}
-
-	b->data[0] = (unsigned char) '\0';
+	b->data[0] = (unsigned char)'\0';
 	b->slen = 0;
 	return BSTR_OK;
 }
 
-/*
- * int btrimws (bstring b)
- *
- * Delete whitespace contiguous from both ends of the string.
- */
-int btrimws (bstring b) {
-int i, j;
-
-	if (b == NULL || b->data == NULL || b->mlen < b->slen ||
-	    b->slen < 0 || b->mlen <= 0) return BSTR_ERR;
-
+int
+btrimws(bstring b)
+{
+	int i, j;
+	if (b == NULL ||
+	    b->data == NULL ||
+	    b->mlen < b->slen ||
+	    b->slen < 0 ||
+	    b->mlen <= 0) {
+		return BSTR_ERR;
+	}
 	for (i = b->slen - 1; i >= 0; i--) {
-		if (!wspace (b->data[i])) {
-			if (b->mlen > i) b->data[i+1] = (unsigned char) '\0';
+		if (!wspace(b->data[i])) {
+			if (b->mlen > i) {
+				b->data[i + 1] = (unsigned char)'\0';
+			}
 			b->slen = i + 1;
-			for (j = 0; wspace (b->data[j]); j++) {}
-			return bdelete (b, 0, j);
+			for (j = 0; wspace (b->data[j]); j++)
+				;
+			return bdelete(b, 0, j);
 		}
 	}
-
-	b->data[0] = (unsigned char) '\0';
+	b->data[0] = (unsigned char)'\0';
 	b->slen = 0;
 	return BSTR_OK;
 }

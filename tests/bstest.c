@@ -32,8 +32,6 @@
  */
 
 /*
- * bstest.c
- *
  * This file is the C unit test for Bstrlib.
  */
 
@@ -3424,63 +3422,58 @@ int ret = 0;
 	return ret;
 }
 
-int main (int argc, char * argv[]) {
-int ret = 0;
-
-	argc = argc;
-	argv = argv;
-
-	printf ("Direct case testing of bstring core functions\n");
-
-	ret += test0 ();
-	ret += test1 ();
-	ret += test2 ();
-	ret += test3 ();
-	ret += test4 ();
-	ret += test5 ();
-	ret += test6 ();
-	ret += test7 ();
-	ret += test8 ();
-	ret += test9 ();
-	ret += test10 ();
-	ret += test11 ();
-	ret += test12 ();
-	ret += test13 ();
-	ret += test14 ();
-	ret += test15 ();
-	ret += test16 ();
-	ret += test17 ();
-	ret += test18 ();
-	ret += test19 ();
-	ret += test20 ();
-	ret += test21 ();
-	ret += test22 ();
-	ret += test23 ();
-	ret += test24 ();
-	ret += test25 ();
-	ret += test26 ();
-	ret += test27 ();
-	ret += test28 ();
-	ret += test29 ();
-	ret += test30 ();
-	ret += test31 ();
-	ret += test32 ();
-	ret += test33 ();
-	ret += test34 ();
-	ret += test35 ();
-	ret += test36 ();
-	ret += test37 ();
-	ret += test38 ();
-	ret += test39 ();
-	ret += test40 ();
-	ret += test41 ();
-	ret += test42 ();
-	ret += test43 ();
-	ret += test44 ();
-	ret += test45 ();
-	ret += test46 ();
-
-	printf ("# test failures: %d\n", ret);
-
+int
+main(void)
+{
+	int ret = 0;
+	printf("Direct case testing of bstring core functions\n");
+	ret += test0();
+	ret += test1();
+	ret += test2();
+	ret += test3();
+	ret += test4();
+	ret += test5();
+	ret += test6();
+	ret += test7();
+	ret += test8();
+	ret += test9();
+	ret += test10();
+	ret += test11();
+	ret += test12();
+	ret += test13();
+	ret += test14();
+	ret += test15();
+	ret += test16();
+	ret += test17();
+	ret += test18();
+	ret += test19();
+	ret += test20();
+	ret += test21();
+	ret += test22();
+	ret += test23();
+	ret += test24();
+	ret += test25();
+	ret += test26();
+	ret += test27();
+	ret += test28();
+	ret += test29();
+	ret += test30();
+	ret += test31();
+	ret += test32();
+	ret += test33();
+	ret += test34();
+	ret += test35();
+	ret += test36();
+	ret += test37();
+	ret += test38();
+	ret += test39();
+	ret += test40();
+	ret += test41();
+	ret += test42();
+	ret += test43();
+	ret += test44();
+	ret += test45();
+	ret += test46();
+	printf("# test failures: %d\n", ret);
 	return ret ? EXIT_FAILURE : EXIT_SUCCESS;
 }
