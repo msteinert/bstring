@@ -32,8 +32,6 @@ m4_ifdef([AC_PROG_CC_C99], [AC_PROG_CC_C99],
 	 [AC_MSG_WARN([Attemping c99 workaround due to old version of autoconf])
 	  AC_PROG_CC
 	  AX_TRY_CFLAGS([-std=c99], [AX_CFLAGS([-std=c99])])])
-AC_PROG_CXX
-AC_LANG([C++])
 AX_PROG_VALGRIND
 AX_PROG_GDB
 
@@ -51,13 +49,6 @@ AX_TRY_CFLAGS([-Wstrict-prototypes], [AX_CFLAGS([-Wstrict-prototypes])])
 AX_TRY_CFLAGS([-Wcast-align], [AX_CFLAGS([-Wcast-align])])
 AX_TRY_CFLAGS([-fno-common], [AX_CFLAGS([-fno-common])])
 AX_TRY_CFLAGS([-fvisibility=hidden], [AX_CFLAGS([-fvisibility=hidden])])
-
-# Enable C++ compiler flags
-AX_TRY_CXXFLAGS([-Wall], [AX_CXXFLAGS([-Wall])])
-AX_TRY_CXXFLAGS([-Wextra], [AX_CXXFLAGS([-Wextra])])
-AX_TRY_CXXFLAGS([-pedantic], [AX_CXXFLAGS([-pedantic])])
-AX_TRY_CXXFLAGS([-Wnon-virtual-dtor], [AX_CXXFLAGS([-Wnon-virtual-dtor])])
-AX_TRY_CXXFLAGS([-fno-rtti], [AX_CXXFLAGS([-fno-rtti])])
 
 # Libtool versioning
 LT_CURRENT=m4_eval(100 * minor_version + micro_version - interface_age)
@@ -81,7 +72,6 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	bsafe.pc
 	bstring.pc
-	bstring++.pc
 	Makefile
 ])
 AC_OUTPUT

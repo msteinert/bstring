@@ -12,9 +12,7 @@ information.
 Comparison With Microsoft's CString Class
 -----------------------------------------
 
-Although developed independently, CBStrings have very similar functionality to
-Microsoft's CString class. The bstring library has significant advantages over
-CString:
+The bstring library has significant advantages over CString:
 
 1. Bstrlib is a C-library as well as a C++ library (using the C++ wrapper)
 
@@ -81,10 +79,8 @@ as those for regular expressions) without difficulty.
 
 Microsoft used a very non-ANSI conforming trick in its implementation to
 allow `printf` to use the `%s` specifier to output a `CString` correctly. This
-can be convenient, but it is inherently not portable. `CBString` requires an
-explicit cast, while bstring requires the data member to be dereferenced.
-Microsoft's own documentation recommends casting, instead of relying on this
-feature.
+can be convenient, but it is inherently not portable. Microsoft's own
+documentation recommends casting, instead of relying on this feature.
 
 Comparison With C++'s `std::string`
 -----------------------------------
@@ -359,9 +355,6 @@ wxString Class
 --------------
 
 This is the string class used in the [wxWindows project](http://www.wxwindows.org/manuals/2.4.2/wx368.htm#wxstring).
-
-This C++ library is similar to CBString. However, it is littered with
-trivial functions (`IsAscii`, `UpperCase`, `RemoveLast` etc.)
 
 1. There is no C implementation.
 

@@ -4,7 +4,7 @@ Better String library
 by Paul Hsieh
 
 The bstring library is an attempt to provide improved string processing
-functionality to the C and C++ language. At the heart of the bstring library
+functionality to the C language. At the heart of the bstring library
 (Bstrlib for short) is the management of `bstring`s which are a significant
 improvement over `'\0'` terminated char buffers.
 
@@ -96,13 +96,9 @@ characters has been acquired. So the minimal check for correctness is:
 Bstrings returned by bstring functions can be assumed to be either NULL or
 satisfy the above property. (When bstrings are only readable, the `mlen >=
 slen` restriction is not required; this is discussed later in this section.)
-A bstring itself is just a pointer to a struct tagbstring:
+A bstring itself is just a pointer to a `struct tagbstring`:
 
-    typedef struct tagbstring * bstring;
-
-Note that use of the prefix "tag" in struct tagbstring is required to work
-around the inconsistency between C and C++'s struct namespace usage. This
-definition is also considered exposed.
+    typedef struct tagbstring *bstring;
 
 Bstrlib basically manages bstrings allocated as a header and an associated
 data-buffer. Since the implementation is exposed, they can also be constructed
@@ -289,10 +285,9 @@ One of the basic important premises for Bstrlib is to not to increase the
 propogation of undefined situations from parameters that are otherwise legal
 in of themselves. In particular, except for extremely marginal cases, usages
 of bstrings that use the bstring library functions alone cannot lead to any
-undefined action. But due to C/C++ language and library limitations, there
-is no way to define a non-trivial library that is completely without
-undefined operations. All such possible undefined operations are described
-below:
+undefined action. But due to C language and library limitations, there is no
+way to define a non-trivial library that is completely without undefined
+operations. All such possible undefined operations are described below:
 
 1. Bstrings or struct tagbstrings that are not explicitely initialized cannot
    be passed as a parameter to any bstring function.
@@ -336,106 +331,6 @@ to the bstring API can significantly reduce the risk of runtime errors (in
 practice it should eliminate them) related to string manipulation due to
 undefined action.
 
-C++ Wrapper
------------
-
-A C++ wrapper has been created to enable bstring functionality for C++ in the
-most natural (for C++ programers) way possible. The mandate for the C++
-wrapper is different from the base C bstring library. Since the C++ language
-has far more abstracting capabilities, the CBString structure is considered
-fully abstracted, i.e., hand generated CBStrings are not supported (though
-conversion from a struct tagbstring is allowed) and all detectable errors are
-manifest as thrown exceptions.
-
-* The C++ class definitions are all under the namespace `Bstrlib`.
-
-* Erroneous accesses results in an exception being thrown. The exception
-  parameter is of type "struct CBStringException" which is derived from
-  std::exception if STL is used. A verbose description of the error message
-  can be obtained from the `what` method.
-
-* CBString is a C++ structure derived from a `struct tagbstring`. An address
-  of a CBString cast to a bstring must not be passed to `bdestroy`. The
-  bstring C API has been made C++ safe and can be used directly in a C++
-  project.
-
-* It includes constructors which can take a `char`, `'\0'` terminated char
-  `buffer`, `tagbstring`, `(char, repeat-value)`, a length delimited buffer or
-  a CBStringList to initialize it.
-
-* Concatenation is performed with the `+` and `+=` operators. Comparisons are
-  done with the `==`, `!=`, `<`, `>`, `<=` and `>=` operators. Note that `==`i
-  and `!=` use the `biseq` call, while `<`, `>`, `<=` and `>=` use `bstrcmp`.
-
-* CBString's can be directly cast to const character buffers.
-
-* CBString's can be directly cast to `double`, `float`, `int` or `unsigned
-  int` so long as the CBString are decimal representations of those types
-  (otherwise an exception will be thrown). Converting the other way should be
-  done with the `format` and `formata` method(s).
-
-* CBString contains the `length`, `character` and `[]` accessor methods. The
-  `character` and `[]` accessors are aliases of each other. If the bounds for
-  the string are exceeded, an exception is thrown. To avoid the overhead for
-  this check, first cast the CBString to a `const char *` and use `[]` to
-  dereference the array as normal. Note that the character and `[]` accessor
-  methods allows both reading and writing of individual characters.
-
-* The methods `format`, `formata`, `find`, `reversefind`, `findcaseless`,
-  `reversefindcaseless`, `midstr`, `insert`, `insertchrs`, `replace`,
-  `findreplace`, `findreplacecaseless`, `remove`, `findchr`, `nfindchr`,
-  `alloc`, `toupper`, `tolower`, `gets`, `read` are analogous to the functions
-  that can be found in the C API.
-
-* The `caselessEqual` and `caselessCmp` methods are analogous to
-  `biseqcaseless` and `bstricmp` functions respectively.
-
-* Note that just like the `bformat` function, the `format` and `formata`
-  methods do not automatically cast CBStrings into `char *` strings for
-  `"%s"`-type substitutions:
-
-    CBString w("world");
-    CBString h("Hello");
-    CBString hw;
-    /* The casts are necessary */
-    hw.format("%s, %s", (const char *)h, (const char *)w);
-
-* The methods `trunc` and `repeat` have been added instead of using pattern.
-
-* `ltrim`, `rtrim` and `trim` methods have been added. These remove characters
-  from a given character string set (defaulting to the whitespace characters)
-  from either the left, right or both ends of the CBString, respectively.
-
-* The method `setsubstr` is also analogous in functionality to `bsetstr`,
-  except that it cannot be passed NULL. Instead the method fill and the
-  fill-style constructor have been supplied to enable this functionality.
-
-* The `writeprotect`, `writeallow` and `iswriteprotected` methods are
-  analogous to the `bwriteprotect`, `bwriteallow` and `biswriteprotected`
-  macros in the C API. Write protection semantics in CBString are stronger
-  than with the C API in that indexed character assignment is checked for
-  write protection. However, unlike with the C API, a write protected
-  CBString can be destroyed by the destructor.
-
-* CBStream is a C++ structure which wraps a struct bStream (its not derived
-  from it, since destruction is slightly different). It is constructed by
-  passing in a bNread function pointer and a stream parameter cast to
-  `void *`. This structure includes methods for detecting eof, setting the
-  buffer length, reading the whole stream or reading entries line by line or
-  block by block, an unread function, and a peek function.
-
-* If the STL is available, the CBStringList structure is derived from a vector
-  of CBString with various split methods. The split method has been overloaded
-  to accept either a character or CBString as the second parameter (when the
-  split parameter is a CBString any character in that CBString is used as a
-  seperator). The `splitstr` method takes a CBString as a substring seperator.
-  Joins can be performed via a CBString constructor which takes a
-  CBStringList as a parameter, or just using the `CBString::join` method.
-
-* If there is proper support for `std::iostreams`, then the `>>` and `<<`
-  operators and the `getline` function have been added (with semantics the
-  same as those for `std::string`).
-
 Multithreading
 --------------
 
@@ -467,17 +362,16 @@ or "coding conventions."
 Problems Not Solved
 -------------------
 
-Bstrlib is written for the C and C++ languages, which have inherent weaknesses
-that cannot be easily solved:
+Bstrlib is written for the C languages, which have inherent weaknesses that
+cannot be easily solved:
 
 1. Memory leaks: Forgetting to call `bdestroy` on a bstring that is about to
    be unreferenced, just as forgetting to call free on a heap buffer that is
    about to be dereferenced. Though bstrlib itself is leak free.
 
 2. Read before write usage: In C, declaring an auto bstring does not
-   automatically fill it with legal/valid contents. This problem has been
-   somewhat mitigated in C++. (The `bstrDeclare` and `bstrFree` macros from
-   bstraux can be used to help mitigate this problem.)
+   automatically fill it with legal/valid contents. (The `bstrDeclare` and
+   `bstrFree` macros from bstraux can be used to help mitigate this problem).
 
 Other problems not addressed:
 
@@ -492,70 +386,6 @@ Other problems not addressed:
 > Note: except for spotty support of wide characters, the default C standard
   library does not address any of these problems either.
 
-Configurable Compilation Options
---------------------------------
-
-All configuration options are meant solely for the purpose of compiler
-compatibility. Configuration options are not meant to change the semantics
-or capabilities of the library, except where it is unavoidable.
-
-Since some C++ compilers don't include the Standard Template Library and some
-have the options of disabling exception handling, a number of macros can be
-used to conditionally compile support for each of this:
-
-* `BSTRLIB_CAN_USE_STL`
-
-    Defining this will enable the used of the Standard Template Library.
-    Defining `BSTRLIB_CAN_USE_STL` overrides the `BSTRLIB_CANNOT_USE_STL`
-    macro.
-
-* `BSTRLIB_CANNOT_USE_STL`
-
-    Defining this will disable the use of the Standard Template Library.
-    Defining `BSTRLIB_CAN_USE_STL` overrides the `BSTRLIB_CANNOT_USE_STL`
-    macro.
-
-* `BSTRLIB_CAN_USE_IOSTREAM`
-
-    Defining this will enable the used of streams from `std::iostream`.
-    Defining `BSTRLIB_CAN_USE_IOSTREAM` overrides the
-    `BSTRLIB_CANNOT_USE_IOSTREAM` macro.
-
-* `BSTRLIB_CANNOT_USE_IOSTREAM`
-
-    Defining this will disable the use of streams from `std::iostream`.
-    Defining `BSTRLIB_CAN_USE_IOSTREAM` overrides the
-    `BSTRLIB_CANNOT_USE_IOSTREAM` macro.
-
-* `BSTRLIB_THROWS_EXCEPTIONS`
-
-    Defining this will enable the exception handling within bstring. Defining
-    `BSTRLIB_THROWS_EXCEPTIONS` overrides the
-    `BSTRLIB_DOESNT_THROWS_EXCEPTIONS` macro.
-
-* `BSTRLIB_DOESNT_THROW_EXCEPTIONS`
-
-    Defining this will disable the exception handling within bstring. Defining
-    `BSTRLIB_THROWS_EXCEPTIONS` overrides the `BSTRLIB_DOESNT_THROW_EXCEPTIONS`
-    macro.
-
-> Note: these macros must be defined consistently throughout all modules that
-  use CBStrings including bstrwrap.cpp.
-
-Semantic Compilation Options
-----------------------------
-
-Bstrlib comes with very few compilation options for changing the semantics of
-of the library. These are described below.
-
-* `BSTRLIB_DONT_USE_VIRTUAL_DESTRUCTOR`, --disable-virtual-destructor
-
-    Defining this will make the CBString destructor non-virtual.
-
-> Note: These macros must be defined consistently throughout all modules
-  that use bstrings or CBStrings including bstrlib.c, bstraux.c and
-  bstrwrap.cpp.
-
 The `bstest` Module
 -------------------
 
@@ -569,51 +399,39 @@ also tests for aliasing support. Passing bstest is a necessary but not a
 sufficient condition for ensuring the correctness of the bstrlib module.
 
 
-The `test` module
------------------
-
-The test module is just a unit test for the bstrwrap module. For correct
-implementations of bstrwrap, it should execute with 0 failures being
-reported. This test should be utilized if modifications/customizations to
-bstrwrap have been performed. It tests each core bstrwrap function with
-CBStrings write protected or not and ensures that the expected semantics are
-observed (including expected exceptions.)  Note that exceptions cannot be
-disabled to run this test. Passing test is a necessary but not a sufficient
-condition for ensuring the correctness of the bstrwrap module.
-
-Using Bstring and CBString as an Alternative to the C Library
--------------------------------------------------------------
+Using Bstring an Alternative to the C Library
+---------------------------------------------
 
 First let us give a table of C library functions and the alternative bstring
-functions and CBString methods that should be used instead of them.
+functions that should be used instead of them.
 
 <table>
-<tr><th>C-library</th>  <th>Bstring Alternative</th>    <th>CBString alternative</th></tr>
-<tr><td>gets</td>       <td>bgets</td>                  <td>::gets</td></tr>
-<tr><td>strcpy</td>     <td>bassign</td>                <td>= operator</td></tr>
-<tr><td>strncpy</td>    <td>bassignmidstr</td>          <td>::midstr</td></tr>
-<tr><td>strcat</td>     <td>bconcat</td>                <td>+= operator</td></tr>
-<tr><td>strncat</td>    <td>bconcat+btrunc</td>         <td>+= operator + ::trunc</td></tr>
-<tr><td>strtok</td>     <td>bsplit,bsplits</td>         <td>::split</td></tr>
-<tr><td>sprintf</td>    <td>bformat</td>                <td>::format</td></tr>
-<tr><td>snprintf</td>   <td>bformat + btrunc</td>       <td>::format + ::trunc</td></tr>
-<tr><td>vsprintf</td>   <td>bvformata</td>              <td>bvformata</td></tr>
-<tr><td>vsnprintf</td>  <td>bvformata + btrunc</td>     <td>bvformata+btrunc</td></tr>
-<tr><td>vfprintf</td>   <td>bvformata + fputs</td>      <td>use bvformata + fputs</td></tr>
-<tr><td>strcmp</td>     <td>biseq, bstrcmp</td>         <td>comparison operators</td></tr>
-<tr><td>strncmp</td>    <td>bstrncmp, memcmp</td>       <td>bstrncmp, memcmp</td></tr>
-<tr><td>strlen</td>     <td>slen, blength</td>          <td>::length</td></tr>
-<tr><td>strdup</td>     <td>bstrcpy</td>                <td>constructor</td></tr>
-<tr><td>strset</td>     <td>bpattern</td>               <td>::fill</td></tr>
-<tr><td>strstr</td>     <td>binstr</td>                 <td>::find</td></tr>
-<tr><td>strpbrk</td>    <td>binchr</td>                 <td>::findchr</td></tr>
-<tr><td>stricmp</td>    <td>bstricmp</td>               <td>cast & use bstricmp</td></tr>
-<tr><td>strlwr</td>     <td>btolower</td>               <td>cast & use btolower</td></tr>
-<tr><td>strupr</td>     <td>btoupper</td>               <td>cast & use btoupper</td></tr>
-<tr><td>strrev</td>     <td>bReverse (aux module)</td>  <td>cast & use bReverse</td></tr>
-<tr><td>strchr</td>     <td>bstrchr</td>                <td>cast & use bstrchr</td></tr>
-<tr><td>strspnp</td>    <td>usestrspn</td>              <td>usestrspn</td></tr>
-<tr><td>ungetc</td>     <td>bsunread</td>               <td>bsunread</td></tr>
+<tr><th>C-library</th>  <th>Bstring Alternative</th>
+<tr><td>gets</td>       <td>bgets</td>
+<tr><td>strcpy</td>     <td>bassign</td>
+<tr><td>strncpy</td>    <td>bassignmidstr</td>
+<tr><td>strcat</td>     <td>bconcat</td>
+<tr><td>strncat</td>    <td>bconcat+btrunc</td>
+<tr><td>strtok</td>     <td>bsplit,bsplits</td>
+<tr><td>sprintf</td>    <td>bformat</td>
+<tr><td>snprintf</td>   <td>bformat + btrunc</td>
+<tr><td>vsprintf</td>   <td>bvformata</td>
+<tr><td>vsnprintf</td>  <td>bvformata + btrunc</td>
+<tr><td>vfprintf</td>   <td>bvformata + fputs</td>
+<tr><td>strcmp</td>     <td>biseq, bstrcmp</td>
+<tr><td>strncmp</td>    <td>bstrncmp, memcmp</td>
+<tr><td>strlen</td>     <td>slen, blength</td>
+<tr><td>strdup</td>     <td>bstrcpy</td>
+<tr><td>strset</td>     <td>bpattern</td>
+<tr><td>strstr</td>     <td>binstr</td>
+<tr><td>strpbrk</td>    <td>binchr</td>
+<tr><td>stricmp</td>    <td>bstricmp</td>
+<tr><td>strlwr</td>     <td>btolower</td>
+<tr><td>strupr</td>     <td>btoupper</td>
+<tr><td>strrev</td>     <td>bReverse (aux module)</td>
+<tr><td>strchr</td>     <td>bstrchr</td>
+<tr><td>strspnp</td>    <td>usestrspn</td>
+<tr><td>ungetc</td>     <td>bsunread</td>
 </table>
 
 The top 9 C functions listed here are troublesome in that they impose memory
@@ -628,35 +446,34 @@ The substitute for `strncat` can be performed with higher performance by
 using the `blk2tbstr` macro to create a presized second operand for `bconcat`.
 
 <table>
-<tr><th>C-library</th>  <th>Bstring alternative</th>    <th>CBString alternative</th></tr>
-<tr><td>strspn</td>     <td>strspn acceptable</td>      <td>strspn acceptable</td></tr>
-<tr><td>strcspn</td>    <td>strcspn acceptable</td>     <td>strcspn acceptable</td></tr>
-<tr><td>strnset</td>    <td>strnset acceptable</td>     <td>strnset acceptable</td></tr>
-<tr><td>printf</td>     <td>printf acceptable</td>      <td>printf acceptable</td></tr>
-<tr><td>puts</td>       <td>puts acceptable</td>        <td>puts acceptable</td></tr>
-<tr><td>fprintf</td>    <td>fprintf acceptable</td>     <td>fprintf acceptable</td></tr>
-<tr><td>fputs</td>      <td>fputs acceptable</td>       <td>fputs acceptable</td></tr>
-<tr><td>memcmp</td>     <td>memcmp acceptable</td>      <td>memcmp acceptable</td></tr>
+<tr><th>C-library</th>  <th>Bstring alternative</th>
+<tr><td>strspn</td>     <td>strspn acceptable</td>
+<tr><td>strcspn</td>    <td>strcspn acceptable</td>
+<tr><td>strnset</td>    <td>strnset acceptable</td>
+<tr><td>printf</td>     <td>printf acceptable</td>
+<tr><td>puts</td>       <td>puts acceptable</td>
+<tr><td>fprintf</td>    <td>fprintf acceptable</td>
+<tr><td>fputs</td>      <td>fputs acceptable</td>
+<tr><td>memcmp</td>     <td>memcmp acceptable</td>
 </table>
 
-Remember that Bstring (and CBstring) functions will automatically append the
-`'\0'` character to the character data buffer. So by simply accessing the data
+Remember that Bstring functions will automatically append the `'\0'`
+character to the character data buffer. So by simply accessing the data
 buffer directly, ordinary C string library functions can be called directly
 on them. Note that `bstrcmp` is not the same as `memcmp` in exactly the same
 way that `strcmp` is not the same as `memcmp`.
 
 <table>
-<tr><th>C-library</th>  <th>Bstring alternative</th>    <th>CBString alternative</th><tr>
-<tr><td>fread</td>      <td>balloc + fread</td>         <td>::alloc + fread</td></tr>
-<tr><td>fgets</td>      <td>balloc + fgets</td>         <td>::alloc + fgets</td></tr>
+<tr><th>C-library</th>  <th>Bstring alternative</th>
+<tr><td>fread</td>      <td>balloc + fread</td>
+<tr><td>fgets</td>      <td>balloc + fgets</td>
 </table>
 
 These are odd ones because of the exact sizing of the buffer required. The
-Bstring and `CBString` alternatives requires that the buffers are forced to
-hold at least the prescribed length, then just use `fread` or `fgets` directly.
-However, typically the automatic memory management of Bstring and `CBstring`
-will make the typical use of `fgets` and `fread` to read specifically sized
-strings unnecessary.
+Bstring alternatives requires that the buffers are forced to hold at least
+the prescribed length, then just use `fread` or `fgets` directly.  However,
+typically the automatic memory management of Bstring will make the typical
+use of `fgets` and `fread` to read specifically sized strings unnecessary.
 
 Implementation Choices
 ----------------------
@@ -768,60 +585,6 @@ Where high performance `char *` based algorithms are available, Bstrlib can
 still leverage them by accessing the `data` field on bstrings. So
 realistically Bstrlib can never be significantly slower than any standard
 `'\0'` terminated `char *` based solutions.
-
-### Performance of the C++ Interface
-
-The C++ interface has been designed with an emphasis on abstraction and safety
-first. However, since it is substantially a wrapper for the C bstring
-functions, for longer strings the performance comments described in the
-"Performance of the C interface" section above still apply. Note that the
-`CBString *` type can be directly cast to a `bstring` type, and passed as
-parameters to the C functions (though a `CBString` must never be passed to
-`bdestroy`).
-
-Probably the most controversial choice is performing full bounds checking on
-the `[]` operator. This decision was made because:
-
-1. The fast alternative of not bounds checking is still available by first
-   casting the CBString to a `const char *` buffer or to a `struct tagbstring`
-   then derefencing `data`.
-
-2. The lack of bounds checking is seen as one of the main weaknesses of C/C++
-   versus other languages. This check being done on every access leads tox
-   individual character extraction being actually slower than other languages
-   in this one respect (other language's compilers will normally dedicate more
-   resources on hoisting or removing bounds checking as necessary) but
-   otherwise bring C++ up to the level of other languages in terms of
-   functionality.
-
-It is common for other C++ libraries to leverage the abstractions provided by
-C++ to use reference counting and "copy on write" policies. While these
-techniques can speed up some scenarios, they impose a problem with respect to
-thread safety. Bstrings and CBStrings can be properly protected with
-"per-object" mutexes, meaning that two bstrlib calls can be made and execute
-simultaneously, so long as the bstrings and CBstrings are distinct. With a
-reference count and alias before copy on write policy, global mutexes are
-required that prevent multiple calls to the strings library to execute
-simultaneously regardless of whether or not the strings represent the same
-string.
-
-One interesting trade off in CBString is that the default constructor is not
-trivial, i.e., it always prepares a ready to use memory buffer. The purpose
-is to ensure that there is a uniform internal composition for any functioning
-CBString that is compatible with bstrings. It also means that the other
-methods in the class are not forced to perform "late initialization" checks.
-In the end it means that construction of CBStrings are slower than other
-comparable C++ string classes. Initial testing, however, indicates that
-CBString outperforms `std::string` and MFC's `CString`, for example, in all
-other operations. So to work around this weakness it is recommended that
-`CBString` declarations be pushed outside of inner loops.
-
-Practical testing indicates that with the exception of the caveats given
-above (constructors and safe index character manipulations) the C++ API for
-Bstrlib generally outperforms popular standard C++ string classes. Amongst
-the standard libraries and compilers, the quality of concatenation operations
-varies wildly and very little care has gone into search functions. Bstrlib
-dominates those performance benchmarks.
 
 ### Memory Management
 
@@ -960,29 +723,6 @@ is generally not useful for any purpose.)  Using `bstrcpy` is the correct way
 of creating duplicate instances. The ampersand operator is useful for
 creating aliases to `struct tagbstrings` (remembering that constructed struct
 tagbstrings are not writable by default).
-
-CBStrings use complete copy semantics for the equal operator, and thus do not
-have these sorts of issues.
-
-### Integration With Microsoft's Visual Studio Debugger
-
-Microsoft's Visual Studio debugger has a capability of customizable mouse
-float over data type descriptions. This is accomplished by editting the
-AUTOEXP.DAT file to include the following:
-
-    ; new for CBString
-    tagbstring =slen=<slen> mlen=<mlen> <data,st>
-    Bstrlib::CBStringList =count=<size()>
-
-In Visual C++ 6.0 this file is located in the directory:
-
-    C:\Program Files\Microsoft Visual Studio\Common\MSDev98\Bin
-
-and in Visual Studio .NET 2003 its located here:
-
-    C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\Packages\Debugger
-
-This will improve the ability of debugging with Bstrlib under Visual Studio.
 
 Security
 --------

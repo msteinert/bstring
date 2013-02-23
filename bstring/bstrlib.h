@@ -213,11 +213,6 @@ bassignblk(bstring a, const void *s, int len);
  * protected. A bstring which is write protected cannot be destroyed via the
  * bdestroy call. Any attempt to do so will result in no action taken, and
  * BSTR_ERR will be returned.
- *
- * Note to C++ users: Passing in a CBString cast to a bstring will lead to
- * undefined behavior (free will be called on the header, rather than the
- * CBString destructor.)  Instead just use the ordinary C++ language
- * facilities to dealloc a CBString.
  */
 BSTR_PUBLIC int
 bdestroy(bstring b);
@@ -743,9 +738,7 @@ struct bstrList {
  * full management of struct bstrList in an abstracted way. The reason for
  * this is because aliasing semantics of the list are best left to the user
  * of this function, and performance varies wildly depending on the
- * assumptions made. For a complete list of bstring data type it is
- * recommended that the C++ public std::vector<CBString> be used, since its
- * semantics are usage are more standard.
+ * assumptions made.
  */
 BSTR_PUBLIC struct bstrList *
 bstrListCreate(void);
@@ -1722,9 +1715,6 @@ do { \
  * lead to BSTR_ERR being returned.
  *
  * Note: bstrings which are write protected cannot be destroyed via bdestroy.
- *
- * Note to C++ users: Setting a CBString as write protected will not prevent
- * it from being destroyed by the destructor.
  */
 #define bwriteprotect(t) \
 do { \

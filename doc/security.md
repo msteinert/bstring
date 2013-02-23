@@ -102,16 +102,16 @@ specification.
 ### Information leaking
 
 In bstraux.h, using the semantically equivalent macros `bSecureDestroy` and
-`bSecureWriteProtect` in place of `bdestroy` and `bwriteprotect` respectively
-will ensure that stale data does not linger in the heap's free space after
-strings have been released back to memory. Created bstrings or CBStrings
-are not linked to anything external to themselves, and thus cannot expose
+`bSecureWriteProtect` in place of `bdestroy` and `bwriteprotect`
+respectively will ensure that stale data does not linger in the heap's free
+space after strings have been released back to memory. Created bstrings are
+not linked to anything external to themselves, and thus cannot expose
 deterministic data leaking. If a bstring is resized, the preimage may exist
 as a copy that is released to the heap. Thus for sensitive data, the bstring
-should be sufficiently presized before manipulated so that it is not resized.
-`bSecureInput` has been supplied in bstraux.c, which can be used to obtain
-input securely without any risk of leaving any part of the input image in the
-heap except for the allocated bstring that is returned.
+should be sufficiently presized before manipulated so that it is not
+resized.  `bSecureInput` has been supplied in bstraux.c, which can be used
+to obtain input securely without any risk of leaving any part of the input
+image in the heap except for the allocated bstring that is returned.
 
 ### Memory leaking
 
@@ -126,8 +126,8 @@ garbage collection mechanisms such as the Boehm garbage collector.
 
 Bstrlib does not present any built-in encryption mechanism. However, it
 supports full binary contents in its data buffers, so any standard block
-based encryption mechanism can make direct use of bstrings/CBStrings for
-buffer management.
+based encryption mechanism can make direct use of bstrings for buffer
+management.
 
 ### Double freeing
 
