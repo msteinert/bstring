@@ -347,18 +347,6 @@ exclusive access lock as should be expected (or if the bstring is read-only,
 which can be enforced by bstring write protection) for any sort of shared
 object in a multithreaded environment.
 
-Bsafe Module
-------------
-
-For convenience, a bsafe module has been included. The idea is that if this
-module is included, inadvertant usage of the most dangerous C functions will
-be overridden and lead to an immediate run time abort. Of course, it should
-be emphasized that usage of this module is completely optional. The intention
-is essentially to provide an option for creating project safety rules which
-can be enforced mechanically rather than socially. This is useful for larger,
-or open development projects where its more difficult to enforce social rules
-or "coding conventions."
-
 Problems Not Solved
 -------------------
 
@@ -841,19 +829,6 @@ linking with file I/O functions.
 2. The `bstrlib` function names are not unique in the first 6 characters. This
    is only an issue for older C compiler environments which do not store more
    than 6 characters for function names.
-
-3. The `bsafe` module defines macros and function names which are part of the
-   C library. This simply overrides the definition as expected on all
-   platforms tested, however it is not sanctioned by the ANSI standard. This
-   module is clearly optional and should be omitted on platforms which
-   disallow its undefined semantics.
-
-   In practice the real issue is that some compilers in some modes of
-   operation can/will inline these standard library functions on a module by
-   module basis as they appear in each. The linker will thus have no
-   opportunity to override the implementation of these functions for those
-   cases. This can lead to inconsistent behaviour of the bsafe module on
-   different platforms and compilers.
 
 Examples
 --------

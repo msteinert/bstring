@@ -5,17 +5,8 @@ ACLOCAL_AMFLAGS = -I m4
 
 AM_CFLAGS = -I$(top_srcdir)/bstring
 
-lib_LTLIBRARIES = \
-	bstring/libbsafe.la \
-	bstring/libbstring.la
+lib_LTLIBRARIES = bstring/libbstring.la
 
-# BSafe library
-bstring_libbsafe_la_SOURCES = \
-	bstring/bsafe.c
-bstring_libbsafe_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
-
-# C library
 bstring_libbstring_la_SOURCES = \
 	bstring/bstraux.c \
 	bstring/bstrlib.c
@@ -25,7 +16,6 @@ bstring_libbstring_la_LDFLAGS = \
 # install development headers
 pkgincludedir = $(includedir)/bstring
 pkginclude_HEADERS = \
-	bstring/bsafe.h \
 	bstring/bstraux.h \
 	bstring/bstrlib.h
 
@@ -53,5 +43,4 @@ include $(top_srcdir)/m4/gdb.mk
 # Install pkg-config scripts
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = \
-	bsafe.pc \
 	bstring.pc

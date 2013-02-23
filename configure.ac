@@ -70,7 +70,6 @@ AM_CONDITIONAL([HAVE_CHECK], [test "x$have_check" = "xyes"])
 # Output files & status
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
-	bsafe.pc
 	bstring.pc
 	Makefile
 ])

@@ -75,16 +75,6 @@ version of the compiler gains support. (For example, its possible to rig
 up STLport to provide STL support for WATCOM C/C++, so `-DBSTRLIB_CAN_USE_STL`
 can be passed in as a compiler option.)
 
-### The Bsafe Module and Reserved Words
-
-The bsafe module is in gross violation of the ANSI/ISO C standard in the
-sense that it redefines what could be implemented as reserved words on a
-given compiler. The typical problem is that a compiler may inline some of the
-functions and thus not be properly overridden by the definitions in the bsafe
-module. It is also possible that a compiler may prohibit the redefinitions in
-the bsafe module. Compiler specific action will be required to deal with
-these situations.
-
 Platform Specific Files
 -----------------------
 
@@ -97,26 +87,12 @@ Testing a port
 
 To test that a port compiles correctly do the following:
 
-1. Build a sample project that includes the bstrlib, bstraux, bstrwrap, and
-   bsafe modules.
+1. Run `make check` and ensure that no errors are reported.
 
-2. Compile bstest against the bstrlib module.
+2. Run `make memcheck` and ensure that no errors are reported.
 
-3. Run bstest and ensure that 0 errors are reported.
-
-4. Compile test against the bstrlib and bstrwrap modules.
-
-5. Run test and ensure that 0 errors are reported.
-
-6. Compile each of the examples (except for the "re" example, which may be
-   complicated and is not a real test of bstrlib and except for the mfcbench
-   example which is Windows specific.)
-
-7. Run each of the examples.
-
-The builds must have 0 errors, and should have the absolute minimum number of
-warnings (in most cases can be reduced to 0). The result of execution should
-be essentially identical on each platform.
+The builds must have zero errors and zero warnings. The result of execution
+should be essentially identical on each platform.
 
 Performance
 -----------
