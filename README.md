@@ -552,11 +552,6 @@ of the library. These are described below.
 
     Defining this will make the CBString destructor non-virtual.
 
-* `BSTRLIB_MEMORY_DEBUG`, --enable-memory-debug
-
-    Defining this will cause the bstrlib modules bstrlib.c and bstrwrap.cpp
-    to invoke a `#include "memdbg.h"`. memdbg.h has to be supplied by the user.
-
 > Note: These macros must be defined consistently throughout all modules
   that use bstrings or CBStrings including bstrlib.c, bstraux.c and
   bstrwrap.cpp.
@@ -968,49 +963,6 @@ tagbstrings are not writable by default).
 
 CBStrings use complete copy semantics for the equal operator, and thus do not
 have these sorts of issues.
-
-### Debugging
-
-Bstrings have a simple, exposed definition and construction, and the library
-itself is open source. So most debugging is going to be fairly straight-
-forward. But the memory for bstrings come from the heap, which can often be
-corrupted indirectly, and it might not be obvious what has happened even from
-direct examination of the contents in a debugger or a core dump. There are
-some tools such as Valgrind, Purify, Insure++ and Electric Fence which can
-help solve such problems, however another common approach is to directly
-instrument the calls to `malloc`, `realloc`, `calloc`, `free`, `memcpy`,
-`memmove` and/or other calls by overriding them with macro definitions.
-
-Although the user could hack on the Bstrlib sources directly as necessary to
-perform such an instrumentation, Bstrlib comes with a built-in mechanism for
-doing this. By defining the macro `BSTRLIB_MEMORY_DEBUG` and providing an
-include file named memdbg.h this will force the core Bstrlib modules to
-attempt to include this file. In such a file, macros could be defined which
-overrides Bstrlib's useage of the C standard library.
-
-Rather than calling `malloc`, `realloc`, `free`, `memcpy` or `memmove`
-directly, Bstrlib emits the macros `bstr__alloc`, `bstr__realloc`,
-`bstr__free`, `bstr__memcpy` and `bstr__memmove` in their place respectively.
-By default these macros are simply assigned to be equivalent to their
-corresponding C standard library function call. However, if they are given
-earlier macro definitions (via the back door include file) they will not be
-given their default definition. In this way Bstrlib's interface to the
-standard library can be changed but without having to directly redefine or
-link standard library symbols (both of which are not strictly ANSI C
-compliant).
-
-An example definition might include:
-
-    #define bstr__alloc(sz) X_malloc ((sz), __LINE__, __FILE__)
-
-which might help contextualize heap entries in a debugging environment.
-
-The `NULL` parameter and sanity checking of bstrings is part of the Bstrlib
-API, and thus Bstrlib itself does not present any different modes which would
-correspond to "Debug" or "Release" modes. Bstrlib always contains mechanisms
-which one might think of as debugging features, but retains the performance
-and small memory footprint one would normally associate with release mode
-code.
 
 ### Integration With Microsoft's Visual Studio Debugger
 

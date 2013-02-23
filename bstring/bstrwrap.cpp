@@ -51,42 +51,6 @@
 #include <limits.h>
 #include "bstrwrap.h"
 
-#if defined(MEMORY_DEBUG) || defined(BSTRLIB_MEMORY_DEBUG)
-#include "memdbg.h"
-#endif
-
-#ifndef bstr__alloc
-#define bstr__alloc(x) malloc (x)
-#endif
-
-#ifndef bstr__free
-#define bstr__free(p) free (p)
-#endif
-
-#ifndef bstr__realloc
-#define bstr__realloc(p,x) realloc ((p), (x))
-#endif
-
-#ifndef bstr__memcpy
-#define bstr__memcpy(d,s,l) memcpy ((d), (s), (l))
-#endif
-
-#ifndef bstr__memmove
-#define bstr__memmove(d,s,l) memmove ((d), (s), (l))
-#endif
-
-#ifndef bstr__memset
-#define bstr__memset(d,c,l) memset ((d), (c), (l))
-#endif
-
-#ifndef bstr__memcmp
-#define bstr__memcmp(d,c,l) memcmp ((d), (c), (l))
-#endif
-
-#ifndef bstr__memchr
-#define bstr__memchr(s,c,l) memchr ((s), (c), (l))
-#endif
-
 #if defined(BSTRLIB_CAN_USE_IOSTREAM)
 #include <iostream>
 #endif
@@ -98,7 +62,7 @@ namespace Bstrlib {
 CBString::CBString () {
 	slen = 0;
 	mlen = 8;
-	data = (unsigned char *) bstr__alloc (mlen);
+	data = (unsigned char *) malloc (mlen);
 	if (!data) {
 		mlen = 0;
 		bstringThrow ("Failure in default constructor");
@@ -112,13 +76,13 @@ CBString::CBString (const void * blk, int len) {
 	if (len >= 0) {
 		mlen = len + 1;
 		slen = len;
-		data = (unsigned char *) bstr__alloc (mlen);
+		data = (unsigned char *) malloc (mlen);
 	}
 	if (!data) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in block constructor");
 	} else {
-		if (slen > 0) bstr__memcpy (data, blk, slen);
+		if (slen > 0) memcpy (data, blk, slen);
 		data[slen] = '\0';
 	}
 }
@@ -128,13 +92,13 @@ CBString::CBString (char c, int len) {
 	if (len >= 0) {
 		mlen = len + 1;
 		slen = len;
-		data = (unsigned char *) bstr__alloc (mlen);
+		data = (unsigned char *) malloc (mlen);
 	}
 	if (!data) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in repeat(char) constructor");
 	} else {
-		if (slen > 0) bstr__memset (data, c, slen);
+		if (slen > 0) memset (data, c, slen);
 		data[slen] = '\0';
 	}
 }
@@ -142,7 +106,7 @@ CBString::CBString (char c, int len) {
 CBString::CBString (char c) {
 	mlen = 2;
 	slen = 1;
-	if (NULL == (data = (unsigned char *) bstr__alloc (mlen))) {
+	if (NULL == (data = (unsigned char *) malloc (mlen))) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in (char) constructor");
 	} else {
@@ -154,7 +118,7 @@ CBString::CBString (char c) {
 CBString::CBString (unsigned char c) {
 	mlen = 2;
 	slen = 1;
-	if (NULL == (data = (unsigned char *) bstr__alloc (mlen))) {
+	if (NULL == (data = (unsigned char *) malloc (mlen))) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in (char) constructor");
 	} else {
@@ -169,8 +133,8 @@ CBString::CBString (const char *s) {
 		if (sslen >= INT_MAX) bstringThrow ("Failure in (char *) constructor, string too large")
 		slen = (int) sslen;
 		mlen = slen + 1;
-		if (NULL != (data = (unsigned char *) bstr__alloc (mlen))) {
-			bstr__memcpy (data, s, mlen);
+		if (NULL != (data = (unsigned char *) malloc (mlen))) {
+			memcpy (data, s, mlen);
 			return;
 		}
 	}
@@ -185,8 +149,8 @@ CBString::CBString (int len, const char *s) {
 		slen = (int) sslen;
 		mlen = slen + 1;
 		if (mlen < len) mlen = len;
-		if (NULL != (data = (unsigned char *) bstr__alloc (mlen))) {
-			bstr__memcpy (data, s, slen + 1);
+		if (NULL != (data = (unsigned char *) malloc (mlen))) {
+			memcpy (data, s, slen + 1);
 			return;
 		}
 	}
@@ -198,11 +162,11 @@ CBString::CBString (const CBString& b) {
 	slen = b.slen;
 	mlen = slen + 1;
 	data = NULL;
-	if (mlen > 0) data = (unsigned char *) bstr__alloc (mlen);
+	if (mlen > 0) data = (unsigned char *) malloc (mlen);
 	if (!data) {
 		bstringThrow ("Failure in (CBString) constructor");
 	} else {
-		bstr__memcpy (data, b.data, slen);
+		memcpy (data, b.data, slen);
 		data[slen] = '\0';
 	}
 }
@@ -211,11 +175,11 @@ CBString::CBString (const tagbstring& x) {
 	slen = x.slen;
 	mlen = slen + 1;
 	data = NULL;
-	if (slen >= 0 && x.data != NULL) data = (unsigned char *) bstr__alloc (mlen);
+	if (slen >= 0 && x.data != NULL) data = (unsigned char *) malloc (mlen);
 	if (!data) {
 		bstringThrow ("Failure in (tagbstring) constructor");
 	} else {
-		bstr__memcpy (data, x.data, slen);
+		memcpy (data, x.data, slen);
 		data[slen] = '\0';
 	}
 }
@@ -224,7 +188,7 @@ CBString::CBString (const tagbstring& x) {
 
 CBString::~CBString () {
 	if (data != NULL) {
-		bstr__free (data);
+		free (data);
 		data = NULL;
 	}
 	mlen = 0;
@@ -273,7 +237,7 @@ size_t tmpSlen;
 
 	if (data) {
 		slen = (int) tmpSlen;
-		bstr__memcpy (data, s, tmpSlen + 1);
+		memcpy (data, s, tmpSlen + 1);
 	} else {
 		mlen = slen = 0;
 		bstringThrow ("Failure in =(const char *) operator");
@@ -290,7 +254,7 @@ const CBString& CBString::operator = (const CBString& b) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in =(CBString) operator");
 	} else {
-		bstr__memcpy (data, b.data, slen);
+		memcpy (data, b.data, slen);
 		data[slen] = '\0';
 	}
 	return *this;
@@ -306,7 +270,7 @@ const CBString& CBString::operator = (const tagbstring& x) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in =(tagbstring) operator");
 	} else {
-		bstr__memcpy (data, x.data, slen);
+		memcpy (data, x.data, slen);
 		data[slen] = '\0';
 	}
 	return *this;
@@ -365,7 +329,7 @@ const CBString& CBString::operator += (const tagbstring& x) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in +=(tagbstring) operator");
 	} else {
-		bstr__memcpy (data + slen, x.data, x.slen);
+		memcpy (data + slen, x.data, x.slen);
 		slen += x.slen;
 		data[slen] = '\0';
 	}
@@ -1010,8 +974,8 @@ size_t q;
 				alloc ((int) (slen + q - len));
 				if (NULL == data) return;
 			}
-			if ((int) q != len) bstr__memmove (data + pos + q, data + pos + len, slen - (pos + len));
-			bstr__memcpy (data + pos, s, q);
+			if ((int) q != len) memmove (data + pos + q, data + pos + len, slen - (pos + len));
+			memcpy (data + pos, s, q);
 			slen += ((int) q) - len;
 			data[slen] = '\0';
 		}
@@ -1245,7 +1209,7 @@ size_t i;
 
 	mlen = c;
 	slen = 0;
-	data = (unsigned char *) bstr__alloc (c);
+	data = (unsigned char *) malloc (c);
 	if (!data) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in (CBStringList) constructor");
@@ -1266,7 +1230,7 @@ size_t i;
 
 	mlen = c;
 	slen = 0;
-	data = (unsigned char *) bstr__alloc (mlen);
+	data = (unsigned char *) malloc (mlen);
 	if (!data) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in (CBStringList) constructor");
@@ -1288,7 +1252,7 @@ size_t i;
 
 	mlen = c;
 	slen = 0;
-	data = (unsigned char *) bstr__alloc (mlen);
+	data = (unsigned char *) malloc (mlen);
 	if (!data) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in (CBStringList) constructor");
@@ -1310,7 +1274,7 @@ size_t i;
 
 	mlen = c;
 	slen = 0;
-	data = (unsigned char *) bstr__alloc (mlen);
+	data = (unsigned char *) malloc (mlen);
 	if (!data) {
 		mlen = slen = 0;
 		bstringThrow ("Failure in (CBStringList) constructor");

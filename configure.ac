@@ -67,15 +67,6 @@ AC_SUBST([LT_CURRENT])
 AC_SUBST([LT_REVISION])
 AC_SUBST([LT_AGE])
 
-# Debug option
-AC_ARG_ENABLE([memory-debug],
-	      [AS_HELP_STRING([--enable-memory-debug],
-	      [enable memory debugging features @<:@default=no@:>@])],,
-	      [enable_memory_debug=no])
-AS_IF([test "x$enable_memory_debug" = "xyes"],
-      [AC_DEFINE([BSTRLIB_MEMORY_DEBUG], [1],
-		 [Define to 1 to enable memory debugging])])
-
 # Setup unit-test environment
 PKG_CHECK_MODULES([CHECK], [check >= 0.9],
 		  [have_check=yes

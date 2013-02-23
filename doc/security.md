@@ -115,16 +115,12 @@ heap except for the allocated bstring that is returned.
 
 ### Memory leaking
 
-Bstrlib can be built using memdbg.h enabled via the `BSTRLIB_MEMORY_DEBUG`
-macro. User generated definitions for `malloc`, `realloc` and `free` can then
-be supplied which can implement special strategies for memory corruption
-detection or memory leaking. Otherwise, bstrlib does not do anything out of
-the ordinary to attempt to deal with the standard problem of memory leaking
-(losing references to allocated memory) when programming in the C and C++
-languages. However, it does not compound the problem any more than exists
-either, as it doesn't have any intrinsic inescapable leaks in it. Bstrlib
-does not preclude the use of automatic garbage collection mechanisms such as
-the Boehm garbage collector.
+Bstrlib does not do anything out of the ordinary to attempt to deal with the
+standard problem of memory leaking (losing references to allocated memory)
+when programming in the C and C++ languages. However, it does not compound
+the problem any more than exists either, as it doesn't have any intrinsic
+inescapable leaks in it. Bstrlib does not preclude the use of automatic
+garbage collection mechanisms such as the Boehm garbage collector.
 
 ### Encryption
 

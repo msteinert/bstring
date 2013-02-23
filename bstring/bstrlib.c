@@ -52,47 +52,9 @@
 #include <ctype.h>
 #include "bstrlib.h"
 
-/* Optionally include a mechanism for debugging memory */
-
-#if defined(MEMORY_DEBUG) || defined(BSTRLIB_MEMORY_DEBUG)
-#include "memdbg.h"
-#endif
-
-#ifndef bstr__alloc
-#define bstr__alloc(x) malloc (x)
-#endif
-
-#ifndef bstr__free
-#define bstr__free(p) free (p)
-#endif
-
-#ifndef bstr__realloc
-#define bstr__realloc(p,x) realloc ((p), (x))
-#endif
-
-#ifndef bstr__memcpy
-#define bstr__memcpy(d,s,l) memcpy ((d), (s), (l))
-#endif
-
-#ifndef bstr__memmove
-#define bstr__memmove(d,s,l) memmove ((d), (s), (l))
-#endif
-
-#ifndef bstr__memset
-#define bstr__memset(d,c,l) memset ((d), (c), (l))
-#endif
-
-#ifndef bstr__memcmp
-#define bstr__memcmp(d,c,l) memcmp ((d), (c), (l))
-#endif
-
-#ifndef bstr__memchr
-#define bstr__memchr(s,c,l) memchr ((s), (c), (l))
-#endif
-
 /* Just a length safe wrapper for memmove. */
 
-#define bBlockCopy(D,S,L) { if ((L) > 0) bstr__memmove ((D),(S),(L)); }
+#define bBlockCopy(D,S,L) { if ((L) > 0) memmove ((D),(S),(L)); }
 
 /* Compute the snapped size for a given requested size.  By snapping to powers
    of 2 like this, repeated reallocations are avoided. */
@@ -144,32 +106,32 @@ int balloc (bstring b, int olen) {
 
 			reallocStrategy:;
 
-			x = (unsigned char *) bstr__realloc (b->data, (size_t) len);
+			x = (unsigned char *) realloc (b->data, (size_t) len);
 			if (x == NULL) {
 
-				/* Since we failed, try allocating the tighest possible
-				   allocation */
+				/* Since we failed, try mallocating the tighest possible
+				   mallocation */
 
-				if (NULL == (x = (unsigned char *) bstr__realloc (b->data, (size_t) (len = olen)))) {
+				if (NULL == (x = (unsigned char *) realloc (b->data, (size_t) (len = olen)))) {
 					return BSTR_ERR;
 				}
 			}
 		} else {
 
 			/* If slen is not close to mlen then avoid the penalty of copying
-			   the extra bytes that are allocated, but not considered part of
+			   the extra bytes that are mallocated, but not considered part of
 			   the string */
 
-			if (NULL == (x = (unsigned char *) bstr__alloc ((size_t) len))) {
+			if (NULL == (x = (unsigned char *) malloc ((size_t) len))) {
 
 				/* Perhaps there is no available memory for the two
-				   allocations to be in memory at once */
+				   mallocations to be in memory at once */
 
 				goto reallocStrategy;
 
 			} else {
-				if (b->slen) bstr__memcpy ((char *) x, (char *) b->data, (size_t) b->slen);
-				bstr__free (b->data);
+				if (b->slen) memcpy ((char *) x, (char *) b->data, (size_t) b->slen);
+				free (b->data);
 			}
 		}
 		b->data = x;
@@ -197,7 +159,7 @@ int ballocmin (bstring b, int len) {
 	if (len < b->slen + 1) len = b->slen + 1;
 
 	if (len != b->mlen) {
-		s = (unsigned char *) bstr__realloc (b->data, (size_t) len);
+		s = (unsigned char *) realloc (b->data, (size_t) len);
 		if (NULL == s) return BSTR_ERR;
 		s[b->slen] = (unsigned char) '\0';
 		b->data = s;
@@ -222,15 +184,15 @@ size_t j;
 	i = snapUpSize ((int) (j + (2 - (j != 0))));
 	if (i <= (int) j) return NULL;
 
-	b = (bstring) bstr__alloc (sizeof (struct tagbstring));
+	b = (bstring) malloc (sizeof (struct tagbstring));
 	if (NULL == b) return NULL;
 	b->slen = (int) j;
-	if (NULL == (b->data = (unsigned char *) bstr__alloc (b->mlen = i))) {
-		bstr__free (b);
+	if (NULL == (b->data = (unsigned char *) malloc (b->mlen = i))) {
+		free (b);
 		return NULL;
 	}
 
-	bstr__memcpy (b->data, str, j+1);
+	memcpy (b->data, str, j+1);
 	return b;
 }
 
@@ -250,17 +212,17 @@ size_t j;
 	i = snapUpSize ((int) (j + (2 - (j != 0))));
 	if (i <= (int) j) return NULL;
 
-	b = (bstring) bstr__alloc (sizeof (struct tagbstring));
+	b = (bstring) malloc (sizeof (struct tagbstring));
 	if (b == NULL) return NULL;
 	b->slen = (int) j;
 	if (i < mlen) i = mlen;
 
-	if (NULL == (b->data = (unsigned char *) bstr__alloc (b->mlen = i))) {
-		bstr__free (b);
+	if (NULL == (b->data = (unsigned char *) malloc (b->mlen = i))) {
+		free (b);
 		return NULL;
 	}
 
-	bstr__memcpy (b->data, str, j+1);
+	memcpy (b->data, str, j+1);
 	return b;
 }
 
@@ -274,7 +236,7 @@ bstring b;
 int i;
 
 	if (blk == NULL || len < 0) return NULL;
-	b = (bstring) bstr__alloc (sizeof (struct tagbstring));
+	b = (bstring) malloc (sizeof (struct tagbstring));
 	if (b == NULL) return NULL;
 	b->slen = len;
 
@@ -283,13 +245,13 @@ int i;
 
 	b->mlen = i;
 
-	b->data = (unsigned char *) bstr__alloc ((size_t) b->mlen);
+	b->data = (unsigned char *) malloc ((size_t) b->mlen);
 	if (b->data == NULL) {
-		bstr__free (b);
+		free (b);
 		return NULL;
 	}
 
-	if (len > 0) bstr__memcpy (b->data, blk, (size_t) len);
+	if (len > 0) memcpy (b->data, blk, (size_t) len);
 	b->data[len] = (unsigned char) '\0';
 
 	return b;
@@ -308,7 +270,7 @@ char * r;
 
 	if (b == NULL || b->slen < 0 || b->data == NULL) return NULL;
 	l = b->slen;
-	r = (char *) bstr__alloc ((size_t) (l + 1));
+	r = (char *) malloc ((size_t) (l + 1));
 	if (r == NULL) return r;
 
 	for (i=0; i < l; i ++) {
@@ -320,20 +282,14 @@ char * r;
 	return r;
 }
 
-/*  int bcstrfree (char * s)
+/* int bcstrfree (char * s)
  *
- *  Frees a C-string generated by bstr2cstr ().  This is normally unnecessary
- *  since it just wraps a call to bstr__free (), however, if bstr__alloc ()
- *  and bstr__free () have been redefined as a macros within the bstrlib
- *  module (via defining them in memdbg.h after defining
- *  BSTRLIB_MEMORY_DEBUG) with some difference in behaviour from the std
- *  library functions, then this allows a correct way of freeing the memory
- *  that allows higher level code to be independent from these macro
- *  redefinitions.
+ * Frees a C-string generated by bstr2cstr (). This is normally unnecessary
+ * since it just wraps a call to free ().
  */
 int bcstrfree (char * s) {
 	if (s) {
-		bstr__free (s);
+		free (s);
 		return BSTR_OK;
 	}
 	return BSTR_ERR;
@@ -443,22 +399,22 @@ int i,j;
 	/* Attempted to copy an invalid string? */
 	if (b == NULL || b->slen < 0 || b->data == NULL) return NULL;
 
-	b0 = (bstring) bstr__alloc (sizeof (struct tagbstring));
+	b0 = (bstring) malloc (sizeof (struct tagbstring));
 	if (b0 == NULL) {
-		/* Unable to allocate memory for string header */
+		/* Unable to mallocate memory for string header */
 		return NULL;
 	}
 
 	i = b->slen;
 	j = snapUpSize (i + 1);
 
-	b0->data = (unsigned char *) bstr__alloc (j);
+	b0->data = (unsigned char *) malloc (j);
 	if (b0->data == NULL) {
 		j = i + 1;
-		b0->data = (unsigned char *) bstr__alloc (j);
+		b0->data = (unsigned char *) malloc (j);
 		if (b0->data == NULL) {
-			/* Unable to allocate memory for string data */
-			bstr__free (b0);
+			/* Unable to mallocate memory for string data */
+			free (b0);
 			return NULL;
 		}
 	}
@@ -466,7 +422,7 @@ int i,j;
 	b0->mlen = j;
 	b0->slen = i;
 
-	if (i) bstr__memcpy ((char *) b0->data, (char *) b->data, i);
+	if (i) memcpy ((char *) b0->data, (char *) b->data, i);
 	b0->data[b0->slen] = (unsigned char) '\0';
 
 	return b0;
@@ -481,7 +437,7 @@ int bassign (bstring a, const bstring b) {
 		return BSTR_ERR;
 	if (b->slen != 0) {
 		if (balloc (a, b->slen) != BSTR_OK) return BSTR_ERR;
-		bstr__memmove (a->data, b->data, b->slen);
+		memmove (a->data, b->data, b->slen);
 	} else {
 		if (a == NULL || a->data == NULL || a->mlen < a->slen ||
 		    a->slen < 0 || a->mlen == 0)
@@ -515,7 +471,7 @@ int bassignmidstr (bstring a, const bstring b, int left, int len) {
 
 	if (len > 0) {
 		if (balloc (a, len) != BSTR_OK) return BSTR_ERR;
-		bstr__memmove (a->data, b->data + left, len);
+		memmove (a->data, b->data + left, len);
 		a->slen = len;
 	} else {
 		a->slen = 0;
@@ -828,7 +784,7 @@ int biseq (const bstring b0, const bstring b1) {
 		b0->slen < 0 || b1->slen < 0) return BSTR_ERR;
 	if (b0->slen != b1->slen) return BSTR_OK;
 	if (b0->data == b1->data || b0->slen == 0) return 1;
-	return !bstr__memcmp (b0->data, b1->data, b0->slen);
+	return !memcmp (b0->data, b1->data, b0->slen);
 }
 
 /*  int bisstemeqblk (const bstring b0, const void * blk, int len)
@@ -1021,7 +977,7 @@ int bdelete (bstring b, int pos, int len) {
  *
  *  Free up the bstring.  Note that if b is detectably invalid or not writable
  *  then no action is performed and BSTR_ERR is returned.  Like a freed memory
- *  allocation, dereferences, writes or any other action on b after it has
+ *  mallocation, dereferences, writes or any other action on b after it has
  *  been bdestroyed is undefined.
  */
 int bdestroy (bstring b) {
@@ -1029,7 +985,7 @@ int bdestroy (bstring b) {
 	    b->data == NULL)
 		return BSTR_ERR;
 
-	bstr__free (b->data);
+	free (b->data);
 
 	/* In case there is any stale usage, there is one more chance to
 	   notice this error. */
@@ -1038,7 +994,7 @@ int bdestroy (bstring b) {
 	b->mlen = -__LINE__;
 	b->data = NULL;
 
-	bstr__free (b);
+	free (b);
 	return BSTR_OK;
 }
 
@@ -1281,7 +1237,7 @@ int bstrchrp (const bstring b, int c, int pos) {
 unsigned char * p;
 
 	if (b == NULL || b->data == NULL || b->slen <= pos || pos < 0) return BSTR_ERR;
-	p = (unsigned char *) bstr__memchr ((b->data + pos), (unsigned char) c, (b->slen - pos));
+	p = (unsigned char *) memchr ((b->data + pos), (unsigned char) c, (b->slen - pos));
 	if (p) return (int) (p - b->data);
 	return BSTR_ERR;
 }
@@ -1457,7 +1413,7 @@ bstring aux = (bstring) b1;
 
 	/* Fill in "fill" character as necessary */
 	if (pos > newlen) {
-		bstr__memset (b0->data + b0->slen, (int) fill, (size_t) (pos - b0->slen));
+		memset (b0->data + b0->slen, (int) fill, (size_t) (pos - b0->slen));
 		newlen = pos;
 	}
 
@@ -1507,7 +1463,7 @@ bstring aux = (bstring) b2;
 			if (aux != b2) bdestroy (aux);
 			return BSTR_ERR;
 		}
-		bstr__memset (b1->data + b1->slen, (int) fill, (size_t) (pos - b1->slen));
+		memset (b1->data + b1->slen, (int) fill, (size_t) (pos - b1->slen));
 		b1->slen = l;
 	} else {
 		/* Inserting in the middle of the string */
@@ -1563,8 +1519,8 @@ bstring aux = (bstring) b2;
 		}
 	}
 
-	if (aux->slen != len) bstr__memmove (b1->data + pos + aux->slen, b1->data + pos + len, b1->slen - (pos + len));
-	bstr__memcpy (b1->data + pos, aux->data, aux->slen);
+	if (aux->slen != len) memmove (b1->data + pos + aux->slen, b1->data + pos + len, b1->slen - (pos + len));
+	memcpy (b1->data + pos, aux->data, aux->slen);
 	b1->slen += aux->slen - len;
 	b1->data[b1->slen] = (unsigned char) '\0';
 	if (aux != b2) bdestroy (aux);
@@ -1617,7 +1573,7 @@ bstring auxr = (bstring) repl;
 	   length */
 	if (delta == 0) {
 		while ((pos = instr (b, pos, auxf)) >= 0) {
-			bstr__memcpy (b->data + pos, auxr->data, auxr->slen);
+			memcpy (b->data + pos, auxr->data, auxr->slen);
 			pos += auxf->slen;
 		}
 		if (auxf != find) bdestroy (auxf);
@@ -1631,9 +1587,9 @@ bstring auxr = (bstring) repl;
 
 		while ((i = instr (b, pos, auxf)) >= 0) {
 			if (acc && i > pos)
-				bstr__memmove (b->data + pos - acc, b->data + pos, i - pos);
+				memmove (b->data + pos - acc, b->data + pos, i - pos);
 			if (auxr->slen)
-				bstr__memcpy (b->data + i - acc, auxr->data, auxr->slen);
+				memcpy (b->data + i - acc, auxr->data, auxr->slen);
 			acc += delta;
 			pos = i + auxf->slen;
 		}
@@ -1641,7 +1597,7 @@ bstring auxr = (bstring) repl;
 		if (acc) {
 			i = b->slen;
 			if (i > pos)
-				bstr__memmove (b->data + pos - acc, b->data + pos, i - pos);
+				memmove (b->data + pos - acc, b->data + pos, i - pos);
 			b->slen -= acc;
 			b->data[b->slen] = (unsigned char) '\0';
 		}
@@ -1676,11 +1632,11 @@ bstring auxr = (bstring) repl;
 			mlen += mlen;
 			sl = sizeof (int *) * mlen;
 			if (static_d == d) d = NULL; /* static_d cannot be realloced */
-			if (mlen <= 0 || sl < mlen || NULL == (t = (int *) bstr__realloc (d, sl))) {
+			if (mlen <= 0 || sl < mlen || NULL == (t = (int *) realloc (d, sl))) {
 				ret = BSTR_ERR;
 				goto done;
 			}
-			if (NULL == d) bstr__memcpy (t, static_d, sizeof (static_d));
+			if (NULL == d) memcpy (t, static_d, sizeof (static_d));
 			d = t;
 		}
 		d[slen] = pos;
@@ -1703,10 +1659,10 @@ bstring auxr = (bstring) repl;
 			s = d[i] + auxf->slen;
 			l = d[i+1] - s; /* d[slen] may be accessed here. */
 			if (l) {
-				bstr__memmove (b->data + s + acc, b->data + s, l);
+				memmove (b->data + s + acc, b->data + s, l);
 			}
 			if (auxr->slen) {
-				bstr__memmove (b->data + s + acc - auxr->slen,
+				memmove (b->data + s + acc - auxr->slen,
 				               auxr->data, auxr->slen);
 			}
 			acc += delta;
@@ -1716,7 +1672,7 @@ bstring auxr = (bstring) repl;
 
 	done:;
 	if (static_d == d) d = NULL;
-	bstr__free (d);
+	free (d);
 	if (auxf != find) bdestroy (auxf);
 	if (auxr != repl) bdestroy (auxr);
 	return ret;
@@ -1958,7 +1914,7 @@ struct bStream * bsopen (bNread readPtr, void * parm) {
 struct bStream * s;
 
 	if (readPtr == NULL) return NULL;
-	s = (struct bStream *) bstr__alloc (sizeof (struct bStream));
+	s = (struct bStream *) malloc (sizeof (struct bStream));
 	if (s == NULL) return NULL;
 	s->parm = parm;
 	s->buff = bfromcstr ("");
@@ -2006,7 +1962,7 @@ bsclose(struct bStream *s)
 	parm = s->parm;
 	s->parm = NULL;
 	s->isEOF = 1;
-	bstr__free(s);
+	free(s);
 	return parm;
 }
 
@@ -2069,7 +2025,7 @@ struct tagbstring x;
 	i++;
 	r->slen += i;
 	s->buff->slen = l - i;
-	bstr__memcpy (s->buff->data, b + i, l - i);
+	memcpy (s->buff->data, b + i, l - i);
 	r->data[r->slen] = (unsigned char) '\0';
 	return BSTR_OK;
 }
@@ -2139,7 +2095,7 @@ struct charField cf;
 	i++;
 	r->slen += i;
 	s->buff->slen = l - i;
-	bstr__memcpy (s->buff->data, b + i, l - i);
+	memcpy (s->buff->data, b + i, l - i);
 	r->data[r->slen] = (unsigned char) '\0';
 	return BSTR_OK;
 }
@@ -2308,24 +2264,24 @@ bjoin(const struct bstrList *bl, const bstring sep)
 	if (sep != NULL) {
 		c += (bl->qty - 1) * sep->slen;
 	}
-	b = (bstring)bstr__alloc(sizeof(struct tagbstring));
+	b = (bstring)malloc(sizeof(struct tagbstring));
 	if (NULL == b) {
 		return NULL; /* Out of memory */
 	}
-	b->data = (unsigned char *)bstr__alloc(c);
+	b->data = (unsigned char *)malloc(c);
 	if (b->data == NULL) {
-		bstr__free (b);
+		free (b);
 		return NULL;
 	}
 	b->mlen = c;
 	b->slen = c-1;
 	for (i = 0, c = 0; i < bl->qty; i++) {
 		if (i > 0 && sep != NULL) {
-			bstr__memcpy(b->data + c, sep->data, sep->slen);
+			memcpy(b->data + c, sep->data, sep->slen);
 			c += sep->slen;
 		}
 		v = bl->entry[i]->slen;
-		bstr__memcpy(b->data + c, bl->entry[i]->data, v);
+		memcpy(b->data + c, bl->entry[i]->data, v);
 		c += v;
 	}
 	b->data[c] = (unsigned char)'\0';
@@ -2467,11 +2423,11 @@ int i, p, ret;
  *  Create a bstrList.
  */
 struct bstrList * bstrListCreate (void) {
-struct bstrList * sl = (struct bstrList *) bstr__alloc (sizeof (struct bstrList));
+struct bstrList * sl = (struct bstrList *) malloc (sizeof (struct bstrList));
 	if (sl) {
-		sl->entry = (bstring *) bstr__alloc (1*sizeof (bstring));
+		sl->entry = (bstring *) malloc (1*sizeof (bstring));
 		if (!sl->entry) {
-			bstr__free (sl);
+			free (sl);
 			sl = NULL;
 		} else {
 			sl->qty = 0;
@@ -2496,9 +2452,9 @@ int i;
 	}
 	sl->qty  = -1;
 	sl->mlen = -1;
-	bstr__free (sl->entry);
+	free (sl->entry);
 	sl->entry = NULL;
-	bstr__free (sl);
+	free (sl);
 	return BSTR_OK;
 }
 
@@ -2516,11 +2472,11 @@ size_t nsz;
 	smsz = snapUpSize (msz);
 	nsz = ((size_t) smsz) * sizeof (bstring);
 	if (nsz < (size_t) smsz) return BSTR_ERR;
-	l = (bstring *) bstr__realloc (sl->entry, nsz);
+	l = (bstring *) realloc (sl->entry, nsz);
 	if (!l) {
 		smsz = msz;
 		nsz = ((size_t) smsz) * sizeof (bstring);
-		l = (bstring *) bstr__realloc (sl->entry, nsz);
+		l = (bstring *) realloc (sl->entry, nsz);
 		if (!l) return BSTR_ERR;
 	}
 	sl->mlen = smsz;
@@ -2530,7 +2486,7 @@ size_t nsz;
 
 /*  int bstrListAllocMin (struct bstrList * sl, int msz)
  *
- *  Try to allocate the minimum amount of memory for the list to include at
+ *  Try to mallocate the minimum amount of memory for the list to include at
  *  least msz entries or sl->qty whichever is greater.
  */
 int bstrListAllocMin (struct bstrList * sl, int msz) {
@@ -2541,7 +2497,7 @@ size_t nsz;
 	if (sl->mlen == msz) return BSTR_OK;
 	nsz = ((size_t) msz) * sizeof (bstring);
 	if (nsz < (size_t) msz) return BSTR_ERR;
-	l = (bstring *) bstr__realloc (sl->entry, nsz);
+	l = (bstring *) realloc (sl->entry, nsz);
 	if (!l) return BSTR_ERR;
 	sl->mlen = msz;
 	sl->entry = l;
@@ -2659,7 +2615,7 @@ int i, p, ret;
 		return bsplitcb (str, splitStr->data[0], pos, cb, parm);
 
 	for (i=p=pos; i <= str->slen - splitStr->slen; i++) {
-		if (0 == bstr__memcmp (splitStr->data, str->data + i, splitStr->slen)) {
+		if (0 == memcmp (splitStr->data, str->data + i, splitStr->slen)) {
 			if ((ret = cb (parm, p, i - p)) < 0) return ret;
 			i += splitStr->slen;
 			p = i;
@@ -2685,7 +2641,7 @@ struct genBstrList * g = (struct genBstrList *) parm;
 			mlen += mlen;
 		}
 
-		tbl = (bstring *) bstr__realloc (g->bl->entry, sizeof (bstring) * mlen);
+		tbl = (bstring *) realloc (g->bl->entry, sizeof (bstring) * mlen);
 		if (tbl == NULL) return BSTR_ERR;
 
 		g->bl->entry = tbl;
@@ -2707,12 +2663,12 @@ struct genBstrList g;
 
 	if (str == NULL || str->data == NULL || str->slen < 0) return NULL;
 
-	g.bl = (struct bstrList *) bstr__alloc (sizeof (struct bstrList));
+	g.bl = (struct bstrList *) malloc (sizeof (struct bstrList));
 	if (g.bl == NULL) return NULL;
 	g.bl->mlen = 4;
-	g.bl->entry = (bstring *) bstr__alloc (g.bl->mlen * sizeof (bstring));
+	g.bl->entry = (bstring *) malloc (g.bl->mlen * sizeof (bstring));
 	if (NULL == g.bl->entry) {
-		bstr__free (g.bl);
+		free (g.bl);
 		return NULL;
 	}
 
@@ -2735,12 +2691,12 @@ struct genBstrList g;
 
 	if (str == NULL || str->data == NULL || str->slen < 0) return NULL;
 
-	g.bl = (struct bstrList *) bstr__alloc (sizeof (struct bstrList));
+	g.bl = (struct bstrList *) malloc (sizeof (struct bstrList));
 	if (g.bl == NULL) return NULL;
 	g.bl->mlen = 4;
-	g.bl->entry = (bstring *) bstr__alloc (g.bl->mlen * sizeof (bstring));
+	g.bl->entry = (bstring *) malloc (g.bl->mlen * sizeof (bstring));
 	if (NULL == g.bl->entry) {
-		bstr__free (g.bl);
+		free (g.bl);
 		return NULL;
 	}
 
@@ -2766,12 +2722,12 @@ struct genBstrList g;
 	    splitStr == NULL || splitStr->slen < 0 || splitStr->data == NULL)
 		return NULL;
 
-	g.bl = (struct bstrList *) bstr__alloc (sizeof (struct bstrList));
+	g.bl = (struct bstrList *) malloc (sizeof (struct bstrList));
 	if (g.bl == NULL) return NULL;
 	g.bl->mlen = 4;
-	g.bl->entry = (bstring *) bstr__alloc (g.bl->mlen * sizeof (bstring));
+	g.bl->entry = (bstring *) malloc (g.bl->mlen * sizeof (bstring));
 	if (NULL == g.bl->entry) {
-		bstr__free (g.bl);
+		free (g.bl);
 		return NULL;
 	}
 	g.b = (bstring) str;
