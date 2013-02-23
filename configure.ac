@@ -78,5 +78,4 @@ AC_MSG_RESULT([
 $PACKAGE_NAME build options:
 	Host: $host
 	Version: $VERSION
-	Memory Debugging: $enable_memory_debug
 ])
