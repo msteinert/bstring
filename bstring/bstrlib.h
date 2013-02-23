@@ -474,7 +474,7 @@ BSTR_PUBLIC int
 bisstemeqblk(const bstring b0, const void *blk, int len);
 
 /**
- * Compare the bstring b and char * bstring s.
+ * Compare the bstring b and char * string s.
  *
  * The C string s must be '\0' terminated at exactly the length of the bstring
  * b, and the contents between the two must be identical with the bstring b
@@ -1068,11 +1068,11 @@ bvcformata(bstring b, int count, const char *fmt, va_list arglist);
  * Example:
  *
  * \code
- * void dbgerror (FILE * fp, const char * fmt, ...)
+ * void dbgerror (FILE *fp, const char *fmt, ...)
  * {
  *     int ret;
  *     bstring b;
- *     bvformata (ret, b = bfromcstr ("DBG: "), fmt, fmt);
+ *     bvformata(ret, b = bfromcstr ("DBG: "), fmt, fmt);
  *     if (BSTR_OK == ret) {
  *         fputs ((char *) bdata (b), fp);
  *     }
@@ -1083,22 +1083,25 @@ bvcformata(bstring b, int count, const char *fmt, va_list arglist);
 #define bvformata(ret, b, fmt, lastarg) \
 do { \
 	bstring bstrtmp_b =(b); \
-	const char *bstrtmp_fmt =(fmt); \
+	const char *bstrtmp_fmt = (fmt); \
 	int bstrtmp_r = BSTR_ERR, bstrtmp_sz = 16; \
 	for (;;) { \
 		va_list bstrtmp_arglist; \
 		va_start(bstrtmp_arglist, lastarg); \
 		bstrtmp_r = bvcformata(bstrtmp_b, bstrtmp_sz, bstrtmp_fmt, \
-				bstrtmp_arglist); \
+				       bstrtmp_arglist); \
 		va_end(bstrtmp_arglist); \
-		if(bstrtmp_r >= 0) { /* Everything went ok */ \
+		if(bstrtmp_r >= 0) { \
+			/* Everything went ok */ \
 			bstrtmp_r = BSTR_OK; \
 			break; \
-		} else if(-bstrtmp_r <= bstrtmp_sz) { /* A real error? */ \
+		} else if(-bstrtmp_r <= bstrtmp_sz) { \
+			/* A real error? */ \
 			bstrtmp_r = BSTR_ERR; \
 			break; \
 		} \
-		bstrtmp_sz = -bstrtmp_r; /* Doubled or target size */ \
+		/* Doubled or target size */ \
+		bstrtmp_sz = -bstrtmp_r; \
 	} \
 	ret = bstrtmp_r; \
 } while (0);
