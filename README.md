@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/msteinert/bstring.png)](http://travis-ci.org/msteinert/bstring)
+
 Better String library
 =====================
 

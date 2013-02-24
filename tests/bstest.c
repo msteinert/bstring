@@ -417,8 +417,8 @@ START_TEST(core_006)
 END_TEST
 
 static void
-test7x8_0(int (* fnptr)(const const bstring, const const bstring),
-	  const const bstring b0, const const bstring b1, int res)
+test7x8_0(int (*fnptr)(const bstring, const bstring),
+	  const bstring b0, const bstring b1, int res)
 {
 	int ret = 0;
 	ret = fnptr(b0, b1);
@@ -426,7 +426,7 @@ test7x8_0(int (* fnptr)(const const bstring, const const bstring),
 }
 
 static void
-test7x8(int (* fnptr)(const const bstring, const const bstring),
+test7x8(int (* fnptr)(const bstring, const bstring),
 	int retFail, int retLT, int retGT, int retEQ)
 {
 	/* tests with NULL */
@@ -1441,10 +1441,9 @@ test23_aux_open(struct sbstr * sb, bstring b)
 }
 
 static int
-test23_aux_splitcb(void * parm, int ofs, const const bstring entry)
+test23_aux_splitcb(void * parm, BSTR_UNUSED int ofs, const bstring entry)
 {
 	bstring b = (bstring)parm;
-	ofs = ofs;
 	if (b->slen > 0) {
 		bconchar(b, '|');
 	}
@@ -1459,10 +1458,9 @@ struct tagBss {
 };
 
 static int
-test23_aux_splitcbx(void * parm, int ofs, const const bstring entry)
+test23_aux_splitcbx(void * parm, BSTR_UNUSED int ofs, const bstring entry)
 {
 	struct tagBss *p = (struct tagBss *)parm;
-	ofs = ofs;
 	if (!p->first) {
 		bconchar(p->b, (char) p->sc);
 	} else {

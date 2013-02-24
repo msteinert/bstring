@@ -4,10 +4,10 @@ compiler:
   - gcc
   - clang
 
-install: sudo apt-get install check
+install: sudo apt-get install check valgrind
 
 script:
   - autoreconf -i
   - ./configure
-  - make -j2 check
+  - make -j2 memcheck
   - make distcheck

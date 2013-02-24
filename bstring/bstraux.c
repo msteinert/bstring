@@ -231,12 +231,11 @@ bJustifyMargin(bstring b, int width, int space)
 }
 
 static size_t
-readNothing(void *buff, size_t elsize, size_t nelem, void *parm)
+readNothing(BSTR_UNUSED void *buff,
+	    BSTR_UNUSED size_t elsize,
+	    BSTR_UNUSED size_t nelem,
+	    BSTR_UNUSED void *parm)
 {
-	buff = buff;
-	elsize = elsize;
-	nelem = nelem;
-	parm = parm;
 	return 0; /* Immediately indicate EOF. */
 }
 
