@@ -1,0 +1,13 @@
+language: c
+
+compiler:
+  - gcc
+  - clang
+
+install: sudo apt-get install check
+
+script:
+  - autoreconf -i
+  - ./configure
+  - make -j2 check
+  - make distcheck
