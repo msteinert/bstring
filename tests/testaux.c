@@ -138,7 +138,7 @@ END_TEST
 START_TEST(core_002)
 {
 	struct tagbstring t = bsStatic("Hello world");
-	int ret = 0, reto;
+	int ret = 0;
 	bstring b;
 	ret = bSetChar(&t, 4, ',');
 	ck_assert_int_eq(ret, BSTR_ERR);
@@ -169,7 +169,6 @@ START_TEST(core_002)
 	ck_assert_int_eq(ret, 's');
 	ret = bdestroy(b);
 	ck_assert_int_eq(ret, BSTR_OK);
-	reto = ret;
 	ret = 0;
 	ret = bSetCstrChar(&t, 4, ',');
 	ck_assert_int_eq(ret, BSTR_ERR);
@@ -470,20 +469,18 @@ START_TEST(core_013)
 	int ret = 0;
 	int i;
 	for (i = 0; i < 1000; i++) {
-		unsigned char *h;
 		vctx.ofs = 0;
 		vctx.base = &t0;
 		b = bSecureInput(INT_MAX, '\n', (bNgetc)core13_fgetc, &vctx);
 		ret = biseq(b, &t0);
 		ck_assert_int_eq(ret, 1);
-		h = b->data;
 		bSecureDestroy(b);
 	}
 }
 END_TEST
 
 int
-main (void)
+main(void)
 {
 	/* Build test suite */
         Suite *suite = suite_create("bstr-aux");

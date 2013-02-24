@@ -1542,7 +1542,7 @@ do { \
 		? ((int)(strlen)((char *)(t).data)) \
 		: 0; \
 	(t).mlen = -1; \
-} while (0);
+} while (0)
 
 /**
  */
@@ -1551,7 +1551,7 @@ do {            \
 	(t).data = (unsigned char *)(s); \
 	(t).slen = l; \
 	(t).mlen = -1; \
-} while (0);
+} while (0)
 
 /**
  * Fill in the tagbstring t with the data buffer s with length len.
@@ -1738,7 +1738,7 @@ do { \
 #define bwriteallow(t) \
 do { \
 	if ((t).mlen == -1) { \
-		(t).mlen =(t).slen + ((t).slen == 0); \
+		(t).mlen = (t).slen + ((t).slen == 0); \
 	} \
 } while (0);
 

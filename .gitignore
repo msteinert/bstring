@@ -58,3 +58,4 @@ tests/test.trs
 tests/testaux
 tests/testaux.log
 tests/testaux.trs
+vgcore.*
