@@ -49,6 +49,7 @@ AX_TRY_CFLAGS([-Wstrict-prototypes], [AX_CFLAGS([-Wstrict-prototypes])])
 AX_TRY_CFLAGS([-Wcast-align], [AX_CFLAGS([-Wcast-align])])
 AX_TRY_CFLAGS([-fno-common], [AX_CFLAGS([-fno-common])])
 AX_TRY_CFLAGS([-fvisibility=hidden], [AX_CFLAGS([-fvisibility=hidden])])
+AX_TRY_LDFLAGS([-Wl,--no-undefined], [AX_LDFLAGS([-Wl,--no-undefined])])
 
 # Libtool versioning
 LT_CURRENT=m4_eval(100 * minor_version + micro_version - interface_age)
