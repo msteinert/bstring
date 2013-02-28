@@ -4,7 +4,9 @@ compiler:
   - gcc
   - clang
 
-install: sudo apt-get install check valgrind
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq --no-install-recommends check valgrind
 
 script:
   - autoreconf -i

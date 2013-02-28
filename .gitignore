@@ -23,6 +23,7 @@ Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache
+bstring-*.sha256sum
 bstring-*.tar.gz
 build
 config.cache

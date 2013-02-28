@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/msteinert/bstring.png)](http://travis-ci.org/msteinert/bstring)
+[![Build Status](https://travis-ci.org/msteinert/bstring.png?branch=master)](https://travis-ci.org/msteinert/bstring)
 
 Better String library
 =====================

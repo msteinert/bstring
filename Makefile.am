@@ -44,3 +44,6 @@ include $(top_srcdir)/m4/gdb.mk
 # Install pkg-config scripts
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = bstring.pc
+
+release: dist
+	$(AM_V_GEN)sha256sum $(DIST_ARCHIVES) > $(PACKAGE)-$(VERSION).sha256sum
