@@ -12,8 +12,8 @@ AC_PREREQ([2.59])
 #	interface_age = 0
 m4_define([major_version], [0])
 m4_define([minor_version], [1])
-m4_define([micro_version], [0])
-m4_define([interface_age], [0])
+m4_define([micro_version], [1])
+m4_define([interface_age], [1])
 
 # Initialize autoconf & automake
 AC_INIT([Bstring], [major_version.minor_version.micro_version],
@@ -72,6 +72,7 @@ AM_CONDITIONAL([HAVE_CHECK], [test "x$have_check" = "xyes"])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	bstring.pc
+	Doxyfile
 	Makefile
 ])
 AC_OUTPUT

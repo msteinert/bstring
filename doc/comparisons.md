@@ -18,7 +18,6 @@ The bstring library has significant advantages over CString:
 
    Thus it is compatible with more programming environments and available to
    a wider population of programmers.
-
 2. The internal structure of a bstring is considered exposed
 
    A single contiguous block of data can be cut into read-only pieces by
@@ -28,12 +27,10 @@ The bstring library has significant advantages over CString:
    In this way, using bstrings in a totally abstracted way becomes a choice
    rather than an imposition. Further this choice can be made differently
    at different layers of applications that use it.
-
 3. Static declaration support precludes the need for constructor invocation
 
    Allows for static declarations of constant strings that has no additional
    constructor overhead.
-
 4. Bstrlib is not attached to another library
 
    Bstrlib is designed to be easily plugged into any other library collection,
@@ -88,18 +85,13 @@ Comparison With C++'s `std::string`
 This is the C++ language's STL based string class.
 
 1. There is no C implementation.
-
 2. The `[]` operator is not bounds checked.
-
 3. Missing a lot of useful functions like `printf`-like formatting.
-
 4. Some sub-standard `std::string` implementations (SGI) are necessarily
    unsafe to use with multithreading.
-
 5. Limited by STL's std::iostream which in turn is limited by ifstream which
    can only take input from files. (Compare to CBStream's API which can take
    abstracted input.)
-
 6. Extremely uneven performance across implementations.
 
 Comparison With ISO C TR 24731 Proposal
@@ -123,13 +115,9 @@ few non-reenterable functions (`asctime`, `ctime`, and `strtok`).
 
 1. Still based solely on `char *` buffers (and therefore `strlen` and `strcat`
    is still O(n), and there are no faster `streq` comparison functions.)
-
 2. No growable string semantics.
-
 3. Requires manual buffer length synchronization in the source code.
-
 4. No attempt to enhance functionality of the C library.
-
 5. Introduces a new error scenario (strings exceeding `RSIZE_MAX` length).
 
 The hope is that by exposing the buffer length requirements there will be
@@ -294,11 +282,9 @@ This library is [available online](http://www.annexia.org/freeware/c2lib).
    Their suggestion that alternatives which wrap the string data type (such as
    bstring does) imposes a difficulty in interoperating with the C langauge's
    ordinary C string library is not founded.
-
 2. Introduction of memory (and vector?) abstractions imposes a learning
    curve, and some kind of memory usage policy that is outside of the strings
    themselves (and therefore must be maintained by the developer.)
-
 3. The API is massive, and filled with all sorts of trivial (`pjoin`) and
    controvertial (`pmatch` -- regular expression are not sufficiently
    standardized, and there is a very large difference in performance between
@@ -306,11 +292,9 @@ This library is [available online](http://www.annexia.org/freeware/c2lib).
    minimal approach -- none of the functionality in c2lib is difficult or
    challenging to implement on top of Bstrlib (except the regex stuff, which
    is going to be difficult, and controvertial no matter what.)
-
 4. Understanding why c2lib is the way it is pretty much requires a working
    knowledge of Perl. bstrlib requires only knowledge of the C string library
    while providing just a very select few worthwhile extras.
-
 5. It is attached to a lot of cruft like a matrix math library (that doesn't
    include any functions for getting the determinant, eigenvectors,
    eigenvalues, the matrix inverse, test for singularity, test for
@@ -330,9 +314,7 @@ Comparison With stralloc/qmail
 More information about this library can be [found](http://www.canonical.org/~kragen/stralloc.html) [online](http://cr.yp.to/lib/stralloc.html).
 
 1. Library is very very minimal. A little too minimal.
-
 2. Untargetted source parameters are not declared const.
-
 3. Slightly different expected emphasis (like `_cats` function which takes an
    ordinary C string char buffer as a parameter). It's clear that the
    remainder of the C string library is still required to perform more
@@ -357,13 +339,11 @@ wxString Class
 This is the string class used in the [wxWindows project](http://www.wxwindows.org/manuals/2.4.2/wx368.htm#wxstring).
 
 1. There is no C implementation.
-
 2. The memory management strategy is to allocate a bounded fixed amount of
    additional space on each resize, meaning that it does not have the
    `log2(n)` property that Bstrlib has (it will thrash very easily, cause
    massive fragmentation in common heap implementations, and can easily be a
    common source of performance problems).
-
 3. The library uses a "copy on write" strategy, meaning that it has to deal
    with multithreading problems.
 
@@ -375,12 +355,9 @@ networking/realtime programming. It can be found [online](http://www.and.org/vst
 
 1. The convoluted internal structure does not contain a `'\0'` `char *`
    compatible buffer, so interoperability with the C library a non-starter.
-
 2. The API and implementation is very large (owing to its orthogonality) and
    can lead to difficulty in understanding its exact functionality.
-
 3. An obvious dependency on gnu tools (confusing make configure step)
-
 4. Uses a reference counting system, meaning that it is not likely to be
    thread safe.
 
@@ -427,7 +404,6 @@ MFC and STL. The architecture, similarly to MFC's CStrings, is a copy on write
 reference counting mechanism.
 
 1. Commercial
-
 2. C++ only
 
 This library, like Vstr, uses a reference counting system. There is only so
@@ -511,9 +487,7 @@ functions.
 
 1. Uses standard `char *` buffer, and adopts C 99's usage of `restrict` to
    pass the responsibility to guard against aliasing to the programmer.
-
 2. Adds no safety or memory management whatsoever.
-
 3. Most of the supplied string functions are completely trivial.
 
 The goals of libclc and Bstrlib are clearly quite different.
@@ -525,7 +499,6 @@ More information is [available online](http://firestuff.org/).
 
 1. Uses standard `char *` buffer, and adopts C 99's usage of `restrict` to
    pass the responsibility to guard against aliasing to the programmer.
-
 2. Mixes `char *` and length wrapped buffers (estr) functions, doubling the
    API size, with safety limited to only half of the functions.
 
@@ -542,13 +515,10 @@ of increasing safety and power to C's string handling capabilities.
 
 1. While the `safestr_*` functions are safe in of themselves, interoperating
    with `char *` string has dangerous unsafe modes of operation.
-
 2. The architecture of safestr's causes the base pointer to change. Thus,
    its not practical/safe to store a safestr in multiple locations if any
    single instance can be manipulated.
-
 3. Dependent on an additional error handling library.
-
 4. Uses reference counting, meaning that it is either not thread safe or
    slow and not portable.
 
@@ -584,6 +554,3 @@ essence, would allow the compiler to enforce trust propogation at compile
 time rather than run time. Non-resizability is also interesting, however,
 it seems marginal, i.e., to want a string that cannot be resized, yet can be
 modified and yet where a fixed sized buffer is undesirable.
-
-<!-- vim: et:sw=4:ts=4
--->

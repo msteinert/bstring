@@ -88,7 +88,6 @@ Testing a port
 To test that a port compiles correctly do the following:
 
 1. Run `make check` and ensure that no errors are reported.
-
 2. Run `make memcheck` and ensure that no errors are reported.
 
 The builds must have zero errors and zero warnings. The result of execution
@@ -115,6 +114,3 @@ Feedback
 
 Please send email to the [primary author](websnarf@users.sourceforge.net) if
 you find any issues.
-
-<!-- vim: et:sw=4:ts=4
--->

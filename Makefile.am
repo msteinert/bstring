@@ -47,3 +47,5 @@ pkgconfig_DATA = bstring.pc
 
 release: dist
 	$(AM_V_GEN)sha256sum $(DIST_ARCHIVES) > $(PACKAGE)-$(VERSION).sha256sum
+
+EXTRA_DIST = doc README.md
