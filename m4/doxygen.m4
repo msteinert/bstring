@@ -1,6 +1,6 @@
-# gdb.m4 - Check for GDB.
+# gdb.m4 - Check for Doxygen.
 #
-# Copyright 2012 Michael Steinert
+# Copyright 2013 Michael Steinert
 #
 # This file is free software; the copyright holder gives unlimited
 # permission to copy and/or distribute it, with or without modifications,
@@ -13,15 +13,12 @@
 
 #serial 1
 
-# AX_PROG_GDB
-# -----------
-# Setup GDB and the "%.debug" target.
-AC_DEFUN([AX_PROG_GDB],
+# AX_PROG_DOXYGEN
+# ---------------
+# Setup Doxygen and the "html" target.
+AC_DEFUN([AX_PROG_DOXYGEN],
 [dnl
-	AC_ARG_VAR([GDB_PATH], [Path to the GDB executable.])
-	AC_ARG_VAR([GDB_FLAGS], [Flags for GDB.])
-	AC_ARG_VAR([GDB_ENVIRONMENT],
-		   [Environment variables for GDB.])
-	AC_CHECK_PROGS([GDB_PATH], [gdb], [:])
-	AM_CONDITIONAL([HAVE_GDB], [test "x$GDB_PATH" != "x:"])
+	AC_ARG_VAR([DOXYGEN_PATH], [Path to the Doxygen executable.])
+	AC_CHECK_PROGS([DOXYGEN_PATH], [doxygen], [:])
+	AM_CONDITIONAL([HAVE_DOXYGEN], [test "x$DOXYGEN_PATH" != "x:"])
 ])dnl

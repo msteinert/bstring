@@ -33,6 +33,7 @@ m4_ifdef([AC_PROG_CC_C99], [AC_PROG_CC_C99],
 	  AC_PROG_CC
 	  AX_TRY_CFLAGS([-std=c99], [AX_CFLAGS([-std=c99])])])
 AX_PROG_VALGRIND
+AX_PROG_DOXYGEN
 AX_PROG_GDB
 
 # OS-specific settings
@@ -72,7 +73,7 @@ AM_CONDITIONAL([HAVE_CHECK], [test "x$have_check" = "xyes"])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	bstring.pc
-	Doxyfile
+        doc/Doxyfile
 	Makefile
 ])
 AC_OUTPUT

@@ -36,6 +36,10 @@ tests_testaux_LDFLAGS = $(CHECK_LIBS)
 tests_testaux_LDADD = bstring/libbstring.la
 endif
 
+# Documentation setup
+DOXYGEN_DOXYFILE = $(top_srcdir)/doc/Doxyfile
+include $(top_srcdir)/m4/doxygen.mk
+
 # Test targets
 include $(top_srcdir)/m4/valgrind.mk
 include $(top_srcdir)/m4/check.mk

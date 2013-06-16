@@ -37,6 +37,7 @@ configure
 cscope.files
 cscope.out
 depcomp
+doc/html
 install-sh
 libtool
 ltmain.sh
