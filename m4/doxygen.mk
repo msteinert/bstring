@@ -11,6 +11,8 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 # PURPOSE.
 
+if HAVE_DOXYGEN
+
 DOXYGEN_DOXYFILE ?= Doxyfile
 
 AX_V_doxygen = $(ax__v_doxygen_$(V))
@@ -22,3 +24,5 @@ DOXYGEN = $(DOXYGEN_PATH) $(DOXYGEN_DOXYFILE)
 
 html-local: $(DOXYGEN_DOXYFILE)
 	$(AX_V_doxygen)$(DOXYGEN)
+
+endif
