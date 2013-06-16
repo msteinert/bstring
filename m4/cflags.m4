@@ -43,4 +43,3 @@ m4_foreach_w([_ax_flag], [$1],
 			[CFLAGS="$CFLAGS _ax_flag"])
 	])dnl
 ])dnl
-

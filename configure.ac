@@ -64,7 +64,11 @@ AC_SUBST([LT_AGE])
 PKG_CHECK_MODULES([CHECK], [check >= 0.9],
 		  [have_check=yes
 		   VALGRIND_ENVIRONMENT="CK_FORK=no"
-		   GDB_ENVIRONMENT="CK_FORK=no"],
+		   GDB_ENVIRONMENT="CK_FORK=no"
+		   # Some versions of the Check header file use
+		   # GNU-style token pasting.
+		   AX_TRY_CFLAGS([-Wno-gnu],
+				 [CHECK_CFLAGS="$CHECK_CFLAGS -Wno-gnu"])],
 		  [have_check=no
 		   AC_MSG_WARN([Unable to run unit tests.])])
 AM_CONDITIONAL([HAVE_CHECK], [test "x$have_check" = "xyes"])
@@ -73,7 +77,7 @@ AM_CONDITIONAL([HAVE_CHECK], [test "x$have_check" = "xyes"])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	bstring.pc
-        doc/Doxyfile
+	doc/Doxyfile
 	Makefile
 ])
 AC_OUTPUT

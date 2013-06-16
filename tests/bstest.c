@@ -50,8 +50,8 @@ test0_0(const char *s, const char *res)
 	int ret = 0;
 	bstring b0 = bfromcstr(s);
 	if (s) {
-		ck_assert_int_ne(b0, NULL);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(b0 != NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
 		ret = memcmp(res, b0->data, b0->slen);
@@ -60,7 +60,7 @@ test0_0(const char *s, const char *res)
 		ret = bdestroy(b0);
 		ck_assert_int_eq(ret, BSTR_OK);
 	} else {
-		ck_assert_int_eq(res, NULL);
+		ck_assert(res == NULL);
 	}
 }
 
@@ -70,8 +70,8 @@ test0_1(const char *s, int len, const char *res)
 	int ret = 0;
 	bstring b0 = bfromcstralloc(len, s);
 	if (s) {
-		ck_assert_int_ne(b0, NULL);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(b0 != NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
 		ret = memcmp(res, b0->data, b0->slen);
@@ -81,7 +81,7 @@ test0_1(const char *s, int len, const char *res)
 		ret = bdestroy(b0);
 		ck_assert_int_eq(ret, BSTR_OK);
 	} else {
-		ck_assert_int_eq(res, NULL);
+		ck_assert(res == NULL);
 	}
 }
 
@@ -120,7 +120,7 @@ test1_0(const void *blk, int len, const char *res)
 	int ret = 0;
 	bstring b0 = blk2bstr(blk, len);
 	if (res) {
-		ck_assert_int_ne(b0, NULL);
+		ck_assert(b0 != NULL);
 		ck_assert_int_eq(b0->slen, len);
 		ret = memcmp(res, b0->data, len);
 		ck_assert_int_eq(ret, 0);
@@ -128,7 +128,7 @@ test1_0(const void *blk, int len, const char *res)
 		ret = bdestroy(b0);
 		ck_assert_int_eq(ret, BSTR_OK);
 	} else {
-		ck_assert_int_eq(b0, NULL);
+		ck_assert(b0 == NULL);
 	}
 }
 
@@ -153,13 +153,13 @@ test2_0(const bstring b, char z, const unsigned char *res)
 	int ret = 0;
 	char *s = bstr2cstr(b, z);
 	if (res) {
-		ck_assert_int_ne(s, NULL);
+		ck_assert(s != NULL);
 		ret = strlen(s);
 		ck_assert_int_eq(b->slen, ret);
 		ret = memcmp(res, b->data, b->slen);
 		ck_assert_int_eq(ret, 0);
 	} else {
-		ck_assert_int_eq(s, NULL);
+		ck_assert(s == NULL);
 	}
 	free(s);
 }
@@ -210,9 +210,9 @@ test3_0(const bstring b)
 	int ret = 0;
 	bstring b0 = bstrcpy(b);
 	if (!b || !b->data || b->slen < 0) {
-		ck_assert_int_eq(b0, NULL);
+		ck_assert(b0 == NULL);
 	} else {
-		ck_assert_int_ne(b0, NULL);
+		ck_assert(b0 != NULL);
 		ck_assert_int_eq(b0->slen, b->slen);
 		ret = memcmp(b->data, b0->data, b->slen);
 		ck_assert_int_eq(ret, 0);
@@ -243,8 +243,8 @@ test4_0(const bstring b, int left, int len, const char *res)
 	if (b0 == NULL) {
 		ck_assert(!b || !b->data || b->slen < 0 || len < 0);
 	} else {
-		ck_assert_int_ne(b, NULL);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(b != NULL);
+		ck_assert(res != NULL);
 		if (len >= 0) {
 			ck_assert(b0->slen <= len);
 		}
@@ -291,7 +291,7 @@ test5_0(bstring b0, const bstring b1, const char *res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bconcat(b2, b1);
 		ck_assert_int_ne(ret, 0);
@@ -300,7 +300,7 @@ test5_0(bstring b0, const bstring b1, const char *res)
 		bwriteallow(*b2);
 		ret = bconcat(b2, b1);
 		ck_assert_int_eq(b2->slen, b0->slen + b1->slen);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = memcmp(b2->data, res, b2->slen);
 		ck_assert_int_eq(ret, 0);
 		ck_assert_int_eq(b2->data[b2->slen], '\0');
@@ -320,9 +320,9 @@ test5_1(void)
 	int i, ret;
 	for (i = 0; i < longBstring.slen; i++) {
 		b = bstrcpy(&longBstring);
-		ck_assert_int_ne(b, NULL);
+		ck_assert(b != NULL);
 		c = bstrcpy(&longBstring);
-		ck_assert_int_ne(c, NULL);
+		ck_assert(c != NULL);
 		bmid2tbstr(t, b, i, longBstring.slen);
 		ret = bconcat(c, &t);
 		ck_assert_int_eq(ret, 0);
@@ -336,9 +336,9 @@ test5_1(void)
 		ck_assert_int_eq(ret, BSTR_OK);
 	}
 	b = bfromcstr("abcd");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	c = bfromcstr("abcd");
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	for (i = 0; i < 100; i++) {
 		bmid2tbstr(t, b, 0, 3);
 		ret = bcatcstr(c, "abc");
@@ -380,7 +380,7 @@ test6_0(bstring b, char c, const char *res)
 	int ret = 0;
 	if (b && b->data && b->slen >= 0) {
 		b0 = bstrcpy(b);
-		ck_assert_int_ne(b0, NULL);
+		ck_assert(b0 != NULL);
 		bwriteprotect(*b0);
 		ret = bconchar(b0, c);
 		ck_assert_int_ne(ret, 0);
@@ -390,7 +390,7 @@ test6_0(bstring b, char c, const char *res)
 		ret = bconchar(b0, c);
 		ck_assert_int_eq(ret, 0);
 		ck_assert_int_eq(b0->slen, b->slen + 1);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
 		ret = memcmp(b0->data, res, b0->slen);
@@ -445,7 +445,7 @@ test7x8(int (* fnptr)(const bstring, const bstring),
 	test7x8_0(fnptr, &emptyBstring, &shortBstring, retLT);
 	test7x8_0(fnptr, &shortBstring, &shortBstring, retEQ);
 	bstring b = bstrcpy(&shortBstring);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	b->data[1]++;
 	test7x8_0(fnptr, b, &shortBstring, retGT);
 	int ret = bdestroy(b);
@@ -535,8 +535,8 @@ START_TEST(core_010)
 {
 	bstring c = bstrcpy(&shortBstring);
 	bstring b = bstrcpy(&emptyBstring);
-	ck_assert_int_ne(c, NULL);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(c != NULL);
+	ck_assert(b != NULL);
 	/* tests with NULL */
 	test10_0(NULL, BSTR_ERR, 1);
 	/* protected, constant and regular instantiations on empty or not */
@@ -821,7 +821,7 @@ test15_0(bstring b0, int pos, const bstring b1, unsigned char fill, char * res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bsetstr(b2, pos, b1, fill);
 		ck_assert_int_ne(ret, 0);
@@ -839,7 +839,7 @@ test15_0(bstring b0, int pos, const bstring b1, unsigned char fill, char * res)
 				}
 			}
 		}
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ck_assert(!((ret == 0) != (pos >= 0)));
 		ret = strlen(res);
 		ck_assert(b2->slen >= ret);
@@ -889,7 +889,7 @@ test16_0(bstring b0, int pos, const bstring b1, unsigned char fill, char *res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = binsert(b2, pos, b1, fill);
 		ck_assert_int_ne(ret, 0);
@@ -903,7 +903,7 @@ test16_0(bstring b0, int pos, const bstring b1, unsigned char fill, char *res)
 			ck_assert(!((ret == 0) != (pos >= 0 && pos <= b2->slen)));
 			ck_assert(!((ret == 0) != (pos >= 0 && pos <= b2->slen)));
 		}
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b2->slen, ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -951,7 +951,7 @@ test17_0(bstring s1, int pos, int len, char * res)
 	int ret = 0;
 	if (s1 && s1->data && s1->slen >= 0) {
 		b2 = bstrcpy(s1);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bdelete(b2, pos, len);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -961,7 +961,7 @@ test17_0(bstring s1, int pos, int len, char * res)
 		ret = bdelete(b2, pos, len);
 		ck_assert(!((len >= 0) != (ret == 0)));
 		ck_assert(!((b2->slen > s1->slen) || (b2->slen < pos && s1->slen >= pos)));
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b2->slen, ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -1021,7 +1021,7 @@ START_TEST(core_018)
 {
 	int ret = 0;
 	bstring b = bfromcstr("test");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	/* tests with NULL */
 	test18_0(NULL, 2, BSTR_ERR, 0);
 	test18_0(&badBstring1, 2, BSTR_ERR, 0);
@@ -1066,7 +1066,7 @@ test19_0(bstring b, int len, const char *res, int erv)
 	bstring b1 = NULL;
 	if (b && b->data && b->slen >= 0) {
 		b1 = bstrcpy(b);
-		ck_assert_int_ne(b1, NULL);
+		ck_assert(b1 != NULL);
 		bwriteprotect(*b1);
 		ret = bpattern(b1, len);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1075,7 +1075,7 @@ test19_0(bstring b, int len, const char *res, int erv)
 		bwriteallow(*b1);
 		ret = bpattern(b1, len);
 		ck_assert_int_eq(ret, erv);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b1->slen, ret);
 		ret = memcmp(b1->data, res, b1->slen);
@@ -1113,10 +1113,10 @@ START_TEST(core_020)
 	bstring b, c;
 	/* tests with NULL */
 	b = bformat(NULL, 1, 2);
-	ck_assert_int_eq(b, NULL);
+	ck_assert(b == NULL);
 	/* normal operation tests */
 	b = bformat("%d %s", 1, "xy");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = biseq(c = bfromcstr("1 xy"), b);
 	ck_assert_int_eq(ret, 1);
 	ret = bdestroy(b);
@@ -1191,7 +1191,7 @@ START_TEST(core_020)
 			    longBstring.data, longBstring.data);
 	ck_assert_int_eq(ret, BSTR_OK);
 	c = bstrcpy(&longBstring);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	bconcat(c, c);
 	bconcat(c, c);
 	bconcat(c, c);
@@ -1214,7 +1214,7 @@ test21_0(bstring b, char sc, int ns)
 		struct tagbstring t;
 		blk2tbstr(t, &sc, 1);
 		l = bsplit (b, sc);
-		ck_assert_int_ne(l, NULL);
+		ck_assert(l != NULL);
 		ck_assert_int_eq(ns, l->qty);
 		c = bjoin (l, &t);
 		ret = biseq(c, b);
@@ -1225,7 +1225,7 @@ test21_0(bstring b, char sc, int ns)
 		ck_assert_int_eq(ret, BSTR_OK);
 	} else {
 		l = bsplit(b, sc);
-		ck_assert_int_eq(l, NULL);
+		ck_assert(l == NULL);
 	}
 }
 
@@ -1237,10 +1237,10 @@ test21_1(bstring b, const bstring sc, int ns)
 	if (b && b->data && b->slen >= 0) {
 		bstring c;
 		l = bsplitstr (b, sc);
-		ck_assert_int_ne(l, NULL);
+		ck_assert(l != NULL);
 		ck_assert_int_eq(ns, l->qty);
 		c = bjoin(l, sc);
-		ck_assert_int_ne(c, NULL);
+		ck_assert(c != NULL);
 		ret = biseq (c, b);
 		ck_assert_int_eq(ret, 1);
 		ret = bdestroy(c);
@@ -1249,7 +1249,7 @@ test21_1(bstring b, const bstring sc, int ns)
 		ck_assert_int_eq(ret, BSTR_OK);
 	} else {
 		l = bsplitstr(b, sc);
-		ck_assert_int_eq(l, NULL);
+		ck_assert(l == NULL);
 	}
 }
 
@@ -1286,9 +1286,9 @@ START_TEST(core_021)
 		c = '\0';
 		while (1) {
 			l = bsplit(list[i], c);
-			ck_assert_int_ne(l, NULL);
+			ck_assert(l != NULL);
 			b = bjoin(l, &t);
-			ck_assert_int_ne(b, NULL);
+			ck_assert(b != NULL);
 			ret = biseq(b, list[i]);
 			ck_assert_int_eq(ret, 1);
 			ret = bdestroy(b);
@@ -1296,9 +1296,9 @@ START_TEST(core_021)
 			ret = bstrListDestroy(l);
 			ck_assert_int_eq(ret, BSTR_OK);
 			l = bsplitstr(list[i], &t);
-			ck_assert_int_ne(l, NULL);
+			ck_assert(l != NULL);
 			b = bjoin(l, &t);
-			ck_assert_int_ne(b, NULL);
+			ck_assert(b != NULL);
 			ret = biseq(b, list[i]);
 			ck_assert_int_eq(ret, 1);
 			ret = bdestroy(b);
@@ -1329,7 +1329,7 @@ test22_0(const bstring b, const bstring sep, int ns, ...)
 			for (i = 0; i < l->qty; i++) {
 				char *res;
 				res = va_arg(arglist, char *);
-				ck_assert_int_ne(res, NULL);
+				ck_assert(res != NULL);
 				ret = strlen(res);
 				ck_assert(ret <= l->entry[i]->slen);
 				ret = memcmp(l->entry[i]->data, res,
@@ -1348,7 +1348,7 @@ test22_0(const bstring b, const bstring sep, int ns, ...)
 		}
 	} else {
 		l = bsplits(b, sep);
-		ck_assert_int_eq(l, NULL);
+		ck_assert(l == NULL);
 	}
 }
 
@@ -1479,9 +1479,9 @@ START_TEST(core_023)
 	int l, ret = 0;
 	test23_aux_open(&sb, &longBstring);
 	bs = bsopen((bNread)NULL, &sb);
-	ck_assert_int_eq(bs, NULL);
+	ck_assert(bs == NULL);
 	bs = bsopen((bNread)test23_aux_read, &sb);
-	ck_assert_int_ne(bs, NULL);
+	ck_assert(bs != NULL);
 	ret = bseof(bs);
 	ck_assert_int_eq(ret, 0);
 	ret = bsbufflength(NULL, -1);
@@ -1528,10 +1528,10 @@ START_TEST(core_023)
 	ret = biseq(b, &longBstring);
 	ck_assert_int_eq(ret, 1);
 	bs = bsclose(bs);
-	ck_assert_int_ne(bs, NULL);
+	ck_assert(bs != NULL);
 	sb.ofs = 0;
 	bs = bsopen((bNread)test23_aux_read, &sb);
-	ck_assert_int_ne(bs, NULL);
+	ck_assert(bs != NULL);
 	b->slen = 0;
 	ret = bsreadln(b, bs,(char) '.');
 	ck_assert_int_ne(ret, BSTR_ERR);
@@ -1554,10 +1554,10 @@ START_TEST(core_023)
 	ck_assert_int_eq(ret, 0);
 	ck_assert_int_eq(longBstring.data[l-1], '.');
 	bs = bsclose(bs);
-	ck_assert_int_ne(bs, NULL);
+	ck_assert(bs != NULL);
 	test23_aux_open(&sb, &longBstring);
 	bs = bsopen((bNread) test23_aux_read, &sb);
-	ck_assert_int_ne(bs, NULL);
+	ck_assert(bs != NULL);
 	ret = bseof(bs);
 	ck_assert_int_eq(ret, 0);
 	b->slen = 0;
@@ -1565,13 +1565,13 @@ START_TEST(core_023)
 	ret = bseof(bs);
 	ck_assert_int_eq(ret, 1);
 	bs = bsclose(bs);
-	ck_assert_int_ne(bs, NULL);
+	ck_assert(bs != NULL);
 	for (l = 1; l < 4; l++) {
 		char *str;
 		for (str = (char *)longBstring.data; *str; str++) {
 			test23_aux_open(&sb, &longBstring);
 			bs = bsopen((bNread)test23_aux_read, &sb);
-			ck_assert_int_ne(bs, NULL);
+			ck_assert(bs != NULL);
 			ret = bseof(bs);
 			ck_assert_int_eq(ret, 0);
 			ret = bsbufflength(bs, l);
@@ -1584,7 +1584,7 @@ START_TEST(core_023)
 			ret = bseof(bs);
 			ck_assert_int_eq(ret, 1);
 			bs = bsclose(bs);
-			ck_assert_int_ne(bs, NULL);
+			ck_assert(bs != NULL);
 		}
 	}
 	ret = bdestroy(b);
@@ -1600,14 +1600,14 @@ START_TEST(core_023)
 			struct tagBss bss;
 			bss.sc = c;
 			bss.b = bfromcstr("");
-			ck_assert_int_ne(bss.b, NULL);
+			ck_assert(bss.b != NULL);
 			bss.first = 1;
 			test23_aux_open(&sb, list[i]);
 			bs = bsopen((bNread)test23_aux_read, &sb);
-			ck_assert_int_ne(bs, NULL);
+			ck_assert(bs != NULL);
 			bssplitscb(bs, &t, test23_aux_splitcbx, &bss);
 			bs = bsclose(bs);
-			ck_assert_int_ne(bs, NULL);
+			ck_assert(bs != NULL);
 			ret = biseq(bss.b, list[i]);
 			ck_assert_int_eq(ret, 1);
 			ret = bdestroy(bss.b);
@@ -1621,14 +1621,14 @@ START_TEST(core_023)
 			struct tagBss bss;
 			bss.sc = c;
 			bss.b = bfromcstr("");
-			ck_assert_int_ne(bss.b, NULL);
+			ck_assert(bss.b != NULL);
 			bss.first = 1;
 			test23_aux_open(&sb, list[i]);
 			bs = bsopen((bNread) test23_aux_read, &sb);
-			ck_assert_int_ne(bs, NULL);
+			ck_assert(bs != NULL);
 			bssplitstrcb(bs, &t, test23_aux_splitcbx, &bss);
 			bs = bsclose(bs);
-			ck_assert_int_ne(bs, NULL);
+			ck_assert(bs != NULL);
 			ret = biseq(bss.b, list[i]);
 			ck_assert_int_eq(ret, 1);
 			ret = bdestroy(bss.b);
@@ -1664,7 +1664,7 @@ START_TEST(core_024)
 	test24_0(&shortBstring, 1, &shortBstring, BSTR_ERR);
 	test24_0(&longBstring, 3, &shortBstring, 4);
 	b = bstrcpy(&shortBstring);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	test24_0(&longBstring, 3, b, 4);
 	ret = bdestroy(b);
 	ck_assert_int_eq(ret, BSTR_OK);
@@ -1700,7 +1700,7 @@ START_TEST(core_025)
 	test25_0(&shortBstring,  4, &shortBstring, BSTR_ERR);
 	test25_0(&longBstring, 10, &shortBstring, 9);
 	b = bstrcpy(&shortBstring);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	test25_0(&longBstring, 10, b, 9);
 	ret = bdestroy(b);
 	ck_assert_int_eq(ret, BSTR_OK);
@@ -1718,7 +1718,7 @@ test26_0(bstring b0, int pos, int len, const bstring b1,
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = breplace(b2, pos, len, b1, fill);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1730,7 +1730,7 @@ test26_0(bstring b0, int pos, int len, const bstring b1,
 			ck_assert(!(((ret == 0) !=
 				     (pos >= 0 && pos <= b2->slen))));
 		}
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert(b2->slen >= ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -1775,7 +1775,7 @@ test27_0(bstring b0, const bstring b1, const char *res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bassign(b2, b1);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1788,7 +1788,7 @@ test27_0(bstring b0, const bstring b1, const char *res)
 		}
 		ck_assert(!(((0 != ret) && (b1 != NULL)) ||
 			    ((0 == ret) && (b1 == NULL))));
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b2->slen, ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -1904,7 +1904,7 @@ test29_0(bstring b0, char *s, const char *res)
 	int ret = 0;
 	if (b0 && b0->data && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bcatcstr(b2, s);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1953,7 +1953,7 @@ test30_0(bstring b0, const unsigned char *s, int len, const char *res)
 	int ret = 0;
 	if (b0 && b0->data && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bcatblk(b2, s, len);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1970,7 +1970,7 @@ test30_0(bstring b0, const unsigned char *s, int len, const char *res)
 		}
 		ck_assert(!(((0 != ret) && (s && len >= 0)) ||
 			    ((0 == ret) && (s == NULL || len < 0))));
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(ret, b2->slen);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -2013,7 +2013,7 @@ test31_0(bstring b0, const bstring find, const bstring replace,
 	    find && find->data && find->slen >= 0 &&
 	    replace && replace->data && replace->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bfindreplace(b2, find, replace, pos);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2045,7 +2045,7 @@ test31_1(bstring b0, const bstring find, const bstring replace,
 	    find && find->data && find->slen >= 0 &&
 	    replace && replace->data && replace->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bfindreplacecaseless(b2, find, replace, pos);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2054,7 +2054,7 @@ test31_1(bstring b0, const bstring find, const bstring replace,
 		bwriteallow(*b2);
 		ret = bfindreplacecaseless(b2, find, replace, pos);
 		ck_assert_int_eq(ret, BSTR_OK);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert(b2->slen >= ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -2172,7 +2172,7 @@ START_TEST(core_032)
 	test32_0(&emptyBstring, "bogus", 0);
 	test32_0(&shortBstring, "", 0);
 	b = bstrcpy(&shortBstring);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	b->data[1]++;
 	test32_0(b, (char *)shortBstring.data, 0);
 	ret = bdestroy(b);
@@ -2190,7 +2190,7 @@ START_TEST(core_032)
 	test32_1(&emptyBstring, "bogus", 0);
 	test32_1(&shortBstring, "", 0);
 	b = bstrcpy(&shortBstring);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	b->data[1]++;
 	test32_1(b, (char *)shortBstring.data, 0);
 	ret = bdestroy(b);
@@ -2205,7 +2205,7 @@ test33_0(bstring b0, const char *res)
 	int ret = 0;
 	if (b0 && b0->data && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = btoupper(b2);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2251,7 +2251,7 @@ test34_0(bstring b0, const char *res)
 	int ret = 0;
 	if (b0 != NULL && b0->data != NULL && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = btolower(b2);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2261,7 +2261,7 @@ test34_0(bstring b0, const char *res)
 		ret = btolower(b2);
 		ck_assert_int_eq(b2->slen, b0->slen);
 		ck_assert_int_eq(ret, BSTR_OK);
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b2->slen, ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -2451,13 +2451,13 @@ START_TEST(core_038)
 	ck_assert_int_eq(ret, 0);
 	/* Creation/reads */
 	b0 = bgets((bNgetc)test38_aux_bngetc, &f, 'b');
-	ck_assert_int_ne(b0, NULL);
+	ck_assert(b0 != NULL);
 	b1 = bread((bNread)test38_aux_bnread, &f);
-	ck_assert_int_ne(b1, NULL);
+	ck_assert(b1 != NULL);
 	b2 = bgets((bNgetc)test38_aux_bngetc, &f, '\0');
-	ck_assert_int_eq(b2, NULL);
+	ck_assert(b2 == NULL);
 	b3 = bread((bNread)test38_aux_bnread, &f);
-	ck_assert_int_ne(b3, NULL);
+	ck_assert(b3 != NULL);
 	ret = biseqcstr(b0, "b");
 	ck_assert_int_eq(ret, 1);
 	ret = biseqcstr(b1, "ogus");
@@ -2515,7 +2515,7 @@ test39_0(const bstring b, const bstring lt, const bstring rt, const bstring t)
 	ret = btrimws(NULL);
 	ck_assert_int_eq(ret, BSTR_ERR);
 	r = bstrcpy(b);
-	ck_assert_int_ne(r, NULL);
+	ck_assert(r != NULL);
 	bwriteprotect(*r);
 	ret = bltrimws(r);
 	ck_assert_int_eq(ret, BSTR_ERR);
@@ -2531,7 +2531,7 @@ test39_0(const bstring b, const bstring lt, const bstring rt, const bstring t)
 	ret = bdestroy(r);
 	ck_assert_int_eq(ret, BSTR_OK);
 	r = bstrcpy(b);
-	ck_assert_int_ne(r, NULL);
+	ck_assert(r != NULL);
 	ret = brtrimws(r);
 	ck_assert_int_eq(ret, BSTR_OK);
 	ret = biseq(r, rt);
@@ -2539,7 +2539,7 @@ test39_0(const bstring b, const bstring lt, const bstring rt, const bstring t)
 	ret = bdestroy(r);
 	ck_assert_int_eq(ret, BSTR_OK);
 	r = bstrcpy(b);
-	ck_assert_int_ne(r, NULL);
+	ck_assert(r != NULL);
 	ret = btrimws(r);
 	ck_assert_int_eq(ret, BSTR_OK);
 	ret = biseq(r, t);
@@ -2573,7 +2573,7 @@ test40_0(bstring b0, const bstring b1, int left, int len, const char *res)
 	if (b0 != NULL && b0->data != NULL && b0->slen >= 0 &&
 	    b1 != NULL && b1->data != NULL && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bwriteprotect(*b2);
 		ret = bassignmidstr(b2, b1, left, len);
 		ck_assert_int_ne(ret, 0);
@@ -2586,7 +2586,7 @@ test40_0(bstring b0, const bstring b1, int left, int len, const char *res)
 		}
 		ck_assert(!(((0 != ret) && (b1 != NULL)) ||
 			    ((0 == ret) && (b1 == NULL))));
-		ck_assert_int_ne(res, NULL);
+		ck_assert(res != NULL);
 		ret = strlen(res);
 		ck_assert_int_eq(b2->slen, ret);
 		ret = memcmp(b2->data, res, b2->slen);
@@ -2629,11 +2629,11 @@ test41_0(bstring b1, int left, int len)
 	int ret = 0;
 	if (b1 && b1->data && b1->slen >= 0) {
 		b2 = bfromcstr("");
-		ck_assert_int_ne(b2, NULL);
+		ck_assert(b2 != NULL);
 		bassignmidstr(b2, b1, left, len);
 		bmid2tbstr(t, b1, left, len);
 		b3 = bstrcpy(&t);
-		ck_assert_int_ne(b3, NULL);
+		ck_assert(b3 != NULL);
 		ret = biseq(&t, b2);
 		ck_assert_int_eq(ret, 1);
 		ret = bdestroy(b2);
@@ -2643,7 +2643,7 @@ test41_0(bstring b1, int left, int len)
 	} else {
 		bmid2tbstr(t, b1, left, len);
 		b3 = bstrcpy(&t);
-		ck_assert_int_ne(b3, NULL);
+		ck_assert(b3 != NULL);
 		ck_assert_int_eq(t.slen, 0);
 		ret = bdestroy(b3);
 		ck_assert_int_eq(ret, BSTR_OK);
@@ -2757,7 +2757,7 @@ test44_0(const char *str)
 {
 	int ret = 0;
 	bstring b = bfromcstr("");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	if (NULL == str) {
 		ret = bassigncstr(NULL, "test");
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2808,7 +2808,7 @@ test45_0(const char *str)
 {
 	int ret = 0, len;
 	bstring b = bfromcstr("");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	if (!str) {
 		ret = bassignblk(NULL, "test", 4);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2863,7 +2863,7 @@ test46_0(const bstring r, bstring b, int count, const char *fmt, ...)
 	ret = bvcformata(b, count, fmt, arglist);
 	va_end(arglist);
 	if (ret < 0) {
-		ck_assert_int_eq(r, NULL);
+		ck_assert(r == NULL);
 	} else {
 		ret = biseq(r, b);
 		ck_assert_int_eq(ret, 1);
@@ -2876,7 +2876,7 @@ test46_1(bstring b, const char * fmt, const bstring r, ...)
 	int ret;
  	bvformata(ret, b, fmt, r);
 	if (ret < 0) {
-		ck_assert_int_eq(r, NULL);
+		ck_assert(r == NULL);
 	} else {
 		ret = biseq(r, b);
 		ck_assert_int_eq(ret, 1);
@@ -2893,7 +2893,7 @@ START_TEST(core_046)
 	test46_0(NULL, &badBstring2, 8, "[%d]", 15);
 	test46_0(NULL, &badBstring3, 8, "[%d]", 15);
 	b = bfromcstr("");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	test46_0(&shortBstring, b, shortBstring.slen, "%s",
 		 (char *)shortBstring.data);
 	b->slen = 0;

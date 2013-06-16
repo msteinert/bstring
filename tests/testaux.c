@@ -64,9 +64,9 @@ START_TEST(core_000)
 	bstring s, t;
 	struct bwriteStream *ws;
 	s = bfromcstr("");
-	ck_assert_int_ne(s, NULL);
+	ck_assert(s != NULL);
 	ws = bwsOpen((bNwrite)tWrite, s);
-	ck_assert_int_ne(ws, NULL);
+	ck_assert(ws != NULL);
 	(void)bwsBuffLength(ws, 8);
 	ret = bwsBuffLength(ws, 0);
 	ck_assert_int_eq(ret, 8);
@@ -79,7 +79,7 @@ START_TEST(core_000)
 	ret = biseqcstr(s, "Hello Wo");
 	ck_assert_int_eq(ret, 1);
 	t = bwsClose(ws);
-	ck_assert_int_eq(t, s);
+	ck_assert(t == s);
 	ret = biseqcstr(s, "Hello World\n");
 	ck_assert_int_eq(ret, 1);
 	ret = bdestroy(s);
@@ -93,9 +93,9 @@ START_TEST(core_001)
 	bstring b, c, d;
 	int ret = 0;
 	b = bTail(&t, 5);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	c = bHead(&t, 5);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	ret = biseqcstr(b, "world");
 	ck_assert_int_eq(ret, 1);
 	ret = biseqcstr(c, "Hello");
@@ -105,9 +105,9 @@ START_TEST(core_001)
 	ret = bdestroy(c);
 	ck_assert_int_eq(ret, BSTR_OK);
 	b = bTail(&t, 0);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	c = bHead(&t, 0);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	ret = biseqcstr(b, "");
 	ck_assert_int_eq(ret, 1);
 	ret = biseqcstr(c, "");
@@ -117,11 +117,11 @@ START_TEST(core_001)
 	ret = bdestroy(c);
 	ck_assert_int_eq(ret, BSTR_OK);
 	d = bstrcpy(&t);
-	ck_assert_int_ne(d, NULL);
+	ck_assert(d != NULL);
 	b = bTail(d, 5);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	c = bHead(d, 5);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	ret = biseqcstr(b, "world");
 	ck_assert_int_eq(ret, 1);
 	ret = biseqcstr(c, "Hello");
@@ -173,7 +173,7 @@ START_TEST(core_002)
 	ret = bSetCstrChar(&t, 4, ',');
 	ck_assert_int_eq(ret, BSTR_ERR);
 	b = bstrcpy(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bSetCstrChar(b, 4, ',');
 	ck_assert_int_eq(ret, 0);
 	ret = biseqcstr(b, "Hell, world");
@@ -208,7 +208,7 @@ START_TEST(core_003)
 	ret = bFill(&t, 'x', 7);
 	ck_assert_int_eq(ret, BSTR_ERR);
 	b = bstrcpy(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bFill(b, 'x', 7);
 	ck_assert_int_eq(ret, 0);
 	ret = biseqcstr(b, "xxxxxxx");
@@ -232,7 +232,7 @@ START_TEST(core_004)
 	ret = bReplicate(&t, 4);
 	ck_assert_int_eq(ret, BSTR_ERR);
 	b = bstrcpy(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bReplicate(b, -1);
 	ck_assert_int_eq(ret, BSTR_ERR);
 	ret = bReplicate(b, 4);
@@ -256,7 +256,7 @@ START_TEST(core_005)
 	ret = bReverse(&t);
 	ck_assert(ret < 0);
 	b = bstrcpy(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bReverse(b);
 	ck_assert_int_eq(ret, 0);
 	ret = biseqcstr(b, "dlrow olleH");
@@ -279,7 +279,7 @@ START_TEST(core_006)
 	ret = bInsertChrs(&t, 6, 4, 'x', '?');
 	ck_assert(ret < 0);
 	b = bstrcpy(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bInsertChrs(b, 6, 4, 'x', '?');
 	ck_assert_int_eq(ret, 0);
 	ret = biseqcstr(b, "Hello xxxxworld");
@@ -303,7 +303,7 @@ START_TEST(core_007)
 	ret = bJustifyCenter(&t, 8, ' ');
 	ck_assert(ret < 0);
 	b = bstrcpy(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bJustifyLeft(b, ' ');
 	ck_assert_int_eq(ret, BSTR_OK);
 	ret = biseqcstr(b, "i am");
@@ -332,11 +332,11 @@ START_TEST(core_008)
 	bstring b;
 	char *c;
 	c = bStr2NetStr(&t);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	ret = strcmp(c, "11:Hello world,");
 	ck_assert_int_eq(ret, 0);
 	b = bNetStr2Bstr(c);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = biseq(b, &t);
 	ck_assert_int_eq(ret, 1);
 	ret = bdestroy(b);
@@ -352,10 +352,10 @@ START_TEST(core_009)
 	int err, ret = 0;
 	bstring b, c;
 	b = bBase64Encode(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret += 0 >= biseqcstr(b, "SGVsbG8gd29ybGQ=");
 	c = bBase64DecodeEx(b, &err);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ck_assert_int_eq(err, 0);
 	ret += 0 >= biseq(c, &t);
 	ck_assert_int_eq(ret, 0);
@@ -372,11 +372,11 @@ START_TEST(core_010)
 	int err, ret = 0;
 	bstring b, c;
 	b = bUuEncode(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = biseqcstr(b, "+2&5L;&\\@=V]R;&0`\r\n");
 	ck_assert_int_eq(ret, 1);
 	c = bUuDecodeEx(b, &err);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	ck_assert_int_eq(err, 0);
 	ret = biseq(c, &t);
 	ck_assert_int_eq(ret, 1);
@@ -397,12 +397,12 @@ START_TEST(core_011)
 	bstring b, c;
 	int ret = 0;
 	b = bYEncode(&t);
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ck_assert_int_eq(ret, 0);
 	ret = bisstemeqblk(b, Ytstr, 11);
 	ck_assert_int_eq(ret, 1);
 	c = bYDecode(b);
-	ck_assert_int_ne(c, NULL);
+	ck_assert(c != NULL);
 	ret = biseq(c, &t);
 	ck_assert_int_eq(ret, 1);
 	ret = bdestroy(b);
@@ -419,9 +419,9 @@ START_TEST(core_012)
 	int ret = 0;
 	bstring b, c;
 	s = bsFromBstr(&t);
-	ck_assert_int_ne(s, NULL);
+	ck_assert(s != NULL);
 	b = bfromcstr("");
-	ck_assert_int_ne(b, NULL);
+	ck_assert(b != NULL);
 	ret = bsread(b, s, 6);
 	ck_assert_int_eq(ret, 0);
 	ret = biseqcstr(b, "Hello ");
@@ -434,7 +434,7 @@ START_TEST(core_012)
 	ret = biseqcstr(b, "world");
 	ck_assert_int_eq(ret, 1);
 	c = bsclose(s);
-	ck_assert_int_eq(c, NULL);
+	ck_assert(c == NULL);
 	ret = bdestroy(b);
 	ck_assert_int_eq(ret, BSTR_OK);
 }
@@ -483,28 +483,28 @@ int
 main(void)
 {
 	/* Build test suite */
-        Suite *suite = suite_create("bstr-aux");
-        /* Core tests */
-        TCase *core = tcase_create("Core");
-        tcase_add_test(core, core_000);
-        tcase_add_test(core, core_001);
-        tcase_add_test(core, core_002);
-        tcase_add_test(core, core_003);
-        tcase_add_test(core, core_004);
-        tcase_add_test(core, core_005);
-        tcase_add_test(core, core_006);
-        tcase_add_test(core, core_007);
-        tcase_add_test(core, core_008);
-        tcase_add_test(core, core_009);
-        tcase_add_test(core, core_010);
-        tcase_add_test(core, core_011);
-        tcase_add_test(core, core_012);
-        tcase_add_test(core, core_013);
+	Suite *suite = suite_create("bstr-aux");
+	/* Core tests */
+	TCase *core = tcase_create("Core");
+	tcase_add_test(core, core_000);
+	tcase_add_test(core, core_001);
+	tcase_add_test(core, core_002);
+	tcase_add_test(core, core_003);
+	tcase_add_test(core, core_004);
+	tcase_add_test(core, core_005);
+	tcase_add_test(core, core_006);
+	tcase_add_test(core, core_007);
+	tcase_add_test(core, core_008);
+	tcase_add_test(core, core_009);
+	tcase_add_test(core, core_010);
+	tcase_add_test(core, core_011);
+	tcase_add_test(core, core_012);
+	tcase_add_test(core, core_013);
 	suite_add_tcase(suite, core);
-        /* Run tests */
-        SRunner *runner = srunner_create(suite);
-        srunner_run_all(runner, CK_ENV);
-        int number_failed = srunner_ntests_failed(runner);
-        srunner_free(runner);
-        return (0 == number_failed) ? EXIT_SUCCESS : EXIT_FAILURE;
+	/* Run tests */
+	SRunner *runner = srunner_create(suite);
+	srunner_run_all(runner, CK_ENV);
+	int number_failed = srunner_ntests_failed(runner);
+	srunner_free(runner);
+	return (0 == number_failed) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
