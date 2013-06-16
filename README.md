@@ -13,7 +13,7 @@ features (or mis-features, depending on your point of view) are included:
 6. Other various improvements
 
 Currently this fork should be binary-compatible with the original code. The
-only source imcompatibility is the removal of the `const_bstring` type.
+only source incompatibility is the removal of the `const_bstring` type.
 
 ## Building
 
