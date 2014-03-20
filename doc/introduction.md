@@ -369,32 +369,32 @@ First let us give a table of C library functions and the alternative bstring
 functions that should be used instead of them.
 
 <table>
-<tr><th>C-library</th>  <th>Bstring Alternative</th>
-<tr><td>gets</td>       <td>bgets</td>
-<tr><td>strcpy</td>     <td>bassign</td>
-<tr><td>strncpy</td>    <td>bassignmidstr</td>
-<tr><td>strcat</td>     <td>bconcat</td>
-<tr><td>strncat</td>    <td>bconcat+btrunc</td>
-<tr><td>strtok</td>     <td>bsplit,bsplits</td>
-<tr><td>sprintf</td>    <td>bformat</td>
-<tr><td>snprintf</td>   <td>bformat + btrunc</td>
-<tr><td>vsprintf</td>   <td>bvformata</td>
-<tr><td>vsnprintf</td>  <td>bvformata + btrunc</td>
-<tr><td>vfprintf</td>   <td>bvformata + fputs</td>
-<tr><td>strcmp</td>     <td>biseq, bstrcmp</td>
-<tr><td>strncmp</td>    <td>bstrncmp, memcmp</td>
-<tr><td>strlen</td>     <td>slen, blength</td>
-<tr><td>strdup</td>     <td>bstrcpy</td>
-<tr><td>strset</td>     <td>bpattern</td>
-<tr><td>strstr</td>     <td>binstr</td>
-<tr><td>strpbrk</td>    <td>binchr</td>
-<tr><td>stricmp</td>    <td>bstricmp</td>
-<tr><td>strlwr</td>     <td>btolower</td>
-<tr><td>strupr</td>     <td>btoupper</td>
-<tr><td>strrev</td>     <td>bReverse (aux module)</td>
-<tr><td>strchr</td>     <td>bstrchr</td>
-<tr><td>strspnp</td>    <td>usestrspn</td>
-<tr><td>ungetc</td>     <td>bsunread</td>
+<tr><th>C-library</th>  <th>Bstring Alternative</th></tr>
+<tr><td>gets</td>       <td>bgets</td></tr>
+<tr><td>strcpy</td>     <td>bassign</td></tr>
+<tr><td>strncpy</td>    <td>bassignmidstr</td></tr>
+<tr><td>strcat</td>     <td>bconcat</td></tr>
+<tr><td>strncat</td>    <td>bconcat+btrunc</td></tr>
+<tr><td>strtok</td>     <td>bsplit,bsplits</td></tr>
+<tr><td>sprintf</td>    <td>bformat</td></tr>
+<tr><td>snprintf</td>   <td>bformat + btrunc</td></tr>
+<tr><td>vsprintf</td>   <td>bvformata</td></tr>
+<tr><td>vsnprintf</td>  <td>bvformata + btrunc</td></tr>
+<tr><td>vfprintf</td>   <td>bvformata + fputs</td></tr>
+<tr><td>strcmp</td>     <td>biseq, bstrcmp</td></tr>
+<tr><td>strncmp</td>    <td>bstrncmp, memcmp</td></tr>
+<tr><td>strlen</td>     <td>slen, blength</td></tr>
+<tr><td>strdup</td>     <td>bstrcpy</td></tr>
+<tr><td>strset</td>     <td>bpattern</td></tr>
+<tr><td>strstr</td>     <td>binstr</td></tr>
+<tr><td>strpbrk</td>    <td>binchr</td></tr>
+<tr><td>stricmp</td>    <td>bstricmp</td></tr>
+<tr><td>strlwr</td>     <td>btolower</td></tr>
+<tr><td>strupr</td>     <td>btoupper</td></tr>
+<tr><td>strrev</td>     <td>bReverse (aux module)</td></tr>
+<tr><td>strchr</td>     <td>bstrchr</td></tr>
+<tr><td>strspnp</td>    <td>usestrspn</td></tr>
+<tr><td>ungetc</td>     <td>bsunread</td></tr>
 </table>
 
 The top 9 C functions listed here are troublesome in that they impose memory
@@ -409,15 +409,15 @@ The substitute for `strncat` can be performed with higher performance by
 using the `blk2tbstr` macro to create a presized second operand for `bconcat`.
 
 <table>
-<tr><th>C-library</th>  <th>Bstring alternative</th>
-<tr><td>strspn</td>     <td>strspn acceptable</td>
-<tr><td>strcspn</td>    <td>strcspn acceptable</td>
-<tr><td>strnset</td>    <td>strnset acceptable</td>
-<tr><td>printf</td>     <td>printf acceptable</td>
-<tr><td>puts</td>       <td>puts acceptable</td>
-<tr><td>fprintf</td>    <td>fprintf acceptable</td>
-<tr><td>fputs</td>      <td>fputs acceptable</td>
-<tr><td>memcmp</td>     <td>memcmp acceptable</td>
+<tr><th>C-library</th>  <th>Bstring alternative</th></tr>
+<tr><td>strspn</td>     <td>strspn acceptable</td></tr>
+<tr><td>strcspn</td>    <td>strcspn acceptable</td></tr>
+<tr><td>strnset</td>    <td>strnset acceptable</td></tr>
+<tr><td>printf</td>     <td>printf acceptable</td></tr>
+<tr><td>puts</td>       <td>puts acceptable</td></tr>
+<tr><td>fprintf</td>    <td>fprintf acceptable</td></tr>
+<tr><td>fputs</td>      <td>fputs acceptable</td></tr>
+<tr><td>memcmp</td>     <td>memcmp acceptable</td></tr>
 </table>
 
 Remember that Bstring functions will automatically append the `NULL`
@@ -427,9 +427,9 @@ on them. Note that `bstrcmp` is not the same as `memcmp` in exactly the same
 way that `strcmp` is not the same as `memcmp`.
 
 <table>
-<tr><th>C-library</th>  <th>Bstring alternative</th>
-<tr><td>fread</td>      <td>balloc + fread</td>
-<tr><td>fgets</td>      <td>balloc + fgets</td>
+<tr><th>C-library</th>  <th>Bstring alternative</th></tr>
+<tr><td>fread</td>      <td>balloc + fread</td></tr>
+<tr><td>fgets</td>      <td>balloc + fgets</td></tr>
 </table>
 
 These are odd ones because of the exact sizing of the buffer required. The

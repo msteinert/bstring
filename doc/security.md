@@ -205,6 +205,3 @@ Obscure Issues
 
 There is no support for a Perl-like "taint" attribute, however, an example of
 how to do this using C++'s type system is given as an example.
-
-<!-- vim: et:sw=4:ts=4
--->
