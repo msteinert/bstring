@@ -383,8 +383,8 @@ bwsClose(struct bwriteStream *stream);
 do { \
 	if ((b) && (b)->mlen > 0 && (b)->data) { \
 		(void)memset((b)->data, 0, (size_t)(b)->mlen); \
-		(void)bdestroy((b)); \
 	} \
+	(void)bdestroy((b)); \
 } while (0)
 
 #define bSecureWriteProtect(t) \

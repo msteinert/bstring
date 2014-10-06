@@ -1476,6 +1476,9 @@ binsert(bstring b1, int pos, const bstring b2, unsigned char fill)
 	d = b1->slen + aux->slen;
 	l = pos + aux->slen;
 	if ((d|l) < 0) {
+		if (aux != b2) {
+			bdestroy(aux);
+		}
 		return BSTR_ERR;
 	}
 	if (l > d) {
@@ -2390,23 +2393,24 @@ bssplitstrcb(struct bStream *s, const bstring splitStr,
 	if (splitStr->slen == 1) {
 		return bssplitscb(s, splitStr, cb, parm);
 	}
-	buff = bfromcstr ("");
+	buff = bfromcstr("");
 	if (!buff) {
 		return BSTR_ERR;
 	}
 	if (splitStr->slen == 0) {
 		for (i = 0; bsreada(buff, s, BSSSC_BUFF_LEN) >= 0; i++) {
-			if ((ret = cb (parm, 0, buff)) < 0) {
+			if ((ret = cb(parm, 0, buff)) < 0) {
 				bdestroy(buff);
 				return ret;
 			}
 			buff->slen = 0;
 		}
+		bdestroy(buff);
 		return BSTR_OK;
 	} else {
 		ret = p = i = 0;
 		for (i = p = 0; ;) {
-			ret = binstr (buff, 0, splitStr);
+			ret = binstr(buff, 0, splitStr);
 			if (ret >= 0) {
 				struct tagbstring t;
 				blk2tbstr(t, buff->data, ret);

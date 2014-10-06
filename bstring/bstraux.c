@@ -978,6 +978,9 @@ bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 		return NULL;
 	}
 	b = bfromcstralloc(INIT_SECURE_INPUT_LENGTH, "");
+	if (!b) {
+		return NULL;
+	}
 	if ((c = UCHAR_MAX + 1) == (size_t)termchar) {
 		c++;
 	}
