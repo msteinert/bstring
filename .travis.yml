@@ -13,3 +13,16 @@ script:
   - ./configure
   - make -j2 memcheck
   - make distcheck
+
+env:
+  global:
+    - secure: "FCsDw8O0O29KWWuuVmOY2FuJ0/8ij3YU5QqCV2M35Mfw8QQuOoNX0KcQFXRMuYLnWUuzDFNyPi8Gui8r//X1hh9DAjt3RQmMMqueF0fq5Pi8Pyetw3AAf7dpyswXD3G8XhjM0cZSVwa2tQRZVvFa6MIL5bPfvNWQqchSJwAfapw="
+
+addons:
+  coverity_scan:
+    project:
+      name: "msteinert/bstring"
+    notification_email: mike.steinert@gmail.com
+    build_command_prepend: autoreconf -if && ./configure
+    build_command: make -j4
+    branch_pattern: coverity_scan
