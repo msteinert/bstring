@@ -10,10 +10,10 @@ AC_PREREQ([2.59])
 #	interface_age += 1
 # If functions have been added or backward-compatibility has been broken:
 #	interface_age = 0
-m4_define([major_version], [0])
-m4_define([minor_version], [1])
-m4_define([micro_version], [1])
-m4_define([interface_age], [1])
+m4_define([major_version], [1])
+m4_define([minor_version], [0])
+m4_define([micro_version], [0])
+m4_define([interface_age], [0])
 
 # Initialize autoconf & automake
 AC_INIT([Bstring], [major_version.minor_version.micro_version],
