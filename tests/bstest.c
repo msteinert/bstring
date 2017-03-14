@@ -1257,6 +1257,12 @@ START_TEST(core_021)
 {
 	struct tagbstring is = bsStatic ("is");
 	struct tagbstring ng = bsStatic ("ng");
+	struct tagbstring delim = bsStatic("aa");
+	struct tagbstring beginWithDelim = bsStatic("aaabcdaa1");
+	struct tagbstring endWithDelim = bsStatic("1aaabcdaa");
+	struct tagbstring conseqDelim = bsStatic("1aaaa1");
+	struct tagbstring oneCharLeft = bsStatic("aaaaaaa");
+	struct tagbstring allDelim = bsStatic("aaaaaa");
 	int ret = 0;
 	/* tests with NULL */
 	test21_0(NULL, (char) '?', 0);
@@ -1275,6 +1281,14 @@ START_TEST(core_021)
 	test21_1(&shortBstring, &emptyBstring, 5);
 	test21_1(&longBstring, &is, 3);
 	test21_1(&longBstring, &ng, 5);
+	/* corner cases */
+	test21_1(&emptyBstring, &delim, 1);
+	test21_1(&delim, &delim, 2);
+	test21_1(&beginWithDelim, &delim, 3);
+	test21_1(&endWithDelim, &delim, 3);
+	test21_1(&conseqDelim, &delim, 3);
+	test21_1(&oneCharLeft, &delim, 4);
+	test21_1(&allDelim, &delim, 4);
 	struct bstrList * l;
 	unsigned char c;
 	struct tagbstring t;

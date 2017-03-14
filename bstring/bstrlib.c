@@ -2619,7 +2619,8 @@ bsplitstrcb(const bstring str, const bstring splitStr, int pos,
 	if (splitStr->slen == 1) {
 		return bsplitcb(str, splitStr->data[0], pos, cb, parm);
 	}
-	for (i = p = pos; i <= str->slen - splitStr->slen; i++) {
+	i = p = pos;
+	while (i <= str->slen - splitStr->slen) {
 		ret = memcmp(splitStr->data, str->data + i, splitStr->slen);
 		if (0 == ret) {
 			ret = cb (parm, p, i - p);
@@ -2628,6 +2629,8 @@ bsplitstrcb(const bstring str, const bstring splitStr, int pos,
 			}
 			i += splitStr->slen;
 			p = i;
+		} else {
+			i++;
 		}
 	}
 	ret = cb (parm, p, str->slen - p);
