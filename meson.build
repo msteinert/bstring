@@ -12,7 +12,7 @@
 
 
 project('bstring', 'c',
-    version         : '2.4.3',
+    version         : '1.0.0',
     license         : 'BSD 3-Clause License',
     meson_version   : '>=0.50.0',
     default_options : 
