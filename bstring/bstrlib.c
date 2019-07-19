@@ -364,7 +364,7 @@ bcatcstr(bstring b, const char *s)
 	}
 	b->slen += i;
 	/* Need to explicitely resize and concatenate tail */
-	return bcatblk(b, s, strlen(s));
+	return bcatblk(b, s, (int)strlen(s));
 }
 
 int
