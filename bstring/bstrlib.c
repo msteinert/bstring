@@ -50,6 +50,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 #include "bstrlib.h"
 
 /* Just a length safe wrapper for memmove. */
@@ -158,9 +159,13 @@ int
 ballocmin(bstring b, int len)
 {
 	unsigned char *s;
-	if (b == NULL || b->data == NULL ||
-	    (b->slen + 1) < 0 || b->mlen <= 0 ||
-	    b->mlen < b->slen || len <= 0) {
+	if (b == NULL || b->data == NULL) {
+		return BSTR_ERR;
+	}
+	if (b->slen >= INT_MAX || b->slen < 0) {
+		return BSTR_ERR;
+	}
+	if (b->mlen <= 0 || b->mlen < b->slen || len <= 0) {
 		return BSTR_ERR;
 	}
 	if (len < b->slen + 1) {
@@ -502,7 +507,7 @@ bassigncstr(bstring a, const char *str)
 	}
 	a->slen = i;
 	len = strlen(str + i);
-	if (len > INT_MAX || i + len + 1 > INT_MAX ||
+	if (len + 1 > (size_t)INT_MAX - i ||
 	    0 > balloc(a, (int)(i + len + 1))) {
 		return BSTR_ERR;
 	}
@@ -517,7 +522,7 @@ bassignblk(bstring a, const void *s, int len)
 	if (!a || !a->data ||
 	    a->mlen < a->slen || a->slen < 0 ||
 	    a->mlen == 0 || !s ||
-	    len + 1 < 1) {
+	    len < 0 || len >= INT_MAX) {
 		return BSTR_ERR;
 	}
 	if (len + 1 > a->mlen && 0 > balloc(a, len + 1)) {
@@ -1523,8 +1528,15 @@ breplace(bstring b1, int pos, int len, const bstring b2, unsigned char fill)
 	int pl, ret;
 	ptrdiff_t pd;
 	bstring aux = (bstring) b2;
-	if (pos < 0 || len < 0 || (pl = pos + len) < 0 || b1 == NULL ||
-	    b2 == NULL || b1->data == NULL || b2->data == NULL ||
+	if (pos < 0 || len < 0) {
+		return BSTR_ERR;
+	}
+	if (pos > INT_MAX - len) {
+		/* Overflow */
+		return BSTR_ERR;
+	}
+	pl = pos + len;
+	if (b1 == NULL || b2 == NULL || b1->data == NULL || b2->data == NULL ||
 	    b1->slen < 0 || b2->slen < 0 || b1->mlen < b1->slen ||
 	    b1->mlen <= 0) {
 		return BSTR_ERR;
@@ -1690,14 +1702,18 @@ findreplaceengine(bstring b, const bstring find, const bstring repl,
 	while ((pos = instr(b, pos, auxf)) >= 0) {
 		if (slen >= mlen - 1) {
 			int sl, *t;
+			/* Overflow */
+			if (mlen > (int)(INT_MAX / sizeof(int *)) / 2) {
+				ret = BSTR_ERR;
+				goto done;
+			}
 			mlen += mlen;
 			sl = sizeof(int *) * mlen;
 			if (static_d == d) {
 				/* static_d cannot be realloced */
 				d = NULL;
 			}
-			if (mlen <= 0 || sl < mlen ||
-			    NULL == (t = (int *) realloc(d, sl))) {
+			if (NULL == (t = (int *) realloc(d, sl))) {
 				ret = BSTR_ERR;
 				goto done;
 			}
@@ -2153,10 +2169,10 @@ bsreada(bstring r, struct bStream *s, int n)
 	 || r->slen < 0 || r->mlen < r->slen || n <= 0) {
 		return BSTR_ERR;
 	}
-	n += r->slen;
-	if (n <= 0) {
+	if (n > INT_MAX - r->slen) {
 		return BSTR_ERR;
 	}
+	n += r->slen;
 	l = s->buff->slen;
 	orslen = r->slen;
 	if (0 == l) {
@@ -2948,13 +2964,12 @@ bvcformata(bstring b, int count, const char *fmt, va_list arg)
 	 */
 	b->data[b->slen] = '\0';
 	if (r > count + 1) {
-		/* Does r specify a particular target length? */
 		n = r;
 	} else {
-		/* If not, just double the size of count */
-		n = count + count;
-		if (count > n) {
+		if (count > INT_MAX / 2) {
 			n = INT_MAX;
+		} else {
+			n = count + count;
 		}
 	}
 	n = -n;
