@@ -1,4 +1,4 @@
-/* Copyright 2002-2010 Paul Hsieh
+/* Copyright 2002-2015 Paul Hsieh
  * This file is part of Bstrlib.
  *
  * Redistribution and use in source and binary forms, with or without
