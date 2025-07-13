@@ -269,7 +269,12 @@ blk2bstr(const void *blk, int len)
 	if (len > 0) {
 		memcpy(b->data, blk, len);
 	}
-	b->data[len] = (unsigned char)'\0';
+	if (b->mlen > len) {
+	    b->data[len] = (unsigned char)'\0';
+	} else {
+		free(b);
+		return NULL;
+	}
 	return b;
 }
 
@@ -2298,7 +2303,7 @@ bjoin(const struct bstrList *bl, const bstring sep)
 	if (bl == NULL || bl->qty < 0) {
 		return NULL;
 	}
-	if (sep != NULL && (sep->slen < 0 || sep->data == NULL)) {
+	if (sep == NULL || sep->slen < 0 || sep->data == NULL) {
 		return NULL;
 	}
 	for (i = 0, c = 1; i < bl->qty; i++) {
