@@ -1823,7 +1823,7 @@ breada(bstring b, bNread readPtr, void *parm)
 	int i, l, n;
 	if (b == NULL || b->mlen <= 0 ||
 	    b->slen < 0 || b->mlen < b->slen ||
-	    b->mlen <= 0 || readPtr == NULL) {
+	    readPtr == NULL) {
 		return BSTR_ERR;
 	}
 	i = b->slen;
@@ -1859,7 +1859,7 @@ bassigngets(bstring b, bNgetc getcPtr, void *parm, char terminator)
 	int c, d, e;
 	if (!b || b->mlen <= 0 ||
 	    b->slen < 0 || b->mlen < b->slen ||
-	    b->mlen <= 0 || getcPtr == NULL) {
+	    getcPtr == NULL) {
 		return BSTR_ERR;
 	}
 	d = 0;
@@ -1889,7 +1889,7 @@ bgetsa(bstring b, bNgetc getcPtr, void *parm, char terminator)
 	int c, d, e;
 	if (!b || b->mlen <= 0 ||
 	    b->slen < 0 || b->mlen < b->slen ||
-	    b->mlen <= 0 || !getcPtr) {
+	    !getcPtr) {
 		return BSTR_ERR;
 	}
 	d = b->slen;
