@@ -89,6 +89,8 @@ test0_1(const char *s, int len, const char *res)
 
 #define SHORT_STRING "bogus"
 
+#define EIGHT_CHAR_STRING "Waterloo"
+
 #define LONG_STRING  \
 	"This is a bogus but reasonably long string.  " \
 	"Just long enough to cause some mallocing."
@@ -2899,7 +2901,7 @@ test46_1(bstring b, const char * fmt, const bstring r, ...)
 
 START_TEST(core_046)
 {
-	bstring b;
+	bstring b, b2;
 	int ret = 0;
 	test46_0(NULL, NULL, 8, "[%d]", 15);
 	test46_0(NULL, &shortBstring, 8, "[%d]", 15);
@@ -2925,6 +2927,15 @@ START_TEST(core_046)
 	test46_1(b, "%s", &shortBstring, (char *)shortBstring.data);
 	b->slen = 0;
 	test46_1(b, "%s", &longBstring, (char *)longBstring.data);
+    b->slen = 0;
+	b2 = bfromcstr(EIGHT_CHAR_STRING);
+	bconcat(b2, b2);
+	bconcat(b2, b2);
+	bconcat(b2, b2);
+	test46_1(b, "%s%s%s%s%s%s%s%s", b2,
+	         EIGHT_CHAR_STRING, EIGHT_CHAR_STRING, EIGHT_CHAR_STRING, EIGHT_CHAR_STRING,
+	         EIGHT_CHAR_STRING, EIGHT_CHAR_STRING, EIGHT_CHAR_STRING, EIGHT_CHAR_STRING);
+	bdestroy(b2);
 	ret = bdestroy(b);
 	ck_assert_int_eq(ret, BSTR_OK);
 }
