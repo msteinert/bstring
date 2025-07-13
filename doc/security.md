@@ -69,17 +69,18 @@ all their code from a functionality point of view.
 
 ### Memory Size Overflow/Wrap Around Attack
 
-Bstrlib is impervious to memory size overflow attacks by design. The
-reason is it is resiliant to length overflows is that bstring lengths are
-bounded above by `INT_MAX`, instead of `~(size_t)0`. So length addition
-overflows cause a wrap around of the integer value making them negative
-causing `balloc` to fail before an erroneous operation can occurr. Attempted
-conversions of `char *` strings which may have lengths greater than `INT_MAX`
-are detected and the conversion is aborted.
+By design, Bstrlib is impervious to memory size overflow attacks.  The
+reason is that it detects length overflows and leads to a result error before
+the operation attempts to proceed.  Attempted conversions of char* strings
+which may have lengths greater than INT_MAX are detected and the conversion
+is aborted.  If the memory to hold the string exceeds the available memory
+for it, again, the result is aborted without changing the prior state of the
+strings.
 
-It is unknown if this property holds on machines that don't represent integers
-as 2s complement. It is recommended that Bstrlib be carefully auditted by
-anyone using a system which is not 2s complement based.
+These behaviors rely on the use of 2s complement by the underlying machine
+architecture.  It is unknown if these properties hold on machines that do
+not represent integers as 2s complement.  It is recommended that Bstrlib be
+carefully auditted by anyone using a system which is not 2s complement based.
 
 ### Constant String Protection
 
