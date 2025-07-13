@@ -554,3 +554,28 @@ essence, would allow the compiler to enforce trust propogation at compile
 time rather than run time. Non-resizability is also interesting, however,
 it seems marginal, i.e., to want a string that cannot be resized, yet can be
 modified and yet where a fixed sized buffer is undesirable.
+
+Libsrt
+------
+
+This is a length based string library based on a slightly different strategy.
+The string contents are appended to the end of the header directly so strings
+only require a single allocation.  However, whenever a reallocation occurs,
+the header is replicated and the base pointer for the string is changed.
+That means references to the string are only valid so long as they are not
+resized after any such reference is cached.  The internal structure maintains
+a lot some state used to accelerate unicode manipulation.  This state is
+dynamically updated according to usage (so, like Bstrlib, it supports both
+a binary mode and a Unicode mode basically all the time).  But this makes
+sustainable usage of the library essentially opaque.  This also creates a
+bottleneck for whatever extensions to the library one desires (write all
+extensions on top of the base library, put in a request to the author, or
+dedicate an expert to learn the internals of the library).
+
+SDS
+---
+
+Sds uses a strategy very similar to Libsrt.  However, it uses some dynamic
+headers to decrease the overhead for very small strings.  This requires an
+extra switch statement for access to each string attribute.  The source code
+appears to use gcc/clang extensions, and thus it is not portable.
