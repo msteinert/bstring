@@ -2929,6 +2929,7 @@ bvcformata(bstring b, int count, const char *fmt, va_list arg)
 		return BSTR_ERR;
 	}
 	exvsnprintf(r, (char *)b->data + b->slen, count + 2, fmt, arg);
+	b->data[b->slen + count + 2] = '\0';
 	/* Did the operation complete successfully within bounds? */
 	for (l = b->slen; l <= n; l++) {
 		if ('\0' == b->data[l]) {
