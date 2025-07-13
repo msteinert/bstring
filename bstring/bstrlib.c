@@ -981,7 +981,9 @@ bdestroy(bstring b)
 	    b->data == NULL) {
 		return BSTR_ERR;
 	}
-	free(b->data);
+	if (b->data != NULL) {
+		free(b->data);
+	}
 	/* In case there is any stale usage, there is one more chance to
 	 * notice this error.
 	 */
