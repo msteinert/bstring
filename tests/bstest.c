@@ -35,6 +35,10 @@
  * This file is the C unit test for Bstrlib.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "bstraux.h"
 #include "bstrlib.h"
 #include <check.h>
@@ -2466,11 +2470,19 @@ START_TEST(core_038)
 	int ret = test38_aux_bnopen(&f, &shortBstring);
 	ck_assert_int_eq(ret, 0);
 	/* Creation/reads */
+#if defined(HAVE_LIBGEN_H_BGETS)
+	b0 = bgetstream((bNgetc)test38_aux_bngetc, &f, 'b');
+#else
 	b0 = bgets((bNgetc)test38_aux_bngetc, &f, 'b');
+#endif
 	ck_assert(b0 != NULL);
 	b1 = bread((bNread)test38_aux_bnread, &f);
 	ck_assert(b1 != NULL);
+#if defined(HAVE_LIBGEN_H_BGETS)
+	b2 = bgetstream((bNgetc)test38_aux_bngetc, &f, '\0');
+#else
 	b2 = bgets((bNgetc)test38_aux_bngetc, &f, '\0');
+#endif
 	ck_assert(b2 == NULL);
 	b3 = bread((bNread)test38_aux_bnread, &f);
 	ck_assert(b3 != NULL);

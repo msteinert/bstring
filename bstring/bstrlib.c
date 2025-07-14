@@ -36,7 +36,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #if defined (_MSC_VER)
@@ -1943,7 +1943,11 @@ bgetsa(bstring b, bNgetc getcPtr, void *parm, char terminator)
 }
 
 bstring
+#if defined(HAVE_LIBGEN_H_BGETS)
+bgetstream(bNgetc getcPtr, void *parm, char terminator)
+#else
 bgets(bNgetc getcPtr, void *parm, char terminator)
+#endif
 {
 	bstring buff;
 	if (0 > bgetsa(buff = bfromcstr (""), getcPtr, parm, terminator) ||
