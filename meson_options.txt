@@ -1,4 +1,10 @@
 option(
+    'force-bgets-workaround',
+    type: 'boolean',
+    value: true,
+    description: 'Always use workaround that renames bgets function to bgetstring',
+)
+option(
     'enable-docs',
     type: 'boolean',
     value: false,

@@ -35,6 +35,10 @@
  * This file is the C unit test for the bstraux module of Bstrlib.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "bstraux.h"
 #include "bstrlib.h"
 #include <check.h>

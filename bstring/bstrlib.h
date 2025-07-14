@@ -66,6 +66,10 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdarg.h>
 #include <string.h>
 #include <limits.h>
@@ -1150,7 +1154,11 @@ typedef size_t (*bNread)(void *buff, size_t elsize, size_t nelem, void *parm);
  * character. This is consistent with the semantics of fgets.)
  */
 BSTR_PUBLIC bstring
+#if defined(HAVE_LIBGEN_H_BGETS)
+bgetstream(bNgetc getcPtr, void *parm, char terminator);
+#else
 bgets(bNgetc getcPtr, void *parm, char terminator);
+#endif
 
 /**
  * Read an entire stream into a bstring, verbatum.
