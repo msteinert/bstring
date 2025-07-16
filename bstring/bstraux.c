@@ -1004,7 +1004,7 @@ bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 			    (m = b->mlen + 1) <= (size_t)b->mlen) {
 				t = NULL;
 			} else {
-				t = bfromcstralloc (m, "");
+				t = bfromcstralloc ((int)m, "");
 			}
 			if (t) {
 				memcpy(t->data, b->data, i);
@@ -1017,7 +1017,7 @@ bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 		}
 		b->data[i] = (unsigned char)c;
 	}
-	b->slen = i;
+	b->slen = (int)i;
 	b->data[i] = (unsigned char)'\0';
 	return b;
 }
