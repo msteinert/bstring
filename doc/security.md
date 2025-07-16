@@ -25,11 +25,11 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Like any software, there is always a possibility of failure due to a flawed
-implementation. Nevertheless a good faith effort has been made to minimize
-such flaws in Bstrlib. Also, use of Bstrlib by itself will not make an
-application secure or free from implementation failures. However, it is the
-author's conviction that use of Bstrlib can greatly facilitate the creation
-of software meeting the highest possible standards of security.
+implementation.  Nevertheless a good faith effort has been made to minimize
+such flaws in Bstrlib.  Use of Bstrlib by itself will not make an application
+secure or free from implementation failures, however, it is the author's
+conviction that use of Bstrlib can greatly facilitate the creation of
+software meeting the highest possible standards of security.
 
 Part of the reason why this document has been created, is for the purpose of
 security auditing, or the creation of further "Statements on Security" for
@@ -69,17 +69,13 @@ all their code from a functionality point of view.
 
 ### Memory Size Overflow/Wrap Around Attack
 
-Bstrlib is impervious to memory size overflow attacks by design. The
-reason is it is resiliant to length overflows is that bstring lengths are
-bounded above by `INT_MAX`, instead of `~(size_t)0`. So length addition
-overflows cause a wrap around of the integer value making them negative
-causing `balloc` to fail before an erroneous operation can occurr. Attempted
-conversions of `char *` strings which may have lengths greater than `INT_MAX`
-are detected and the conversion is aborted.
-
-It is unknown if this property holds on machines that don't represent integers
-as 2s complement. It is recommended that Bstrlib be carefully auditted by
-anyone using a system which is not 2s complement based.
+By design, Bstrlib is impervious to memory size overflow attacks.  The
+reason is that it detects length overflows and leads to a result error before
+the operation attempts to proceed.  Attempted conversions of char* strings
+which may have lengths greater than INT_MAX are detected and the conversion
+is aborted.  If the memory to hold the string exceeds the available memory
+for it, again, the result is aborted without changing the prior state of the
+strings.
 
 ### Constant String Protection
 
@@ -203,5 +199,5 @@ Obscure Issues
 
 ### Data attributes
 
-There is no support for a Perl-like "taint" attribute, however, an example of
-how to do this using C++'s type system is given as an example.
+There is no support for a Perl-like "taint" attribute, although this is a
+fairly straightforward exercise using C++'s type system.

@@ -1,4 +1,4 @@
-/* Copyright 2002-2010 Paul Hsieh
+/* Copyright 2002-2015 Paul Hsieh
  * This file is part of Bstrlib.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,6 +50,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 #include "bstrlib.h"
 
 /* Just a length safe wrapper for memmove. */
@@ -144,6 +145,12 @@ retry:
 		b->data = x;
 		b->mlen = len;
 		b->data[b->slen] = (unsigned char)'\0';
+
+#if defined (BSTRLIB_TEST_CANARY)
+		if (len > b->slen + 1) {
+			memchr (b->data + b->slen + 1, 'X', len - (b->slen + 1));
+		}
+#endif
 	}
 	return BSTR_OK;
 }
@@ -152,9 +159,13 @@ int
 ballocmin(bstring b, int len)
 {
 	unsigned char *s;
-	if (b == NULL || b->data == NULL ||
-	    (b->slen + 1) < 0 || b->mlen <= 0 ||
-	    b->mlen < b->slen || len <= 0) {
+	if (b == NULL || b->data == NULL) {
+		return BSTR_ERR;
+	}
+	if (b->slen >= INT_MAX || b->slen < 0) {
+		return BSTR_ERR;
+	}
+	if (b->mlen <= 0 || b->mlen < b->slen || len <= 0) {
 		return BSTR_ERR;
 	}
 	if (len < b->slen + 1) {
@@ -258,7 +269,12 @@ blk2bstr(const void *blk, int len)
 	if (len > 0) {
 		memcpy(b->data, blk, len);
 	}
-	b->data[len] = (unsigned char)'\0';
+	if (b->mlen > len) {
+	    b->data[len] = (unsigned char)'\0';
+	} else {
+		free(b);
+		return NULL;
+	}
 	return b;
 }
 
@@ -496,7 +512,7 @@ bassigncstr(bstring a, const char *str)
 	}
 	a->slen = i;
 	len = strlen(str + i);
-	if (len > INT_MAX || i + len + 1 > INT_MAX ||
+	if (len + 1 > (size_t)INT_MAX - i ||
 	    0 > balloc(a, (int)(i + len + 1))) {
 		return BSTR_ERR;
 	}
@@ -511,7 +527,7 @@ bassignblk(bstring a, const void *s, int len)
 	if (!a || !a->data ||
 	    a->mlen < a->slen || a->slen < 0 ||
 	    a->mlen == 0 || !s ||
-	    len + 1 < 1) {
+	    len < 0 || len >= INT_MAX) {
 		return BSTR_ERR;
 	}
 	if (len + 1 > a->mlen && 0 > balloc(a, len + 1)) {
@@ -965,7 +981,9 @@ bdestroy(bstring b)
 	    b->data == NULL) {
 		return BSTR_ERR;
 	}
-	free(b->data);
+	if (b->data != NULL) {
+		free(b->data);
+	}
 	/* In case there is any stale usage, there is one more chance to
 	 * notice this error.
 	 */
@@ -1517,8 +1535,15 @@ breplace(bstring b1, int pos, int len, const bstring b2, unsigned char fill)
 	int pl, ret;
 	ptrdiff_t pd;
 	bstring aux = (bstring) b2;
-	if (pos < 0 || len < 0 || (pl = pos + len) < 0 || b1 == NULL ||
-	    b2 == NULL || b1->data == NULL || b2->data == NULL ||
+	if (pos < 0 || len < 0) {
+		return BSTR_ERR;
+	}
+	if (pos > INT_MAX - len) {
+		/* Overflow */
+		return BSTR_ERR;
+	}
+	pl = pos + len;
+	if (b1 == NULL || b2 == NULL || b1->data == NULL || b2->data == NULL ||
 	    b1->slen < 0 || b2->slen < 0 || b1->mlen < b1->slen ||
 	    b1->mlen <= 0) {
 		return BSTR_ERR;
@@ -1684,14 +1709,18 @@ findreplaceengine(bstring b, const bstring find, const bstring repl,
 	while ((pos = instr(b, pos, auxf)) >= 0) {
 		if (slen >= mlen - 1) {
 			int sl, *t;
+			/* Overflow */
+			if (mlen > (int)(INT_MAX / sizeof(int *)) / 2) {
+				ret = BSTR_ERR;
+				goto done;
+			}
 			mlen += mlen;
 			sl = sizeof(int *) * mlen;
 			if (static_d == d) {
 				/* static_d cannot be realloced */
 				d = NULL;
 			}
-			if (mlen <= 0 || sl < mlen ||
-			    NULL == (t = (int *) realloc(d, sl))) {
+			if (NULL == (t = (int *) realloc(d, sl))) {
 				ret = BSTR_ERR;
 				goto done;
 			}
@@ -1823,7 +1852,7 @@ breada(bstring b, bNread readPtr, void *parm)
 	int i, l, n;
 	if (b == NULL || b->mlen <= 0 ||
 	    b->slen < 0 || b->mlen < b->slen ||
-	    b->mlen <= 0 || readPtr == NULL) {
+	    readPtr == NULL) {
 		return BSTR_ERR;
 	}
 	i = b->slen;
@@ -1859,7 +1888,7 @@ bassigngets(bstring b, bNgetc getcPtr, void *parm, char terminator)
 	int c, d, e;
 	if (!b || b->mlen <= 0 ||
 	    b->slen < 0 || b->mlen < b->slen ||
-	    b->mlen <= 0 || getcPtr == NULL) {
+	    getcPtr == NULL) {
 		return BSTR_ERR;
 	}
 	d = 0;
@@ -1889,7 +1918,7 @@ bgetsa(bstring b, bNgetc getcPtr, void *parm, char terminator)
 	int c, d, e;
 	if (!b || b->mlen <= 0 ||
 	    b->slen < 0 || b->mlen < b->slen ||
-	    b->mlen <= 0 || !getcPtr) {
+	    !getcPtr) {
 		return BSTR_ERR;
 	}
 	d = b->slen;
@@ -2147,10 +2176,10 @@ bsreada(bstring r, struct bStream *s, int n)
 	 || r->slen < 0 || r->mlen < r->slen || n <= 0) {
 		return BSTR_ERR;
 	}
-	n += r->slen;
-	if (n <= 0) {
+	if (n > INT_MAX - r->slen) {
 		return BSTR_ERR;
 	}
+	n += r->slen;
 	l = s->buff->slen;
 	orslen = r->slen;
 	if (0 == l) {
@@ -2276,7 +2305,7 @@ bjoin(const struct bstrList *bl, const bstring sep)
 	if (bl == NULL || bl->qty < 0) {
 		return NULL;
 	}
-	if (sep != NULL && (sep->slen < 0 || sep->data == NULL)) {
+	if (sep == NULL || sep->slen < 0 || sep->data == NULL) {
 		return NULL;
 	}
 	for (i = 0, c = 1; i < bl->qty; i++) {
@@ -2929,6 +2958,7 @@ bvcformata(bstring b, int count, const char *fmt, va_list arg)
 		return BSTR_ERR;
 	}
 	exvsnprintf(r, (char *)b->data + b->slen, count + 2, fmt, arg);
+	b->data[b->slen + count + 2] = '\0';
 	/* Did the operation complete successfully within bounds? */
 	for (l = b->slen; l <= n; l++) {
 		if ('\0' == b->data[l]) {
@@ -2941,13 +2971,12 @@ bvcformata(bstring b, int count, const char *fmt, va_list arg)
 	 */
 	b->data[b->slen] = '\0';
 	if (r > count + 1) {
-		/* Does r specify a particular target length? */
 		n = r;
 	} else {
-		/* If not, just double the size of count */
-		n = count + count;
-		if (count > n) {
+		if (count > INT_MAX / 2) {
 			n = INT_MAX;
+		} else {
+			n = count + count;
 		}
 	}
 	n = -n;
