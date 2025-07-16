@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Initialize autoconf
-AC_PREREQ([2.59])
+AC_PREREQ([2.72])
 
 # Library versioning
 # Making releases:
@@ -28,10 +28,7 @@ LT_PREREQ([2.2])
 LT_INIT
 
 # Check the build environment
-m4_ifdef([AC_PROG_CC_C99], [AC_PROG_CC_C99],
-	 [AC_MSG_WARN([Attemping c99 workaround due to old version of autoconf])
-	  AC_PROG_CC
-	  AX_TRY_CFLAGS([-std=c99], [AX_CFLAGS([-std=c99])])])
+AC_PROG_CC
 AX_PROG_VALGRIND
 AX_PROG_DOXYGEN
 AX_PROG_GDB

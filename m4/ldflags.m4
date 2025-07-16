@@ -24,7 +24,8 @@ AC_DEFUN([AX_TRY_LDFLAGS],
 _ax_ldflags=$LDFLAGS
 LDFLAGS="$1 $LDFLAGS"
 AC_MSG_CHECKING([if linker accepts '$1'])
-AC_TRY_LINK([], [],
+AC_LINK_IFELSE(
+	    [AC_LANG_SOURCE([int main(int,char**){return 0;}])],
 	    [AC_MSG_RESULT([yes])
 	     LDFLAGS=$_ax_ldflags
 	     $2],

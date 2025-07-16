@@ -20,7 +20,8 @@ AC_REQUIRE([AC_PROG_CC])
 _ax_cflags=$CFLAGS
 CFLAGS="$1 $CFLAGS"
 AC_MSG_CHECKING([if compiler accepts '$1'])
-AC_TRY_COMPILE([], [],
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int main(int,char**){return 0;}])],
 	[AC_MSG_RESULT([yes])
 	CFLAGS=$_ax_cflags
 	$2],
