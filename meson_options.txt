@@ -1,0 +1,12 @@
+option(
+    'enable-docs',
+    type: 'boolean',
+    value: false,
+    description: 'Generate and install documentation',
+)
+option(
+    'enable-tests',
+    type: 'boolean',
+    value: false,
+    description: 'Build unit tests',
+)
