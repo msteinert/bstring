@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/msteinert/bstring.png?branch=master)](https://travis-ci.org/msteinert/bstring)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/3174/badge.svg)](https://scan.coverity.com/projects/3174)
 
 # Better String Library
