@@ -1,4 +1,4 @@
-project('bstring', 'c', version: '1.0.0', default_options: ['warning_level=2'])
+project('bstring', 'c', version: '1.0.1', default_options: ['warning_level=2'])
 cc = meson.get_compiler('c')
 pkg = import('pkgconfig')
 
