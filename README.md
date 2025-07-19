@@ -6,7 +6,7 @@ This is a fork of Paul Hsieh's [Better String Library][]. The following
 features (or mis-features, depending on your point of view) are included:
 
 1. Autotools build system
-2. Updated test suite based on [Check][2]
+2. Updated test suite based on [Check][]
 3. Add [Valgrind][] to the workflow
 4. Add continuous integration via GitHub Actions
 5. Remove C++ code
