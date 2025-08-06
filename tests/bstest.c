@@ -54,8 +54,12 @@ test0_0(const char *s, const char *res)
 	int ret = 0;
 	bstring b0 = bfromcstr(s);
 	if (s) {
-		ck_assert(b0 != NULL);
-		ck_assert(res != NULL);
+		if (b0 == NULL) {
+			ck_abort_msg("test0_0: bfromcstr failed");
+		}
+		if (res == NULL) {
+			ck_abort_msg("test0_0: res is NULL but s is not");
+		}
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
 		ret = memcmp(res, b0->data, b0->slen);
@@ -74,8 +78,12 @@ test0_1(const char *s, int len, const char *res)
 	int ret = 0;
 	bstring b0 = bfromcstralloc(len, s);
 	if (s) {
-		ck_assert(b0 != NULL);
-		ck_assert(res != NULL);
+		if (b0 == NULL) {
+			ck_abort_msg("test0_1: bfromcstralloc failed");
+		}
+		if (res == NULL) {
+			ck_abort_msg("test0_1: res is NULL but s is not");
+		}
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
 		ret = memcmp(res, b0->data, b0->slen);
@@ -126,7 +134,9 @@ test1_0(const void *blk, int len, const char *res)
 	int ret = 0;
 	bstring b0 = blk2bstr(blk, len);
 	if (res) {
-		ck_assert(b0 != NULL);
+		if (b0 == NULL) {
+			ck_abort_msg("test1_0: blk2bstr failed");
+		}
 		ck_assert_int_eq(b0->slen, len);
 		ret = memcmp(res, b0->data, len);
 		ck_assert_int_eq(ret, 0);
@@ -159,7 +169,9 @@ test2_0(const bstring b, char z, const unsigned char *res)
 	int ret = 0;
 	char *s = bstr2cstr(b, z);
 	if (res) {
-		ck_assert(s != NULL);
+		if (s == NULL) {
+			ck_abort_msg("test2_0: bstr2cstr failed");
+		}
 		ret = strlen(s);
 		ck_assert_int_eq(b->slen, ret);
 		ret = memcmp(res, b->data, b->slen);
@@ -218,7 +230,9 @@ test3_0(const bstring b)
 	if (!b || !b->data || b->slen < 0) {
 		ck_assert(b0 == NULL);
 	} else {
-		ck_assert(b0 != NULL);
+		if (b0 == NULL) {
+			ck_abort_msg("test3_0: bstrcpy failed");
+		}
 		ck_assert_int_eq(b0->slen, b->slen);
 		ret = memcmp(b->data, b0->data, b->slen);
 		ck_assert_int_eq(ret, 0);
@@ -249,8 +263,12 @@ test4_0(const bstring b, int left, int len, const char *res)
 	if (b0 == NULL) {
 		ck_assert(!b || !b->data || b->slen < 0 || len < 0);
 	} else {
-		ck_assert(b != NULL);
-		ck_assert(res != NULL);
+		if (b == NULL) {
+			ck_abort_msg("test4_0: bmidstr failed with NULL b");
+		}
+		if (res == NULL) {
+			ck_abort_msg("test4_0: res is NULL but b is not");
+		}
 		if (len >= 0) {
 			ck_assert(b0->slen <= len);
 		}
@@ -297,7 +315,9 @@ test5_0(bstring b0, const bstring b1, const char *res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort_msg("test5_0: bstrcpy failed");
+		}
 		bwriteprotect(*b2);
 		ret = bconcat(b2, b1);
 		ck_assert_int_ne(ret, 0);
@@ -306,7 +326,9 @@ test5_0(bstring b0, const bstring b1, const char *res)
 		bwriteallow(*b2);
 		ret = bconcat(b2, b1);
 		ck_assert_int_eq(b2->slen, b0->slen + b1->slen);
-		ck_assert(res != NULL);
+		if (res == NULL) {
+			ck_abort_msg("test5_0: res is NULL but b0 and b1 are not");
+		}
 		ret = memcmp(b2->data, res, b2->slen);
 		ck_assert_int_eq(ret, 0);
 		ck_assert_int_eq(b2->data[b2->slen], '\0');
@@ -326,9 +348,13 @@ test5_1(void)
 	int i, ret;
 	for (i = 0; i < longBstring.slen; i++) {
 		b = bstrcpy(&longBstring);
-		ck_assert(b != NULL);
+		if (b == NULL) {
+			ck_abort_msg("test5_1: bstrcpy failed");
+		}
 		c = bstrcpy(&longBstring);
-		ck_assert(c != NULL);
+		if (c == NULL) {
+			ck_abort_msg("test5_1: bstrcpy failed");
+		}
 		bmid2tbstr(t, b, i, longBstring.slen);
 		ret = bconcat(c, &t);
 		ck_assert_int_eq(ret, 0);
@@ -342,9 +368,13 @@ test5_1(void)
 		ck_assert_int_eq(ret, BSTR_OK);
 	}
 	b = bfromcstr("abcd");
-	ck_assert(b != NULL);
+	if (b == NULL) {
+		ck_abort_msg("test5_1: bfromcstr failed");
+	}
 	c = bfromcstr("abcd");
-	ck_assert(c != NULL);
+	if (c == NULL) {
+		ck_abort_msg("test5_1: bfromcstr failed");
+	}
 	for (i = 0; i < 100; i++) {
 		bmid2tbstr(t, b, 0, 3);
 		ret = bcatcstr(c, "abc");
@@ -386,7 +416,9 @@ test6_0(bstring b, char c, const char *res)
 	int ret = 0;
 	if (b && b->data && b->slen >= 0) {
 		b0 = bstrcpy(b);
-		ck_assert(b0 != NULL);
+		if (b0 == NULL) {
+			ck_abort_msg("test6_0: bstrcpy(b) failed");
+		}
 		bwriteprotect(*b0);
 		ret = bconchar(b0, c);
 		ck_assert_int_ne(ret, 0);
@@ -396,7 +428,9 @@ test6_0(bstring b, char c, const char *res)
 		ret = bconchar(b0, c);
 		ck_assert_int_eq(ret, 0);
 		ck_assert_int_eq(b0->slen, b->slen + 1);
-		ck_assert(res != NULL);
+		if (res == NULL) {
+			ck_abort_msg("test6_0: res is NULL");
+		}
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
 		ret = memcmp(b0->data, res, b0->slen);
@@ -451,7 +485,9 @@ test7x8(int (* fnptr)(const bstring, const bstring),
 	test7x8_0(fnptr, &emptyBstring, &shortBstring, retLT);
 	test7x8_0(fnptr, &shortBstring, &shortBstring, retEQ);
 	bstring b = bstrcpy(&shortBstring);
-	ck_assert(b != NULL);
+	if (b == NULL) {
+		ck_abort_msg("test7x8: bstrcpy(&shortBstring) failed");
+	}
 	b->data[1]++;
 	test7x8_0(fnptr, b, &shortBstring, retGT);
 	int ret = bdestroy(b);
@@ -540,9 +576,13 @@ test10_0(bstring b, int res, int nochange)
 START_TEST(core_010)
 {
 	bstring c = bstrcpy(&shortBstring);
+	if (c == NULL) {
+		ck_abort_msg("core_010: bstrcpy(&shortBstring) failed");
+	}
 	bstring b = bstrcpy(&emptyBstring);
-	ck_assert(c != NULL);
-	ck_assert(b != NULL);
+	if (b == NULL) {
+		ck_abort_msg("core_010: bstrcpy(&emptyBstring) failed");
+	}
 	/* tests with NULL */
 	test10_0(NULL, BSTR_ERR, 1);
 	/* protected, constant and regular instantiations on empty or not */
@@ -827,7 +867,9 @@ test15_0(bstring b0, int pos, const bstring b1, unsigned char fill, char * res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort_msg("test15_0: bstrcpy(b0) failed");
+		}
 		bwriteprotect(*b2);
 		ret = bsetstr(b2, pos, b1, fill);
 		ck_assert_int_ne(ret, 0);
@@ -845,7 +887,9 @@ test15_0(bstring b0, int pos, const bstring b1, unsigned char fill, char * res)
 				}
 			}
 		}
-		ck_assert(res != NULL);
+		if (res == NULL) {
+			ck_abort_msg("test15_0: res is NULL");
+		}
 		ck_assert(!((ret == 0) != (pos >= 0)));
 		ret = strlen(res);
 		ck_assert(b2->slen >= ret);
