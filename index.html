@@ -37,7 +37,7 @@
 features (or mis-features, depending on your point of view) are included:</p>
 
 <ol>
-<li>Autotools build system</li>
+<li>Build system (Autotools and Meson)</li>
 <li>Updated test suite based on <a href="http://check.sourceforge.net/">Check</a>
 </li>
 <li>Add <a href="http://valgrind.org/">Valgrind</a> to the workflow</li>
@@ -50,7 +50,30 @@ only source incompatibility is the removal of the <code>const_bstring</code> typ
 
 <h2>Building</h2>
 
-<p>Autotools is required to build from the source repository.</p>
+<p>Meson+Ninja or Autotools is required to build from the source repository.</p>
+
+<p>A test suite is available if <a href="http://check.sourceforge.net/">Check</a> is is installed.</p>
+
+<p>If <a href="http://valgrind.org/">Valgrind</a> is installed the test suite can be checked for memory leaks.</p>
+
+<h3>Meson</h3>
+
+<pre><code>$ meson setup build -Denable-tests=true
+$ meson compile -C build
+$ meson install -C build
+</code></pre>
+
+<p>Run tests with Check.</p>
+
+<pre><code>$ meson test -C build
+</code></pre>
+
+<p>Check for memory leaks with Valgrind.</p>
+
+<pre><code>$ meson test --wrapper='valgrind --leak-check=full' -C build
+</code></pre>
+
+<h3>Autotools</h3>
 
 <pre><code>$ autoreconf -i
 $ ./configure
@@ -58,12 +81,12 @@ $ make
 $ make install
 </code></pre>
 
-<p>A test suite is available if <a href="http://check.sourceforge.net/">Check</a> is is installed.</p>
+<p>Run tests with Check.</p>
 
 <pre><code>$ make check
 </code></pre>
 
-<p>If <a href="http://valgrind.org/">Valgrind</a> is installed the test suite can be checked for memory leaks.</p>
+<p>Check for memory leaks with Valgrind.</p>
 
 <pre><code>$ make memcheck
 </code></pre>
