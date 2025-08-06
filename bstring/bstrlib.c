@@ -2825,6 +2825,10 @@ bformata(bstring b, const char *fmt, ...)
 		}
 	}
 	while (1) {
+		if (n < 0 || n > INT_MAX - 2) {
+			bdestroy(buff);
+			return BSTR_ERR;
+		}
 		va_start(arglist, fmt);
 		exvsnprintf(r, (char *) buff->data, n + 1, fmt, arglist);
 		va_end(arglist);
@@ -2876,6 +2880,10 @@ bassignformat(bstring b, const char *fmt, ...)
 		}
 	}
 	while (1) {
+		if (n < 0 || n > INT_MAX - 2) {
+			bdestroy(buff);
+			return BSTR_ERR;
+		}
 		va_start(arglist, fmt);
 		exvsnprintf(r, (char *)buff->data, n + 1, fmt, arglist);
 		va_end(arglist);
