@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['bchar_0',['bchar',['../bstrlib_8h.html#a7d5203b5518eb6a79911185ad22fad42',1,'bstrlib.h']]],
+  ['bchare_1',['bchare',['../bstrlib_8h.html#aa69796c26dc7f9831420c76f646a1e2c',1,'bstrlib.h']]],
+  ['bdata_2',['bdata',['../bstrlib_8h.html#a918e84c6f0ed26acc34882115e1bc896',1,'bstrlib.h']]],
+  ['bdatae_3',['bdatae',['../bstrlib_8h.html#a319493bef0d51c2d8f4214b30ca0846d',1,'bstrlib.h']]],
+  ['bdataofs_4',['bdataofs',['../bstrlib_8h.html#ae6becf2b45df687b618d745990b77846',1,'bstrlib.h']]],
+  ['bdataofse_5',['bdataofse',['../bstrlib_8h.html#a7a17cc3f91a96c0c81f8c2032610a26f',1,'bstrlib.h']]],
+  ['biswriteprotected_6',['biswriteprotected',['../bstrlib_8h.html#ae6f90b293b8f88607ae83c2feae7ae99',1,'bstrlib.h']]],
+  ['blength_7',['blength',['../bstrlib_8h.html#a462176ab60e31a2ead1b575b50b1124d',1,'bstrlib.h']]],
+  ['blengthe_8',['blengthe',['../bstrlib_8h.html#a1b3759bb27b16d4ed7f87d84eb36a64a',1,'bstrlib.h']]],
+  ['bmid2tbstr_9',['bmid2tbstr',['../bstrlib_8h.html#aef11b11882ddf92fc7ab44b6d5f3a80d',1,'bstrlib.h']]],
+  ['bsstaticblkparms_10',['bsStaticBlkParms',['../bstrlib_8h.html#ac3dc1cdd273f7d9edb89f6a4a49cb852',1,'bstrlib.h']]],
+  ['bstrchr_11',['bstrchr',['../bstrlib_8h.html#aab243648d3d35096c9a9fc8d573d6827',1,'bstrlib.h']]],
+  ['bstrrchr_12',['bstrrchr',['../bstrlib_8h.html#a56057bf0b9c17ba18bc47135ed5eb2c1',1,'bstrlib.h']]],
+  ['btfromblk_13',['btfromblk',['../bstrlib_8h.html#aa6f4ba9c4ffa4800e7214ed13d1ae81c',1,'bstrlib.h']]],
+  ['btfromblkltrimws_14',['btfromblkltrimws',['../bstrlib_8h.html#a168c04182fd97834fbe508fa8c186991',1,'bstrlib.h']]],
+  ['btfromblkrtrimws_15',['btfromblkrtrimws',['../bstrlib_8h.html#a9590d06aa5bc93a8031d5bbaccf75373',1,'bstrlib.h']]],
+  ['btfromblktrimws_16',['btfromblktrimws',['../bstrlib_8h.html#afa5e9e949494d2c5d3f8749b48685e5d',1,'bstrlib.h']]],
+  ['btfromcstr_17',['btfromcstr',['../bstrlib_8h.html#a52bfb9d7cacb9f51e42066e2fe3e5a99',1,'bstrlib.h']]],
+  ['bvformata_18',['bvformata',['../bstrlib_8h.html#afa1682c36488d56476284d722c0fabab',1,'bstrlib.h']]],
+  ['bwriteallow_19',['bwriteallow',['../bstrlib_8h.html#a20e39e69cf2035b12da65078eb1b9817',1,'bstrlib.h']]],
+  ['bwriteprotect_20',['bwriteprotect',['../bstrlib_8h.html#a3b9759ad92b645976d14692362f2ed10',1,'bstrlib.h']]]
+];
