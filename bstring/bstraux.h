@@ -307,7 +307,7 @@ bUuEncode(const bstring src);
  *
  * No header or tail info is appended.
  *
- * See: http://www.yenc.org/whatis.htm, http://www.yenc.org/yenc-draft.1.3.txt
+ * See: https://yence.sourceforge.net/docs/protocol/version1_3_draft.html
  */
 BSTR_PUBLIC bstring
 bYEncode(const bstring src);
@@ -315,7 +315,7 @@ bYEncode(const bstring src);
 /**
  * Performs a YDecode of a block of data.
  *
- * See: http://www.yenc.org/whatis.htm, http://www.yenc.org/yenc-draft.1.3.txt
+ * See: https://yence.sourceforge.net/docs/protocol/version1_3_draft.html
  */
 BSTR_PUBLIC bstring
 bYDecode(const bstring src);
