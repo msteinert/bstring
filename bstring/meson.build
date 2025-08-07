@@ -7,7 +7,6 @@ libbstring = library(
     soversion: '1',
     include_directories: bstring_inc,
     install: true,
-    install_dir: get_option('libdir'),
 )
 
 bstring_dep = declare_dependency(include_directories: bstring_inc, link_with: libbstring)
