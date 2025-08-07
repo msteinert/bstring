@@ -31,7 +31,8 @@ jobs:
             gcc \
             meson \
             ninja \
-            pkgconfig
+            pkgconfig \
+            valgrind
       - name: Configure
         run: |
           meson setup build \
@@ -40,6 +41,8 @@ jobs:
         run: meson compile -C build
       - name: Run unit tests
         run: meson test -C build
+      - name: Run memory profiling
+        run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: meson install -C build
       - name: Uninstall
@@ -60,7 +63,8 @@ jobs:
             gcc \
             meson \
             ninja \
-            pkgconfig
+            pkgconfig \
+            valgrind
       - name: Configure
         run: |
           meson setup build \
@@ -90,7 +94,8 @@ jobs:
             check \
             meson \
             ninja-build \
-            pkg-config
+            pkg-config \
+            valgrind
       - name: Configure
         run: |
           meson setup build \
@@ -99,6 +104,8 @@ jobs:
         run: meson compile -C build
       - name: Run unit tests
         run: meson test -C build
+      - name: Run memory profiling
+        run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: meson install -C build
       - name: Uninstall
@@ -119,7 +126,8 @@ jobs:
             check-devel \
             gcc \
             meson \
-            ninja-build
+            ninja-build \
+            valgrind
       - name: Configure
         run: |
           meson setup build \
@@ -128,6 +136,8 @@ jobs:
         run: meson compile -C build
       - name: Run unit tests
         run: meson test -C build
+      - name: Run memory profiling
+        run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: sudo meson install -C build
       - name: Uninstall
@@ -145,7 +155,8 @@ jobs:
           sudo apt-get install --assume-yes --no-install-recommends \
             check \
             meson \
-            ninja-build
+            ninja-build \
+            valgrind
       - name: Configure
         run: |
           meson setup build \
@@ -154,6 +165,8 @@ jobs:
         run: meson compile -C build
       - name: Run unit tests
         run: meson test -C build
+      - name: Run memory profiling
+        run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: sudo meson install -C build
       - name: Uninstall
@@ -228,13 +241,15 @@ jobs:
             pkg install -y \
               check \
               meson \
-              pkgconf
+              pkgconf \
+              valgrind
           run: |
             set -e
             meson setup build \
               -Denable-tests=true
             meson compile -C build
             meson test -C build
+            meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
             meson install -C build
             ninja -C build uninstall
 
