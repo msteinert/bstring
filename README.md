@@ -21,10 +21,11 @@ only source incompatibility is the removal of the `const_bstring` type.
 
 ## Building
 
-The repository currently includes [Meson][] and Autotools ([Autoconf][],
+The repository currently includes [Meson][]+[Ninja][] and Autotools ([Autoconf][],
 [Automake][], and [Libtool][]) build systems.
 
 [Meson]: https://mesonbuild.com/
+[Ninja]: https://ninja-build.org/
 [Autoconf]: https://www.gnu.org/software/autoconf/
 [Automake]: https://www.gnu.org/software/automake/
 [Libtool]: https://www.gnu.org/software/libtool/
