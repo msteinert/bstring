@@ -21,10 +21,11 @@ only source incompatibility is the removal of the `const_bstring` type.
 
 ## Building
 
-The repository currently includes [Meson][] and Autotools ([Autoconf][],
+The repository currently includes [Meson][]+[Ninja][] and Autotools ([Autoconf][],
 [Automake][], and [Libtool][]) build systems.
 
 [Meson]: https://mesonbuild.com/
+[Ninja]: https://ninja-build.org/
 [Autoconf]: https://www.gnu.org/software/autoconf/
 [Automake]: https://www.gnu.org/software/automake/
 [Libtool]: https://www.gnu.org/software/libtool/
@@ -40,6 +41,10 @@ To build with Meson:
 A test suite is available if Check is is installed.
 
     $ meson test -C build
+
+If Valgrind is installed the test suite can be checked for memory leaks.
+
+    $ meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
 
 ### Autotools
 
