@@ -41,6 +41,10 @@ A test suite is available if Check is is installed.
 
     $ meson test -C build
 
+If Valgrind is installed the test suite can be checked for memory leaks.
+
+    $ meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
+
 ### Autotools
 
 To build with Autotools:
