@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['c_20compiler_0',['Weak C++ Compiler',['../md_porting.html#autotoc_md46',1,'']]],
+  ['c_20interface_1',['Performance of the C Interface',['../index.html#autotoc_md29',1,'']]],
+  ['c_20library_2',['C Library',['../md_porting.html#autotoc_md44',1,'Dependency on The C-Library'],['../index.html#autotoc_md26',1,'Using Bstring an Alternative to the C Library']]],
+  ['c_20s_20std_3a_3astring_3',['Comparison With C++&apos;s &lt;span class=&quot;tt&quot;&gt;std::string&lt;/span&gt;',['../md_comparisons.html#autotoc_md1',1,'']]],
+  ['c_20string_20library_4',['Safe C String Library',['../md_comparisons.html#autotoc_md12',1,'']]],
+  ['c_20tr_2024731_20proposal_5',['Comparison With ISO C TR 24731 Proposal',['../md_comparisons.html#autotoc_md2',1,'']]],
+  ['c2lib_20library_6',['Comparison With Annexia&apos;s c2lib Library',['../md_comparisons.html#autotoc_md4',1,'']]],
+  ['cert_20proposal_7',['Comparison With Managed String Library CERT Proposal',['../md_comparisons.html#autotoc_md3',1,'']]],
+  ['char_20s_20and_20bstrings_8',['Mixing &lt;span class=&quot;tt&quot;&gt;char *&lt;/span&gt;s and Bstrings',['../md_security.html#autotoc_md63',1,'']]],
+  ['choices_9',['Implementation Choices',['../index.html#autotoc_md27',1,'']]],
+  ['class_10',['Class',['../md_comparisons.html#autotoc_md0',1,'Comparison With Microsoft's CString Class'],['../md_comparisons.html#autotoc_md6',1,'wxString Class']]],
+  ['common_20security_20issues_11',['Common Security Issues',['../md_security.html#autotoc_md53',1,'']]],
+  ['comparison_20with_20annexia_20s_20c2lib_20library_12',['Comparison With Annexia&apos;s c2lib Library',['../md_comparisons.html#autotoc_md4',1,'']]],
+  ['comparison_20with_20c_20s_20std_3a_3astring_13',['Comparison With C++&apos;s &lt;span class=&quot;tt&quot;&gt;std::string&lt;/span&gt;',['../md_comparisons.html#autotoc_md1',1,'']]],
+  ['comparison_20with_20iso_20c_20tr_2024731_20proposal_14',['Comparison With ISO C TR 24731 Proposal',['../md_comparisons.html#autotoc_md2',1,'']]],
+  ['comparison_20with_20managed_20string_20library_20cert_20proposal_15',['Comparison With Managed String Library CERT Proposal',['../md_comparisons.html#autotoc_md3',1,'']]],
+  ['comparison_20with_20microsoft_20s_20cstring_20class_16',['Comparison With Microsoft&apos;s CString Class',['../md_comparisons.html#autotoc_md0',1,'']]],
+  ['comparison_20with_20stralloc_20qmail_17',['Comparison With stralloc/qmail',['../md_comparisons.html#autotoc_md5',1,'']]],
+  ['comparisons_18',['Better String Library Comparisons',['../md_comparisons.html',1,'']]],
+  ['compatibility_19',['Compatibility',['../index.html#autotoc_md37',1,'']]],
+  ['compiler_20',['Compiler',['../md_porting.html#autotoc_md42',1,'Identifying the Compiler'],['../md_porting.html#autotoc_md46',1,'Weak C++ Compiler']]],
+  ['consideration_21',['Semantic Consideration',['../index.html#autotoc_md35',1,'']]],
+  ['constant_20and_20static_20tagbstrings_22',['Constant and Static &lt;span class=&quot;tt&quot;&gt;tagbstrings&lt;/span&gt;',['../index.html#autotoc_md31',1,'']]],
+  ['constant_20string_20protection_23',['Constant String Protection',['../md_security.html#autotoc_md56',1,'']]],
+  ['cstring_20class_24',['Comparison With Microsoft&apos;s CString Class',['../md_comparisons.html#autotoc_md0',1,'']]]
+];

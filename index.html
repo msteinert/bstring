@@ -23,7 +23,7 @@
 </header>
 
 <section id="downloads" class="clearfix">
-<a href="https://github.com/msteinert/bstring/releases/v0.1.1/381/bstring-0.1.1.tar.gz" id="download-tar-gz" class="button"><span>Latest Release</span></a>
+<a href="https://github.com/msteinert/bstring/releases/download/v1.0.1/bstring-1.0.1.tar.gz" id="download-tar-gz" class="button"><span>Latest Release</span></a>
 <a href="https://github.com/msteinert/bstring" id="view-on-github" class="button"><span>View Source</span></a>
 </section>
 
@@ -37,11 +37,11 @@
 features (or mis-features, depending on your point of view) are included:</p>
 
 <ol>
-<li>Autotools build system</li>
+<li>Build system (Autotools and Meson)</li>
 <li>Updated test suite based on <a href="http://check.sourceforge.net/">Check</a>
 </li>
 <li>Add <a href="http://valgrind.org/">Valgrind</a> to the workflow</li>
-<li>Add continuous integration via <a href="https://travis-ci.org/msteinert/bstring">Travis-CI</a>
+<li>Add continuous integration via <a href="https://github.com/msteinert/bstring/actions">GitHub CI</a>
 </li>
 <li>Remove C++ code</li>
 <li>Other various improvements</li>
@@ -50,7 +50,30 @@ only source incompatibility is the removal of the <code>const_bstring</code> typ
 
 <h2>Building</h2>
 
-<p>Autotools is required to build from the source repository.</p>
+<p>Meson+Ninja or Autotools is required to build from the source repository.</p>
+
+<p>A test suite is available if <a href="http://check.sourceforge.net/">Check</a> is is installed.</p>
+
+<p>If <a href="http://valgrind.org/">Valgrind</a> is installed the test suite can be checked for memory leaks.</p>
+
+<h3>Meson</h3>
+
+<pre><code>$ meson setup build -Denable-tests=true
+$ meson compile -C build
+$ meson install -C build
+</code></pre>
+
+<p>Run tests with Check.</p>
+
+<pre><code>$ meson test -C build
+</code></pre>
+
+<p>Check for memory leaks with Valgrind.</p>
+
+<pre><code>$ meson test --wrapper='valgrind --leak-check=full' -C build
+</code></pre>
+
+<h3>Autotools</h3>
 
 <pre><code>$ autoreconf -i
 $ ./configure
@@ -58,12 +81,12 @@ $ make
 $ make install
 </code></pre>
 
-<p>A test suite is available if <a href="http://check.sourceforge.net/">Check</a> is is installed.</p>
+<p>Run tests with Check.</p>
 
 <pre><code>$ make check
 </code></pre>
 
-<p>If <a href="http://valgrind.org/">Valgrind</a> is installed the test suite can be checked for memory leaks.</p>
+<p>Check for memory leaks with Valgrind.</p>
 
 <pre><code>$ make memcheck
 </code></pre>
@@ -71,8 +94,9 @@ $ make install
 <h2>Documentation</h2>
 
 <p>The original documentation has been migrated into the header files and
-converted to the Doxygen format. The generated output can be found
-<a href="http://mike.steinert.ca/bstring/doc/">online</a>.</p>
+converted to the Doxygen format.
+<a href="http://mike.steinert.ca/bstring/doc/">The generated output can be found
+online</a>.</p>
 
 <p>The original documentation essays are available in the source distribution
 and are included in the Doxygen output. These essays have been reformatted
