@@ -6,6 +6,8 @@ libbstring = library(
     version: '1.0.0',
     soversion: '1',
     include_directories: bstring_inc,
+    dependencies: bstring_deps,
+    link_args: linker_flags,
     install: true,
 )
 
