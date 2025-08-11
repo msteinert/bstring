@@ -56,9 +56,11 @@ test0_0(const char *s, const char *res)
 	if (s) {
 		if (b0 == NULL) {
 			ck_abort_msg("test0_0: bfromcstr failed");
+			return; /* Just a safeguard */
 		}
 		if (res == NULL) {
 			ck_abort_msg("test0_0: res is NULL but s is not");
+			return; /* Just a safeguard */
 		}
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
@@ -80,9 +82,11 @@ test0_1(const char *s, int len, const char *res)
 	if (s) {
 		if (b0 == NULL) {
 			ck_abort_msg("test0_1: bfromcstralloc failed");
+			return; /* Just a safeguard */
 		}
 		if (res == NULL) {
 			ck_abort_msg("test0_1: res is NULL but s is not");
+			return; /* Just a safeguard */
 		}
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
@@ -136,6 +140,7 @@ test1_0(const void *blk, int len, const char *res)
 	if (res) {
 		if (b0 == NULL) {
 			ck_abort_msg("test1_0: blk2bstr failed");
+			return; /* Just a safeguard */
 		}
 		ck_assert_int_eq(b0->slen, len);
 		ret = memcmp(res, b0->data, len);
@@ -171,6 +176,7 @@ test2_0(const bstring b, char z, const unsigned char *res)
 	if (res) {
 		if (s == NULL) {
 			ck_abort_msg("test2_0: bstr2cstr failed");
+			return; /* Just a safeguard */
 		}
 		ret = strlen(s);
 		ck_assert_int_eq(b->slen, ret);
@@ -232,6 +238,7 @@ test3_0(const bstring b)
 	} else {
 		if (b0 == NULL) {
 			ck_abort_msg("test3_0: bstrcpy failed");
+			return; /* Just a safeguard */
 		}
 		ck_assert_int_eq(b0->slen, b->slen);
 		ret = memcmp(b->data, b0->data, b->slen);
@@ -265,9 +272,11 @@ test4_0(const bstring b, int left, int len, const char *res)
 	} else {
 		if (b == NULL) {
 			ck_abort_msg("test4_0: bmidstr failed with NULL b");
+			return; /* Just a safeguard */
 		}
 		if (res == NULL) {
 			ck_abort_msg("test4_0: res is NULL but b is not");
+			return; /* Just a safeguard */
 		}
 		if (len >= 0) {
 			ck_assert(b0->slen <= len);
@@ -317,6 +326,7 @@ test5_0(bstring b0, const bstring b1, const char *res)
 		b2 = bstrcpy(b0);
 		if (b2 == NULL) {
 			ck_abort_msg("test5_0: bstrcpy failed");
+			return; /* Just a safeguard */
 		}
 		bwriteprotect(*b2);
 		ret = bconcat(b2, b1);
@@ -328,6 +338,7 @@ test5_0(bstring b0, const bstring b1, const char *res)
 		ck_assert_int_eq(b2->slen, b0->slen + b1->slen);
 		if (res == NULL) {
 			ck_abort_msg("test5_0: res is NULL but b0 and b1 are not");
+			return; /* Just a safeguard */
 		}
 		ret = memcmp(b2->data, res, b2->slen);
 		ck_assert_int_eq(ret, 0);
@@ -350,10 +361,12 @@ test5_1(void)
 		b = bstrcpy(&longBstring);
 		if (b == NULL) {
 			ck_abort_msg("test5_1: bstrcpy failed");
+			return; /* Just a safeguard */
 		}
 		c = bstrcpy(&longBstring);
 		if (c == NULL) {
 			ck_abort_msg("test5_1: bstrcpy failed");
+			return; /* Just a safeguard */
 		}
 		bmid2tbstr(t, b, i, longBstring.slen);
 		ret = bconcat(c, &t);
@@ -370,10 +383,12 @@ test5_1(void)
 	b = bfromcstr("abcd");
 	if (b == NULL) {
 		ck_abort_msg("test5_1: bfromcstr failed");
+		return; /* Just a safeguard */
 	}
 	c = bfromcstr("abcd");
 	if (c == NULL) {
 		ck_abort_msg("test5_1: bfromcstr failed");
+		return; /* Just a safeguard */
 	}
 	for (i = 0; i < 100; i++) {
 		bmid2tbstr(t, b, 0, 3);
@@ -418,6 +433,7 @@ test6_0(bstring b, char c, const char *res)
 		b0 = bstrcpy(b);
 		if (b0 == NULL) {
 			ck_abort_msg("test6_0: bstrcpy(b) failed");
+			return; /* Just a safeguard */
 		}
 		bwriteprotect(*b0);
 		ret = bconchar(b0, c);
@@ -430,6 +446,7 @@ test6_0(bstring b, char c, const char *res)
 		ck_assert_int_eq(b0->slen, b->slen + 1);
 		if (res == NULL) {
 			ck_abort_msg("test6_0: res is NULL");
+			return; /* Just a safeguard */
 		}
 		ret = strlen(res);
 		ck_assert_int_eq(b0->slen, ret);
@@ -487,6 +504,7 @@ test7x8(int (* fnptr)(const bstring, const bstring),
 	bstring b = bstrcpy(&shortBstring);
 	if (b == NULL) {
 		ck_abort_msg("test7x8: bstrcpy(&shortBstring) failed");
+		return; /* Just a safeguard */
 	}
 	b->data[1]++;
 	test7x8_0(fnptr, b, &shortBstring, retGT);
@@ -578,10 +596,12 @@ START_TEST(core_010)
 	bstring c = bstrcpy(&shortBstring);
 	if (c == NULL) {
 		ck_abort_msg("core_010: bstrcpy(&shortBstring) failed");
+		return; /* Just a safeguard */
 	}
 	bstring b = bstrcpy(&emptyBstring);
 	if (b == NULL) {
 		ck_abort_msg("core_010: bstrcpy(&emptyBstring) failed");
+		return; /* Just a safeguard */
 	}
 	/* tests with NULL */
 	test10_0(NULL, BSTR_ERR, 1);
@@ -869,6 +889,7 @@ test15_0(bstring b0, int pos, const bstring b1, unsigned char fill, char * res)
 		b2 = bstrcpy(b0);
 		if (b2 == NULL) {
 			ck_abort_msg("test15_0: bstrcpy(b0) failed");
+			return; /* Just a safeguard */
 		}
 		bwriteprotect(*b2);
 		ret = bsetstr(b2, pos, b1, fill);
@@ -889,6 +910,7 @@ test15_0(bstring b0, int pos, const bstring b1, unsigned char fill, char * res)
 		}
 		if (res == NULL) {
 			ck_abort_msg("test15_0: res is NULL");
+			return; /* Just a safeguard */
 		}
 		ck_assert(!((ret == 0) != (pos >= 0)));
 		ret = strlen(res);
