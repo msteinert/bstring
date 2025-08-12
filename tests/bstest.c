@@ -1029,7 +1029,10 @@ test17_0(bstring s1, int pos, int len, char * res)
 	int ret = 0;
 	if (s1 && s1->data && s1->slen >= 0) {
 		b2 = bstrcpy(s1);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bdelete(b2, pos, len);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1147,7 +1150,10 @@ test19_0(bstring b, int len, const char *res, int erv)
 	bstring b1 = NULL;
 	if (b && b->data && b->slen >= 0) {
 		b1 = bstrcpy(b);
-		ck_assert(b1 != NULL);
+		if (b1 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b1);
 		ret = bpattern(b1, len);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1822,7 +1828,10 @@ test26_0(bstring b0, int pos, int len, const bstring b1,
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = breplace(b2, pos, len, b1, fill);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -1882,7 +1891,10 @@ test27_0(bstring b0, const bstring b1, const char *res)
 	if (b0 && b0->data && b0->slen >= 0 &&
 	    b1 && b1->data && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bassign(b2, b1);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2014,7 +2026,10 @@ test29_0(bstring b0, char *s, const char *res)
 	int ret = 0;
 	if (b0 && b0->data && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bcatcstr(b2, s);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2063,7 +2078,10 @@ test30_0(bstring b0, const unsigned char *s, int len, const char *res)
 	int ret = 0;
 	if (b0 && b0->data && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bcatblk(b2, s, len);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2126,7 +2144,10 @@ test31_0(bstring b0, const bstring find, const bstring replace,
 	    find && find->data && find->slen >= 0 &&
 	    replace && replace->data && replace->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bfindreplace(b2, find, replace, pos);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2158,7 +2179,10 @@ test31_1(bstring b0, const bstring find, const bstring replace,
 	    find && find->data && find->slen >= 0 &&
 	    replace && replace->data && replace->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bfindreplacecaseless(b2, find, replace, pos);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2321,7 +2345,10 @@ test33_0(bstring b0, const char *res)
 	int ret = 0;
 	if (b0 && b0->data && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = btoupper(b2);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2367,7 +2394,10 @@ test34_0(bstring b0, const char *res)
 	int ret = 0;
 	if (b0 != NULL && b0->data != NULL && b0->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = btolower(b2);
 		ck_assert_int_eq(ret, BSTR_ERR);
@@ -2700,7 +2730,10 @@ test40_0(bstring b0, const bstring b1, int left, int len, const char *res)
 	if (b0 != NULL && b0->data != NULL && b0->slen >= 0 &&
 	    b1 != NULL && b1->data != NULL && b1->slen >= 0) {
 		b2 = bstrcpy(b0);
-		ck_assert(b2 != NULL);
+		if (b2 == NULL) {
+			ck_abort();
+			return; /* Just a safeguard */
+		}
 		bwriteprotect(*b2);
 		ret = bassignmidstr(b2, b1, left, len);
 		ck_assert_int_ne(ret, 0);
