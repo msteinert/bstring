@@ -161,7 +161,10 @@ a.button span {
 #view-on-github span {
   background: transparent url(../images/octocat-icon.png) 12px 50% no-repeat;
 }
-#view-on-github {
+#read-the-docs span {
+  background: transparent url(../images/doxygen-icon.png) 12px 50% no-repeat;
+}
+#read-the-docs {
   margin-right: 0;
 }
 
