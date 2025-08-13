@@ -5,6 +5,12 @@ option(
     description: 'Always use workaround that renames bgets function to bgetstring',
 )
 option(
+    'enable-coverage',
+    type: 'boolean',
+    value: false,
+    description: 'Enable code coverage analysis for unit tests',
+)
+option(
     'enable-docs',
     type: 'boolean',
     value: false,

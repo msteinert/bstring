@@ -9,6 +9,15 @@ add_project_arguments('-Wno-gnu', language: 'c')
 add_project_arguments('-fno-common', language: 'c')
 add_project_arguments('-fvisibility=hidden', language: 'c')
 
+if get_option('enable-tests') and get_option('enable-coverage')
+    if meson.get_compiler('c').get_id() == 'gcc'
+        add_project_arguments('-fprofile-arcs', '-ftest-coverage', language: 'c')
+        add_project_link_arguments('-lgcov', language: 'c')
+    else
+        error('Code coverage is only supported with gcc')
+    endif
+endif
+
 bstring_inc = include_directories(['.', 'bstring'])
 bstring_deps = []
 libc_dep = cc.find_library('c', required: false)
