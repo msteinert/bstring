@@ -1856,7 +1856,8 @@ breada(bstring b, bNread readPtr, void *parm)
 		return BSTR_ERR;
 	}
 	i = b->slen;
-	for (n = i + 16; ; n += ((n < BS_BUFF_SZ) ? n : BS_BUFF_SZ)) {
+	n = i + 16;
+	while (1) {
 		if (BSTR_OK != balloc(b, n + 1)) {
 			return BSTR_ERR;
 		}
@@ -1864,9 +1865,11 @@ breada(bstring b, bNread readPtr, void *parm)
 		i += l;
 		b->slen = i;
 		if (i < n) {
-			break;
+			goto done;
 		}
+		n += (n < BS_BUFF_SZ) ? n : BS_BUFF_SZ;
 	}
+done:
 	b->data[i] = (unsigned char)'\0';
 	return BSTR_OK;
 }

@@ -572,14 +572,20 @@ bUuDecLine(void *parm, int ofs, int len)
 	llen += t->slen;
 	for (i = 1; i < s->slen && t->slen < llen; i += 4) {
 		unsigned char outoctet[3];
+		int invalid_c0c1 = 0;
+		int invalid_c2 = 0;
+		int invalid_c3 = 0;
 		c0 = UU_DECODE_BYTE(d0 = (int)bchare(s, i+ofs+0, ' ' - 1));
 		c1 = UU_DECODE_BYTE(d1 = (int)bchare(s, i+ofs+1, ' ' - 1));
 		c2 = UU_DECODE_BYTE(d2 = (int)bchare(s, i+ofs+2, ' ' - 1));
 		c3 = UU_DECODE_BYTE(d3 = (int)bchare(s, i+ofs+3, ' ' - 1));
 		if (((unsigned)(c0|c1) >= 0x40)) {
-			if (!ret)ret = -__LINE__;
-			if (d0 > 0x60 || (d0 < (' ' - 1)&& !isspace(d0)) ||
-			    d1 > 0x60 || (d1 < (' ' - 1)&& !isspace(d1))) {
+			invalid_c0c1 = (d0 > 0x60 || (d0 < (' ' - 1) && !isspace(d0))) ||
+						   (d1 > 0x60 || (d1 < (' ' - 1) && !isspace(d1)));
+			if (!ret) {
+				ret = -__LINE__;
+			}
+			if (invalid_c0c1) {
 				t->slen = otlen;
 				goto exit;
 			}
@@ -587,16 +593,19 @@ bUuDecLine(void *parm, int ofs, int len)
 		}
 		outoctet[0] = (unsigned char)((c0 << 2) | ((unsigned)c1 >> 4));
 		if (t->slen+1 >= llen) {
-			if (0 > bconchar(t, (char)outoctet[0])) {
+			int result = bconchar(t, (char)outoctet[0]);
+			if (result < 0) {
 				return -__LINE__;
 			}
-			break;
+			i = s->slen;
+			continue;
 		}
 		if ((unsigned)c2 >= 0x40) {
+			invalid_c2 = (d2 > 0x60 || (d2 < (' ' - 1) && !isspace(d2)));
 			if (!ret) {
 				ret = -__LINE__;
 			}
-			if (d2 > 0x60 || (d2 < (' ' - 1) && !isspace(d2))) {
+			if (invalid_c2) {
 				t->slen = otlen;
 				goto exit;
 			}
@@ -609,18 +618,26 @@ bUuDecLine(void *parm, int ofs, int len)
 			}
 			break;
 		}
-		if ((unsigned) c3 >= 0x40) { if (!ret) ret = -__LINE__;
-			if (d3 > 0x60 || (d3 < (' ' - 1) && !isspace (d3))) {
+		if ((unsigned)c3 >= 0x40) {
+			invalid_c3 = (d3 > 0x60 || (d3 < (' ' - 1) && !isspace(d3)));
+			if (!ret) {
+				ret = -__LINE__;
+			}
+			if (invalid_c3) {
 				t->slen = otlen;
 				goto exit;
 			}
 			c3 = 0;
 		}
 		outoctet[2] = (unsigned char)((c2 << 6) | ((unsigned)c3));
-		if (0 > bcatblk(t, outoctet, 3)) return -__LINE__;
+		if (0 > bcatblk(t, outoctet, 3)) {
+			return -__LINE__;
+		}
 	}
 	if (t->slen < llen) {
-		if (0 == ret) ret = -__LINE__;
+		if (0 == ret) {
+			ret = -__LINE__;
+		}
 		t->slen = otlen;
 	}
 exit:
