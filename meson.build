@@ -17,12 +17,6 @@ if libc_dep.found()
     bstring_deps += [libc_dep]
 endif
 
-linker_flags = []
-
-if cc.has_link_argument('-Wl,--no-undefined')
-    linker_flags = ['-Wl,--no-undefined']
-endif
-
 bgets_test_code = '''
 #include <stdio.h>
 #include <libgen.h>
