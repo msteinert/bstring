@@ -10,18 +10,6 @@ add_project_arguments('-fno-common', language: 'c')
 add_project_arguments('-fvisibility=hidden', language: 'c')
 
 bstring_inc = include_directories(['.', 'bstring'])
-bstring_deps = []
-libc_dep = cc.find_library('c', required: false)
-
-if libc_dep.found()
-    bstring_deps += [libc_dep]
-endif
-
-linker_flags = []
-
-if cc.has_link_argument('-Wl,--no-undefined')
-    linker_flags = ['-Wl,--no-undefined']
-endif
 
 bgets_test_code = '''
 #include <stdio.h>
