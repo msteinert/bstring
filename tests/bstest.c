@@ -54,11 +54,7 @@ test0_0(const char *s, const char *res)
 	int ret = 0;
 	bstring b0 = bfromcstr(s);
 	if (s) {
-		if (b0 == NULL) {
-			ck_abort();
-			return; /* Just a safeguard */
-		}
-		if (res == NULL) {
+		if (b0 == NULL || res == NULL) {
 			ck_abort();
 			return; /* Just a safeguard */
 		}
@@ -80,11 +76,7 @@ test0_1(const char *s, int len, const char *res)
 	int ret = 0;
 	bstring b0 = bfromcstralloc(len, s);
 	if (s) {
-		if (b0 == NULL) {
-			ck_abort();
-			return; /* Just a safeguard */
-		}
-		if (res == NULL) {
+		if (b0 == NULL || res == NULL) {
 			ck_abort();
 			return; /* Just a safeguard */
 		}
@@ -137,11 +129,7 @@ test1_0(const void *blk, int len, const char *res)
 {
 	int ret = 0;
 	bstring b0 = blk2bstr(blk, len);
-	if (res) {
-		if (b0 == NULL) {
-			ck_abort();
-			return; /* Just a safeguard */
-		}
+	if (res && b0) {
 		ck_assert_int_eq(b0->slen, len);
 		ret = memcmp(res, b0->data, len);
 		ck_assert_int_eq(ret, 0);
@@ -173,11 +161,7 @@ test2_0(const bstring b, char z, const unsigned char *res)
 {
 	int ret = 0;
 	char *s = bstr2cstr(b, z);
-	if (res) {
-		if (s == NULL) {
-			ck_abort();
-			return; /* Just a safeguard */
-		}
+	if (res && s) {
 		ret = strlen(s);
 		ck_assert_int_eq(b->slen, ret);
 		ret = memcmp(res, b->data, b->slen);
@@ -235,11 +219,9 @@ test3_0(const bstring b)
 	bstring b0 = bstrcpy(b);
 	if (!b || !b->data || b->slen < 0) {
 		ck_assert(b0 == NULL);
+	} else if (b0 == NULL) {
+		ck_abort();
 	} else {
-		if (b0 == NULL) {
-			ck_abort();
-			return; /* Just a safeguard */
-		}
 		ck_assert_int_eq(b0->slen, b->slen);
 		ret = memcmp(b->data, b0->data, b->slen);
 		ck_assert_int_eq(ret, 0);
@@ -270,11 +252,7 @@ test4_0(const bstring b, int left, int len, const char *res)
 	if (b0 == NULL) {
 		ck_assert(!b || !b->data || b->slen < 0 || len < 0);
 	} else {
-		if (b == NULL) {
-			ck_abort();
-			return; /* Just a safeguard */
-		}
-		if (res == NULL) {
+		if (b == NULL || res == NULL) {
 			ck_abort();
 			return; /* Just a safeguard */
 		}
@@ -504,18 +482,18 @@ test7x8(int (* fnptr)(const bstring, const bstring),
 	bstring b = bstrcpy(&shortBstring);
 	if (b == NULL) {
 		ck_abort();
-		return; /* Just a safeguard */
-	}
-	b->data[1]++;
-	test7x8_0(fnptr, b, &shortBstring, retGT);
-	int ret = bdestroy(b);
-	ck_assert_int_eq(ret, BSTR_OK);
-	if (fnptr == biseq) {
-		test7x8_0(fnptr, &shortBstring, &longBstring, retGT);
-		test7x8_0(fnptr, &longBstring, &shortBstring, retLT);
 	} else {
-		test7x8_0(fnptr, &shortBstring, &longBstring, 'b' - 'T');
-		test7x8_0(fnptr, &longBstring, &shortBstring, 'T' - 'b');
+		b->data[1]++;
+		test7x8_0(fnptr, b, &shortBstring, retGT);
+		int ret = bdestroy(b);
+		ck_assert_int_eq(ret, BSTR_OK);
+		if (fnptr == biseq) {
+			test7x8_0(fnptr, &shortBstring, &longBstring, retGT);
+			test7x8_0(fnptr, &longBstring, &shortBstring, retLT);
+		} else {
+			test7x8_0(fnptr, &shortBstring, &longBstring, 'b' - 'T');
+			test7x8_0(fnptr, &longBstring, &shortBstring, 'T' - 'b');
+		}
 	}
 }
 
@@ -1332,17 +1310,17 @@ test21_1(bstring b, const bstring sc, int ns)
 		l = bsplitstr (b, sc);
 		if (l == NULL) {
 			ck_abort();
-			return; /* Just a safeguard */
+		} else {
+			ck_assert_int_eq(ns, l->qty);
+			c = bjoin(l, sc);
+			ck_assert(c != NULL);
+			ret = biseq (c, b);
+			ck_assert_int_eq(ret, 1);
+			ret = bdestroy(c);
+			ck_assert_int_eq(ret, BSTR_OK);
+			ret = bstrListDestroy(l);
+			ck_assert_int_eq(ret, BSTR_OK);
 		}
-		ck_assert_int_eq(ns, l->qty);
-		c = bjoin(l, sc);
-		ck_assert(c != NULL);
-		ret = biseq (c, b);
-		ck_assert_int_eq(ret, 1);
-		ret = bdestroy(c);
-		ck_assert_int_eq(ret, BSTR_OK);
-		ret = bstrListDestroy(l);
-		ck_assert_int_eq(ret, BSTR_OK);
 	} else {
 		l = bsplitstr(b, sc);
 		ck_assert(l == NULL);
