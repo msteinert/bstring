@@ -590,7 +590,8 @@ bUuDecLine(void *parm, int ofs, int len)
 			if (0 > bconchar(t, (char)outoctet[0])) {
 				return -__LINE__;
 			}
-			break;
+			i = s->slen;
+			continue;
 		}
 		if ((unsigned)c2 >= 0x40) {
 			if (!ret) {
@@ -607,7 +608,8 @@ bUuDecLine(void *parm, int ofs, int len)
 			if (0 > bcatblk (t, outoctet, 2)) {
 				return -__LINE__;
 			}
-			break;
+			i = s->slen;
+			continue;
 		}
 		if ((unsigned) c3 >= 0x40) { if (!ret) ret = -__LINE__;
 			if (d3 > 0x60 || (d3 < (' ' - 1) && !isspace (d3))) {
