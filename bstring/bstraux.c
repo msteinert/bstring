@@ -587,10 +587,11 @@ bUuDecLine(void *parm, int ofs, int len)
 		}
 		outoctet[0] = (unsigned char)((c0 << 2) | ((unsigned)c1 >> 4));
 		if (t->slen+1 >= llen) {
-			break;
-		}
-		if (t->slen+1 >= llen && 0 > bconchar(t, (char)outoctet[0])) {
-			return -__LINE__;
+			if (0 > bconchar(t, (char)outoctet[0])) {
+				return -__LINE__;
+			} else {
+				break;
+			}
 		}
 		if ((unsigned)c2 >= 0x40) {
 			if (!ret) {
