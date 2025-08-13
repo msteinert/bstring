@@ -1,0 +1,60 @@
+name: Unit Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions: read-all
+
+jobs:
+  test-ubuntu:
+    name: Test and Coverage Reports
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --assume-yes --no-install-recommends \
+            check \
+            lcov \
+            meson \
+            ninja-build
+      - name: Configure
+        run: |
+          meson setup build \
+            -Db_coverage=true \
+            -Denable-tests=true
+      - name: Build
+        run: meson compile -C build
+      - name: Run unit tests
+        run: meson test -C build
+      - name: Generate coverage report
+        run: ninja coverage -C build
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3 # v5.6.2
+        if: success() || failure()
+        with:
+          report_paths: build/meson-logs/testlog.junit.xml
+          include_passed: true
+      - name: Setup LCOV
+        uses: hrishikesh-kadam/setup-lcov@6c1aa0cc9e1c02f9f58f01ac599f1064ccc83470 # v1.1.0
+      - name: Report code coverage
+        uses: zgosalvez/github-actions-report-lcov@eda775f552bfb2bffbdedea26f19dfb8c24a1648 # v4.1.26
+        with:
+          coverage-files: build/meson-logs/coverage.info
+          artifact-name: code-coverage-report
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: bstring
+          update-comment: true
