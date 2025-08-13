@@ -39,6 +39,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -572,53 +573,83 @@ bUuDecLine(void *parm, int ofs, int len)
 	llen += t->slen;
 	for (i = 1; i < s->slen && t->slen < llen; i += 4) {
 		unsigned char outoctet[3];
+		
+		// Decode the 4 input bytes
 		c0 = UU_DECODE_BYTE(d0 = (int)bchare(s, i+ofs+0, ' ' - 1));
 		c1 = UU_DECODE_BYTE(d1 = (int)bchare(s, i+ofs+1, ' ' - 1));
 		c2 = UU_DECODE_BYTE(d2 = (int)bchare(s, i+ofs+2, ' ' - 1));
 		c3 = UU_DECODE_BYTE(d3 = (int)bchare(s, i+ofs+3, ' ' - 1));
+		
+		// Check first two bytes
 		if (((unsigned)(c0|c1) >= 0x40)) {
-			if (!ret)ret = -__LINE__;
-			if (d0 > 0x60 || (d0 < (' ' - 1)&& !isspace(d0)) ||
-			    d1 > 0x60 || (d1 < (' ' - 1)&& !isspace(d1))) {
+			if (!ret) {
+				ret = -__LINE__;
+			}
+			
+			bool d0_invalid = (d0 > 0x60) || (d0 < (' ' - 1) && !isspace(d0));
+			bool d1_invalid = (d1 > 0x60) || (d1 < (' ' - 1) && !isspace(d1));
+			
+			if (d0_invalid || d1_invalid) {
 				t->slen = otlen;
 				goto exit;
 			}
 			c0 = c1 = 0;
 		}
+		
+		// Generate first output byte
 		outoctet[0] = (unsigned char)((c0 << 2) | ((unsigned)c1 >> 4));
+		
 		if (t->slen+1 >= llen) {
 			if (0 > bconchar(t, (char)outoctet[0])) {
 				return -__LINE__;
-			} else {
-				break;
 			}
+			break;
 		}
+		
+		// Check third byte
 		if ((unsigned)c2 >= 0x40) {
 			if (!ret) {
 				ret = -__LINE__;
 			}
-			if (d2 > 0x60 || (d2 < (' ' - 1) && !isspace(d2))) {
+			
+			bool d2_invalid = (d2 > 0x60) || (d2 < (' ' - 1) && !isspace(d2));
+			if (d2_invalid) {
 				t->slen = otlen;
 				goto exit;
 			}
 			c2 = 0;
 		}
-		outoctet[1] = (unsigned char) ((c1 << 4) | ((unsigned) c2 >> 2));
+		
+		// Generate second output byte
+		outoctet[1] = (unsigned char)((c1 << 4) | ((unsigned)c2 >> 2));
+		
 		if (t->slen + 2 >= llen) {
-			if (0 > bcatblk (t, outoctet, 2)) {
+			if (0 > bcatblk(t, outoctet, 2)) {
 				return -__LINE__;
 			}
 			break;
 		}
-		if ((unsigned) c3 >= 0x40) { if (!ret) ret = -__LINE__;
-			if (d3 > 0x60 || (d3 < (' ' - 1) && !isspace (d3))) {
+		
+		// Check fourth byte
+		if ((unsigned)c3 >= 0x40) {
+			if (!ret) {
+				ret = -__LINE__;
+			}
+			
+			bool d3_invalid = (d3 > 0x60) || (d3 < (' ' - 1) && !isspace(d3));
+			if (d3_invalid) {
 				t->slen = otlen;
 				goto exit;
 			}
 			c3 = 0;
 		}
+		
+		// Generate third output byte and append all three
 		outoctet[2] = (unsigned char)((c2 << 6) | ((unsigned)c3));
-		if (0 > bcatblk(t, outoctet, 3)) return -__LINE__;
+		
+		if (0 > bcatblk(t, outoctet, 3)) {
+			return -__LINE__;
+		}
 	}
 	if (t->slen < llen) {
 		if (0 == ret) ret = -__LINE__;
