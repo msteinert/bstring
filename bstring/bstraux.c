@@ -587,7 +587,8 @@ bUuDecLine(void *parm, int ofs, int len)
 		}
 		outoctet[0] = (unsigned char)((c0 << 2) | ((unsigned)c1 >> 4));
 		if (t->slen+1 >= llen) {
-			if (0 > bconchar(t, (char)outoctet[0])) {
+			int result = bconchar(t, (char)outoctet[0]);
+			if (result < 0) {
 				return -__LINE__;
 			}
 			i = s->slen;
@@ -605,7 +606,8 @@ bUuDecLine(void *parm, int ofs, int len)
 		}
 		outoctet[1] = (unsigned char) ((c1 << 4) | ((unsigned) c2 >> 2));
 		if (t->slen + 2 >= llen) {
-			if (0 > bcatblk (t, outoctet, 2)) {
+			int result = bcatblk(t, outoctet, 2);
+			if (result < 0) {
 				return -__LINE__;
 			}
 			i = s->slen;
