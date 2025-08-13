@@ -13,10 +13,6 @@ bstring_inc = include_directories(['.', 'bstring'])
 bstring_deps = []
 libc_dep = cc.find_library('c', required: false)
 
-if libc_dep.found()
-    bstring_deps += [libc_dep]
-endif
-
 bgets_test_code = '''
 #include <stdio.h>
 #include <libgen.h>

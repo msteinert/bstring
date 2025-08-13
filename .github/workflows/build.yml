@@ -298,7 +298,7 @@ jobs:
           run: |
             set -e
             meson setup build \
-              -Denable-tests=true
+              -Denable-tests=true -Db_lundef=true
             meson compile -C build
             meson test -C build
             meson install -C build
