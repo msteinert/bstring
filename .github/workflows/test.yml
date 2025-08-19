@@ -28,7 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --assume-yes --no-install-recommends \
             check \
-            lcov \
+            gcovr \
             meson \
             ninja-build
       - name: Configure
@@ -40,7 +40,7 @@ jobs:
         run: meson compile -C build
       - name: Run unit tests
         run: meson test -C build
-      - name: Generate coverage report
+      - name: Run code coverage
         run: ninja coverage -C build
       - name: Publish test report
         uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3 # v5.6.2
@@ -48,13 +48,16 @@ jobs:
         with:
           report_paths: build/meson-logs/testlog.junit.xml
           include_passed: true
-      - name: Setup LCOV
-        uses: hrishikesh-kadam/setup-lcov@6c1aa0cc9e1c02f9f58f01ac599f1064ccc83470 # v1.1.0
       - name: Report code coverage
-        uses: zgosalvez/github-actions-report-lcov@eda775f552bfb2bffbdedea26f19dfb8c24a1648 # v4.1.26
+        uses: threeal/gcovr-action@9e51adaccda85662e99d0c29087f99fcf976c8dc # v1.1.0
         with:
-          coverage-files: build/meson-logs/coverage.info
-          artifact-name: code-coverage-report
+          excludes: 'tests/.*'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: bstring
-          update-comment: true
+          xml-out: build/meson-logs/coverage.xml
+      - uses: 5monkeys/cobertura-action@ee5787cc56634acddedc51f21c7947985531e6eb # v14
+        with:
+          path: build/meson-logs/coverage.xml
+          fail_below_threshold: true
+          minimum_coverage: 50
+          show_line: true
+          show_branch: true
