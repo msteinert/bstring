@@ -2650,7 +2650,10 @@ test39_0(const bstring b, const bstring lt, const bstring rt, const bstring t)
 	ret = btrimws(NULL);
 	ck_assert_int_eq(ret, BSTR_ERR);
 	r = bstrcpy(b);
-	ck_assert(r != NULL);
+	if (r == NULL) {
+		ck_abort();
+		return; /* Just a safeguard */
+	}
 	bwriteprotect(*r);
 	ret = bltrimws(r);
 	ck_assert_int_eq(ret, BSTR_ERR);
