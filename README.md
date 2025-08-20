@@ -1,4 +1,6 @@
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/3174/badge.svg)](https://scan.coverity.com/projects/3174)
+[![SonarQube Security](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=security_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
+[![SonarQube Reliability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=reliability_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
+[![SonarQube Maintainability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=sqale_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 
 # Better String Library
 
