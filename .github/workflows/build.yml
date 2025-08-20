@@ -287,7 +287,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Build on VM
-        uses: vmactions/openbsd-vm@0d65352eee1508bab7cb12d130536d3a556be487
+        uses: vmactions/openbsd-vm@1e7cc4fa7727646d3cf5921289b1f5c9d1a88f3c
         with:
           copyback: false
           prepare: |
