@@ -21,7 +21,7 @@ jobs:
     container:
       image: alpine:latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Install dependencies
         run: |
           apk add \
@@ -55,7 +55,7 @@ jobs:
     container:
       image: archlinux:latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Install dependencies
         run: |
           pacman -Sy --noconfirm \
@@ -85,7 +85,7 @@ jobs:
     container:
       image: debian:latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Install dependencies
         run: |
           apt-get update
@@ -118,7 +118,7 @@ jobs:
     container:
       image: fedora:latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Install dependencies
         run: |
           dnf --setopt=install_weak_deps=False --assumeyes install \
@@ -148,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -180,7 +180,7 @@ jobs:
       HOMEBREW_NO_INSTALL_CLEANUP: 1
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Install dependencies
         run: |
           brew update
@@ -206,7 +206,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Build on VM
         uses: vmactions/dragonflybsd-vm@ff1f01c32b9e82f2ba388d0ff270442bcd6ceddc
         with:
@@ -232,7 +232,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Build on VM
         uses: vmactions/freebsd-vm@966989c456d41351f095a421f60e71342d3bce41
         with:
@@ -259,7 +259,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Build on VM
         uses: vmactions/netbsd-vm@46a58bbf03682b4cb24142b97fa315ae52bed573
         with:
@@ -285,7 +285,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Build on VM
         uses: vmactions/openbsd-vm@1e7cc4fa7727646d3cf5921289b1f5c9d1a88f3c
         with:
@@ -310,7 +310,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Build on VM
         uses: vmactions/omnios-vm@c31844c7abe722cd7c97df82cab1f1fab1e5339f
         with:
@@ -342,7 +342,7 @@ jobs:
     timeout-minutes: 12
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - name: Build on VM
         uses: vmactions/solaris-vm@58cbd70c6e051860f9b8f65908cc582938fbbdba
         with:
