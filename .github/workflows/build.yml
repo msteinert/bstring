@@ -18,7 +18,7 @@ jobs:
     name: Alpine Linux
     runs-on: ubuntu-latest
     container:
-      image: alpine:latest
+      image: alpine:3.22.1
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
@@ -51,7 +51,7 @@ jobs:
     name: Arch Linux
     runs-on: ubuntu-latest
     container:
-      image: archlinux:latest
+      image: archlinux:base-devel-20250824.0.410029
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
@@ -80,7 +80,7 @@ jobs:
     name: Debian Linux
     runs-on: ubuntu-latest
     container:
-      image: debian:latest
+      image: debian:13.0
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
@@ -112,7 +112,7 @@ jobs:
     name: Fedora Linux
     runs-on: ubuntu-latest
     container:
-      image: fedora:latest
+      image: fedora:42
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
@@ -142,15 +142,21 @@ jobs:
   build-ubuntu:
     name: Ubuntu Linux
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:25.10
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install --assume-yes --no-install-recommends \
+          apt-get update
+          apt-get install --assume-yes --no-install-recommends \
+            build-essential \
             check \
+            cmake \
+            gcc \
             meson \
             ninja-build \
+            pkg-config \
             valgrind
       - name: Configure
         run: |
@@ -163,9 +169,9 @@ jobs:
       - name: Run memory profiling
         run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
-        run: sudo meson install -C build
+        run: meson install -C build
       - name: Uninstall
-        run: sudo ninja -C build uninstall
+        run: ninja -C build uninstall
 
   build-macos:
     name: macOS
