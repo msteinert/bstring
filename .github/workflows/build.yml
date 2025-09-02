@@ -347,6 +347,7 @@ jobs:
             set -e
             export PATH=/usr/local/sbin:/usr/local/bin:$PATH
             meson setup build \
+              -Denable-bgets-workaround=true \
               -Denable-tests=true \
               -Dpkg_config_path=/usr/lib/amd64/pkgconfig
             meson compile -C build
