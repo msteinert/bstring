@@ -1154,7 +1154,7 @@ typedef size_t (*bNread)(void *buff, size_t elsize, size_t nelem, void *parm);
  * character. This is consistent with the semantics of fgets.)
  */
 BSTR_PUBLIC bstring
-#if defined(HAVE_LIBGEN_H_BGETS)
+#if defined(HAVE_BGETS)
 bgetstream(bNgetc getcPtr, void *parm, char terminator);
 #else
 bgets(bNgetc getcPtr, void *parm, char terminator);

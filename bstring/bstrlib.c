@@ -1946,7 +1946,7 @@ bgetsa(bstring b, bNgetc getcPtr, void *parm, char terminator)
 }
 
 bstring
-#if defined(HAVE_LIBGEN_H_BGETS)
+#if defined(HAVE_BGETS)
 bgetstream(bNgetc getcPtr, void *parm, char terminator)
 #else
 bgets(bNgetc getcPtr, void *parm, char terminator)

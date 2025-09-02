@@ -1,8 +1,8 @@
 option(
-    'force-bgets-workaround',
+    'enable-bgets-workaround',
     type: 'boolean',
-    value: true,
-    description: 'Always use workaround that renames bgets function to bgetstring',
+    value: false,
+    description: 'Enable workaround that renames bgets function to bgetstring',
 )
 option(
     'enable-docs',

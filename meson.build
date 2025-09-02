@@ -10,26 +10,12 @@ add_project_arguments('-fno-common', language: 'c')
 add_project_arguments('-fvisibility=hidden', language: 'c')
 
 bstring_inc = include_directories(['.', 'bstring'])
-
-bgets_test_code = '''
-#include <stdio.h>
-#include <libgen.h>
-int main() {
-    char buffer[256];
-    char delim = '\n';
-    FILE *fp = stdin;
-    char *result = bgets(buffer, sizeof(buffer), fp, &delim);
-    return 0;
-}
-'''
-
-has_bgets = cc.compiles(bgets_test_code, name: 'bgets defined in standard C library')
 conf_data = configuration_data()
 
-if has_bgets or get_option('force-bgets-workaround')
-    conf_data.set('HAVE_LIBGEN_H_BGETS', '1')
+if get_option('enable-bgets-workaround')
+    conf_data.set('HAVE_BGETS', '1')
 else
-    conf_data.set('HAVE_LIBGEN_H_BGETS', '0')
+    conf_data.set('HAVE_BGETS', '0')
 endif
 
 configure_file(
