@@ -5,9 +5,12 @@ pkg = import('pkgconfig')
 add_project_arguments('-pedantic', language: 'c')
 add_project_arguments('-Wstrict-prototypes', language: 'c')
 add_project_arguments('-Wcast-align', language: 'c')
-add_project_arguments('-Wno-gnu', language: 'c')
 add_project_arguments('-fno-common', language: 'c')
 add_project_arguments('-fvisibility=hidden', language: 'c')
+
+if get_option('enable-tests') and cc.has_argument('-Wno-gnu')
+    add_project_arguments('-Wno-gnu', language: 'c')
+endif
 
 bstring_inc = include_directories(['.', 'bstring'])
 
