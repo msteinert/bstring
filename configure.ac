@@ -12,7 +12,7 @@ AC_PREREQ([2.72])
 #	interface_age = 0
 m4_define([major_version], [1])
 m4_define([minor_version], [0])
-m4_define([micro_version], [1])
+m4_define([micro_version], [2])
 m4_define([interface_age], [0])
 
 # Initialize autoconf & automake
