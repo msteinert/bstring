@@ -1,6 +1,7 @@
 [![SonarQube Security](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=security_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 [![SonarQube Reliability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=reliability_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 [![SonarQube Maintainability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=sqale_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
+[![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/msteinert/bstring?label=openssf+scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/msteinert/bstring)
 
 # Better String Library
 
