@@ -3,7 +3,7 @@ install_headers(['bstraux.h', 'bstrlib.h'])
 libbstring = library(
     meson.project_name(),
     ['bstraux.c', 'bstrlib.c'],
-    version: '1.0.0',
+    version: meson.project_version(),
     soversion: '1',
     include_directories: bstring_inc,
     install: true,
