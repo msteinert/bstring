@@ -8,9 +8,9 @@
 This is a fork of Paul Hsieh's [Better String Library][]. The following
 features (or mis-features, depending on your point of view) are included:
 
-1. Autotools build system
+1. Build system (Meson and Autotools)
 2. Updated test suite based on [Check][]
-3. Add [Valgrind][] to the workflow
+3. Add memory profiling with [Valgrind][] to the workflow
 4. Add continuous integration via GitHub Actions
 5. Remove C++ code
 6. Other various improvements
@@ -19,7 +19,7 @@ Currently this fork should be binary-compatible with the original code. The
 only source incompatibility is the removal of the `const_bstring` type.
 
 [Better String Library]: http://bstring.sourceforge.net/
-[Check]: http://check.sourceforge.net/
+[Check]: https://github.com/libcheck/check
 [Valgrind]: http://valgrind.org/
 
 ## Building
