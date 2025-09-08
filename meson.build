@@ -2,21 +2,39 @@ project(
     'bstring',
     'c',
     version: '1.0.2',
-    default_options: ['warning_level=2', 'c_std=c99']
+    default_options: ['warning_level=3', 'c_std=c99']
 )
 cc = meson.get_compiler('c')
 pkg = import('pkgconfig')
+warning_flags = []
 
-add_project_arguments('-pedantic', language: 'c')
-add_project_arguments('-Wstrict-prototypes', language: 'c')
-add_project_arguments('-Wcast-align', language: 'c')
-add_project_arguments('-fno-common', language: 'c')
-add_project_arguments('-fvisibility=hidden', language: 'c')
+foreach flag: [
+    '-fno-common',
+    '-fvisibility=hidden',
+    '-Wstrict-prototypes',
+    '-Wcast-align',
+]
+    if cc.has_argument(flag)
+        warning_flags += flag
+    endif
+endforeach
 
 if get_option('enable-tests') and cc.has_argument('-Wno-gnu')
-    add_project_arguments('-Wno-gnu', language: 'c')
+    warning_flags += '-Wno-gnu'
 endif
 
+if cc.get_id() == 'msvc'
+    foreach flag: [
+        '/we4431',
+        '/w14826',
+    ]
+        if cc.has_argument(flag)
+            warning_flags += flag
+        endif
+    endforeach
+endif
+
+add_project_arguments(warning_flags, language: 'c')
 bstring_inc = include_directories(['.', 'bstring'])
 conf_data = configuration_data()
 
