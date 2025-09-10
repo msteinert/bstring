@@ -16,7 +16,7 @@ We recommend always using the latest stable version to ensure you have the most 
 ## Reporting a Vulnerability
 
 If you find an exploitable security vulnerability in this software, we would love to hear from you.
-Our preferred reporting function is a public GitHub issue ticket.
+Please file a [private GitHub security vulnerability ticket](https://github.com/msteinert/bstring/security/advisories/new).
 
 When reporting a vulnerability, please include as much of the following information as possible:
 
