@@ -34,8 +34,11 @@
 
 <h1>Better String Library</h1>
 
-<p>This is a fork of Paul Hsieh's <a href="http://bstring.sourceforge.net/">Better String Library</a>. The following
-features (or mis-features, depending on your point of view) are included:</p>
+<p>The bstring library provides a string abstraction data type for the C language
+as a memory safe alternative to null terminated buffers.</p>
+
+<p>This is a fork of Paul Hsieh's <a href="http://bstring.sourceforge.net/">Better String Library</a>.
+Compared to the original, the following features (or mis-features, depending on your point of view) are included:</p>
 
 <ol>
 <li>Build system (Autotools and Meson)</li>
@@ -44,10 +47,11 @@ features (or mis-features, depending on your point of view) are included:</p>
 <li>Add <a href="http://valgrind.org/">Valgrind</a> to the workflow</li>
 <li>Add continuous integration via <a href="https://github.com/msteinert/bstring/actions">GitHub CI</a>
 </li>
-<li>Remove C++ code</li>
+<li>Remove C++ wrapper code, returning this to a pure C library</li>
 <li>Other various improvements</li>
 </ol><p>Currently this fork should be binary-compatible with the original code. The
-only source incompatibility is the removal of the <code>const_bstring</code> type.</p>
+only source incompatibility is the removal of the <code>const_bstring</code> type.
+Just use <code>const bstring</code> instead.</p>
 
 <h2>Building</h2>
 
