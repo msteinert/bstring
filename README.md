@@ -5,6 +5,9 @@
 
 # Better String Library
 
+The bstring library provides a string abstraction data type for the C language
+as a memory safe alternative to null terminated buffers.
+
 This is a fork of Paul Hsieh's [Better String Library][]. The following
 features (or mis-features, depending on your point of view) are included:
 
@@ -12,11 +15,12 @@ features (or mis-features, depending on your point of view) are included:
 2. Updated test suite based on [Check][]
 3. Add memory profiling with [Valgrind][] to the workflow
 4. Add continuous integration via GitHub Actions
-5. Remove C++ code
+5. Remove C++ wrapper code, returning this to a pure C library
 6. Other various improvements
 
 Currently this fork should be binary-compatible with the original code. The
 only source incompatibility is the removal of the `const_bstring` type.
+Just use `const bstring` instead.
 
 [Better String Library]: http://bstring.sourceforge.net/
 [Check]: https://github.com/libcheck/check
