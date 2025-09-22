@@ -48,7 +48,7 @@ jobs:
           report_paths: build/meson-logs/testlog.junit.xml
           include_passed: true
       - name: Report code coverage
-        uses: threeal/gcovr-action@9e51adaccda85662e99d0c29087f99fcf976c8dc # v1.1.0
+        uses: threeal/gcovr-action@64cb417ed6f143cafe1c69611922672002f460bb # v1.2.0
         with:
           excludes: 'tests/.*'
           github-token: ${{ secrets.GITHUB_TOKEN }}
