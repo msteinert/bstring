@@ -26,6 +26,17 @@ Just use `const bstring` instead.
 [Check]: https://github.com/libcheck/check
 [Valgrind]: http://valgrind.org/
 
+## Get bstring
+
+The bstring library is available as a binary package in various distributions.
+The shared library and development headers can be installed with their respective package manager.
+
+This is the easiest option if you have the option for your distribution.
+
+The current packaging status as reported by repology.org:
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/bstring.svg)](https://repology.org/project/bstring/versions)
+
 ## Building
 
 The repository currently includes [Meson][]+[Ninja][] and Autotools ([Autoconf][],
