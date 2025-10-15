@@ -362,7 +362,7 @@ networking/realtime programming. It can be found [online](http://www.and.org/vst
    thread safe.
 
 The implementation has an extreme emphasis on performance for nontrivial
-actions (adds, inserts and deletes are all constant or roughly O(#operations)
+actions (adds, inserts and deletes are all constant or roughly O(\#operations)
 time) following the "zero copy" principle. This trades off performance of
 trivial functions (character access, char buffer access/coersion, alias
 detection) which becomes significantly slower, as well as incremental

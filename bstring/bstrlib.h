@@ -94,7 +94,7 @@ struct tagbstring {
  * Take a standard C library style '\0' terminated char buffer and generate
  * a bstring with the same contents as the char buffer.
  *
- * If an error occurs #NULL is returned.
+ * If an error occurs NULL is returned.
  *
  * \code
  * bstring b = bfromcstr("Hello");
