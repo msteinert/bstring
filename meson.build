@@ -56,7 +56,6 @@ pkg.generate(
     name: meson.project_name(),
     description: 'The Better String Library',
     version: meson.project_version(),
-    subdirs: ['bstring'],
 )
 
 check = dependency('check', required: false)
