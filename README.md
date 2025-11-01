@@ -11,20 +11,24 @@ as a memory safe alternative to null terminated buffers.
 This is a fork of Paul Hsieh's [Better String Library][]. The following
 features (or mis-features, depending on your point of view) are included:
 
-1. Build system (Meson and Autotools)
+1. Build system ([Meson][]+[Ninja][])
 2. Updated test suite based on [Check][]
 3. Add memory profiling with [Valgrind][] to the workflow
 4. Add continuous integration via GitHub Actions
 5. Remove C++ wrapper code, returning this to a pure C library
-6. Other various improvements
+6. Documentation generation with [Doxygen][]
+7. Other various code quality and reliability improvements
 
 Currently this fork should be binary-compatible with the original code. The
 only source incompatibility is the removal of the `const_bstring` type.
 Just use `const bstring` instead.
 
 [Better String Library]: http://bstring.sourceforge.net/
+[Meson]: https://mesonbuild.com/
+[Ninja]: https://ninja-build.org/
 [Check]: https://github.com/libcheck/check
 [Valgrind]: http://valgrind.org/
+[Doxygen]: https://www.doxygen.nl/
 
 ## Get bstring
 
@@ -39,20 +43,22 @@ The current packaging status as reported by repology.org:
 
 ## Building
 
-The repository currently includes [Meson][]+[Ninja][] and Autotools ([Autoconf][],
-[Automake][], and [Libtool][]) build systems.
+The repository currently includes a [Meson][]+[Ninja][] build system.
 
-[Meson]: https://mesonbuild.com/
-[Ninja]: https://ninja-build.org/
-[Autoconf]: https://www.gnu.org/software/autoconf/
-[Automake]: https://www.gnu.org/software/automake/
-[Libtool]: https://www.gnu.org/software/libtool/
+The library itself doesn't have any dependencies beyond a C compiler,
+but the test suite requires the [Check][] unit testing framework,
+while the documentation generation requires [Doxygen][].
 
-### Meson
+Configure the `build` directory with Meson.
 
-To build with Meson:
+    $ meson setup build
+
+Alternatively, enable building the documentation and test suite.
 
     $ meson setup build -Denable-docs=true -Denable-tests=true
+
+Then compile and install.
+
     $ meson compile -C build
     $ sudo meson install -C build
 
@@ -63,23 +69,6 @@ A test suite is available if Check is is installed.
 If Valgrind is installed the test suite can be checked for memory leaks.
 
     $ meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
-
-### Autotools
-
-To build with Autotools:
-
-    $ autoreconf -i
-    $ ./configure
-    $ make
-    $ make install
-
-A test suite is available if Check is is installed.
-
-    $ make check
-
-If Valgrind is installed the test suite can be checked for memory leaks.
-
-    $ make memcheck
 
 ## Documentation
 
