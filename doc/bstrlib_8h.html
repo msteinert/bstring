@@ -23,7 +23,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">bstring<span id="projectnumber">&#160;1.0.2</span>
+   <div id="projectname">bstring<span id="projectnumber">&#160;1.0.3</span>
    </div>
   </td>
  </tr>
@@ -1544,7 +1544,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Take a standard C library style '\0' terminated char buffer and generate a bstring with the same contents as the char buffer.</p>
-<p>If an error occurs #NULL is returned.</p>
+<p>If an error occurs NULL is returned.</p>
 <div class="fragment"><div class="line">bstring b = <a class="code hl_function" href="#a18bcf0b649f36e9023a20cf42d5eb375">bfromcstr</a>(<span class="stringliteral">&quot;Hello&quot;</span>);</div>
 <div class="line"><span class="keywordflow">if</span>(!b) {</div>
 <div class="line">    fprintf(stderr, <span class="stringliteral">&quot;Out of memory&quot;</span>);</div>
