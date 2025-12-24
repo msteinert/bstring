@@ -11,13 +11,12 @@ on:
       - synchronize
       - reopened
 
-permissions: read-all
-
 jobs:
   test-ubuntu:
     name: Test and Coverage Reports
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       checks: write
       pull-requests: write
     steps:
