@@ -6,14 +6,13 @@ on:
   push:
     branches: ["main"]
 
-permissions: read-all
-
 jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
     if: github.event.repository.default_branch == github.ref_name || github.event_name == 'pull_request'
     permissions:
+      contents: read
       security-events: write
       id-token: write
 

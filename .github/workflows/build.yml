@@ -11,12 +11,12 @@ on:
       - synchronize
       - reopened
 
-permissions: read-all
-
 jobs:
   build-alpine:
     name: Alpine Linux
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: alpine:3.22.1
     steps:
@@ -50,6 +50,8 @@ jobs:
   build-archlinux:
     name: Arch Linux
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: archlinux:base-devel-20250824.0.410029
     steps:
@@ -79,6 +81,8 @@ jobs:
   build-debian:
     name: Debian Linux
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: debian:13.0
     steps:
@@ -111,6 +115,8 @@ jobs:
   build-fedora:
     name: Fedora Linux
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: fedora:42
     steps:
@@ -142,6 +148,8 @@ jobs:
   build-ubuntu:
     name: Ubuntu Linux
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: ubuntu:25.10
     steps:
@@ -175,6 +183,8 @@ jobs:
 
   build-macos:
     name: macOS
+    permissions:
+      contents: read
     runs-on: macos-latest
     env:
       HOMEBREW_NO_INSTALL_CLEANUP: 1
@@ -203,6 +213,8 @@ jobs:
   build-dflybsd:
     name: DragonflyBSD
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -228,6 +240,8 @@ jobs:
   build-freebsd:
     name: FreeBSD
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -254,6 +268,8 @@ jobs:
   build-netbsd:
     name: NetBSD
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -279,6 +295,8 @@ jobs:
   build-openbsd:
     name: OpenBSD
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -303,6 +321,8 @@ jobs:
   build-omnios:
     name: OmniOS
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -334,6 +354,8 @@ jobs:
   build-solaris:
     name: Solaris
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -363,6 +385,8 @@ jobs:
 
   build-windows:
     name: Windows (MSYS2+gcc)
+    permissions:
+      contents: read
     runs-on: windows-latest
     defaults:
       run:
@@ -395,6 +419,8 @@ jobs:
 
   ci-msvc:
     name: Windows (MSVC)
+    permissions:
+      contents: read
     runs-on: windows-latest
     steps:
       - name: Fetch Sources
