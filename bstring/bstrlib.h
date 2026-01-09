@@ -57,6 +57,10 @@
 	__attribute__ ((__format__ (__printf__, format, argument)))
 #define BSTR_UNUSED \
 	__attribute__ ((__unused__))
+#elif defined(_MSC_VER)
+#define BSTR_PRINTF(format, argument)
+#define BSTR_UNUSED \
+	__pragma(warning(suppress:4100))
 #else
 #define BSTR_PRINTF(format, argument)
 #define BSTR_UNUSED
