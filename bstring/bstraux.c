@@ -1004,7 +1004,7 @@ bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 	for (i = 0; ; i++) {
 		if ((size_t)termchar == c ||
 		    (maxlen > 0 && i >= (size_t)maxlen)) {
-			c = EOF;
+			c = (size_t)EOF;
 		} else {
 			c = vgetchar (vgcCtx);
 		}
