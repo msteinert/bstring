@@ -46,6 +46,12 @@ jobs:
         run: meson install -C build
       - name: Uninstall
         run: ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-archlinux:
     name: Arch Linux
@@ -77,6 +83,12 @@ jobs:
         run: meson install -C build
       - name: Uninstall
         run: ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-debian:
     name: Debian Linux
@@ -111,6 +123,12 @@ jobs:
         run: meson install -C build
       - name: Uninstall
         run: ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-fedora:
     name: Fedora Linux
@@ -144,6 +162,12 @@ jobs:
         run: sudo meson install -C build
       - name: Uninstall
         run: sudo ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-ubuntu:
     name: Ubuntu Linux
@@ -180,6 +204,12 @@ jobs:
         run: meson install -C build
       - name: Uninstall
         run: ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-macos:
     name: macOS
@@ -209,6 +239,12 @@ jobs:
         run: sudo meson install -C build
       - name: Uninstall
         run: sudo ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-dflybsd:
     name: DragonflyBSD
@@ -221,9 +257,9 @@ jobs:
       - name: Build on VM
         uses: vmactions/dragonflybsd-vm@b976fb4b5e5cc008f30edf67b9f9dfc13ef47e49 # v1.1.9
         with:
-          copyback: false
-          usesh: true
+          copyback: true
           prepare: |
+            set -e
             pkg install -y \
               check \
               meson \
@@ -236,6 +272,12 @@ jobs:
             meson test -C build
             meson install -C build
             ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-freebsd:
     name: FreeBSD
@@ -248,8 +290,10 @@ jobs:
       - name: Build on VM
         uses: vmactions/freebsd-vm@670398e4236735b8b65805c3da44b7a511fb8b27 # v1.3.0
         with:
-          copyback: false
+          copyback: true
+          sync: sshfs
           prepare: |
+            set -e
             pkg install -y \
               check \
               meson \
@@ -264,6 +308,12 @@ jobs:
             meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
             meson install -C build
             ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-netbsd:
     name: NetBSD
@@ -276,8 +326,10 @@ jobs:
       - name: Build on VM
         uses: vmactions/netbsd-vm@2ba9902c77c2ebdb7501e5e9308dea03f0f251c4 # v1.3.1
         with:
-          copyback: false
+          copyback: true
+          sync: sshfs
           prepare: |
+            set -e
             export PKG_PATH="http://ftp.NetBSD.org/pub/pkgsrc/packages/NetBSD/$(uname -p)/$(uname -r|cut -f '1 2' -d.)/All/"
             pkg_add \
               check \
@@ -291,6 +343,12 @@ jobs:
             meson test -C build
             meson install -C build
             ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-openbsd:
     name: OpenBSD
@@ -303,8 +361,10 @@ jobs:
       - name: Build on VM
         uses: vmactions/openbsd-vm@00753f2835e62704570734312de6f212069dfef7 # v1.3.1
         with:
-          copyback: false
+          copyback: true
+          sync: sshfs
           prepare: |
+            set -e
             pkg_add -I \
               check \
               meson \
@@ -317,6 +377,12 @@ jobs:
             meson test -C build
             meson install -C build
             ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-omnios:
     name: OmniOS
@@ -329,8 +395,9 @@ jobs:
       - name: Build on VM
         uses: vmactions/omnios-vm@f259932b10067e9cd18962ae1fd468bcb53fecac # v1.2.0
         with:
-          copyback: false
+          copyback: true
           prepare: |
+            set -e
             pkg install \
               build-essential \
               pkg-config
@@ -350,6 +417,12 @@ jobs:
             meson test -C build
             meson install -C build
             ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-solaris:
     name: Solaris
@@ -362,9 +435,11 @@ jobs:
       - name: Build on VM
         uses: vmactions/solaris-vm@bc0aac1832ebad9d31cbe43a94168dce0f84ed50 # v1.2.3
         with:
-          copyback: false
+          copyback: true
+          sync: nfs
           prepare: |
             set -e
+            ntpdate -u pool.ntp.org
             pkg install \
               check \
               gcc \
@@ -382,6 +457,12 @@ jobs:
             meson test -C build
             meson install -C build
             ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   build-windows:
     name: Windows (MSYS2+gcc)
@@ -416,6 +497,12 @@ jobs:
         run: meson install -C build
       - name: Uninstall
         run: ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
 
   ci-msvc:
     name: Windows (MSVC)
@@ -439,3 +526,9 @@ jobs:
         run: meson setup build
       - name: Build
         run: meson compile -v -C build
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
