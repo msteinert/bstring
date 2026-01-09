@@ -425,6 +425,44 @@ jobs:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
 
+  build-openindiana:
+    name: OpenIndiana
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - name: Build on VM
+        uses: vmactions/openindiana-vm@e90777531e6e6cfc125a2e7e9741b8012cd6a10c # v1.0.1
+        with:
+          copyback: true
+          prepare: |
+            set -e
+            pkg install \
+              developer/build/meson \
+              developer/build/ninja \
+              developer/build/pkg-config \
+              developer/check \
+              developer/gcc-14
+          run: |
+            set -e
+            export PATH=/usr/local/sbin:/usr/local/bin:$PATH
+            meson setup build \
+              -Denable-bgets-workaround=true \
+              -Denable-tests=true \
+              -Dpkg_config_path=/usr/lib/amd64/pkgconfig
+            meson compile -C build
+            meson test -C build
+            meson install -C build
+            ninja -C build uninstall
+      - name: Upload meson logs
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: meson-logs-${{ github.job }}
+          path: build/meson-logs
+
   build-solaris:
     name: Solaris
     runs-on: ubuntu-latest
