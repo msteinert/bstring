@@ -475,10 +475,10 @@ jobs:
         uses: vmactions/solaris-vm@7a5256863396c1cea1665b084d569876a1321347 # v1.2.4
         with:
           copyback: true
+          sync-time: true
           sync: nfs
           prepare: |
             set -e
-            ntpdate -u pool.ntp.org
             pkg install \
               check \
               gcc \
