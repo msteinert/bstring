@@ -94,3 +94,8 @@ made to reflect changes to the codebase.
 The Better String Library is released under the [BSD 3-Clause License][].
 
 [BSD 3-Clause License]: http://opensource.org/licenses/BSD-3-Clause
+
+Alternatively, the contents of the C source code and documentation may be used
+under the terms of GNU General Public License Version 2 (the "GPL").
+See the gpl.txt file in this repository for the full text of the license.
+
