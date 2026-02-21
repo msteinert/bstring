@@ -436,6 +436,7 @@ jobs:
       - name: Build on VM
         uses: vmactions/openindiana-vm@4e22b052bda91b3d2771bccdff731dc388edf278 # v1.0.6
         with:
+          release: "202510-build"
           copyback: true
           prepare: |
             set -e
