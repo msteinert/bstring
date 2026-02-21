@@ -1,23 +1,25 @@
+# Better String Library
+
 [![SonarQube Security](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=security_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 [![SonarQube Reliability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=reliability_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 [![SonarQube Maintainability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=sqale_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/msteinert/bstring?label=openssf+scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/msteinert/bstring)
 
-# Better String Library
+The bstring library provides rich and memory safe string processing functionality to the C language.
 
-The bstring library provides a string abstraction data type for the C language
-as a memory safe alternative to null terminated buffers.
+At the heart of the bstring library is the management of `bstring` objects which are a significant
+improvement over `NULL` terminated char buffers.
+
+## Fork
 
 This is a fork of Paul Hsieh's [Better String Library][]. The following
 features (or mis-features, depending on your point of view) are included:
 
-1. Build system ([Meson][]+[Ninja][])
-2. Updated test suite based on [Check][]
-3. Add memory profiling with [Valgrind][] to the workflow
-4. Add continuous integration via GitHub Actions
-5. Remove C++ wrapper code, returning this to a pure C library
-6. Documentation generation with [Doxygen][]
-7. Other various code quality and reliability improvements
+1. A build system ([Meson][]+[Ninja][])
+2. Improved test suite using the [Check][] library
+3. Continuous integration via GitHub Actions, including memory profiling with [Valgrind][]
+4. Remove C++ wrapper code, returning this to a pure C library
+5. Documentation generation with [Doxygen][]
 
 Currently this fork should be binary-compatible with the original code. The
 only source incompatibility is the removal of the `const_bstring` type.
@@ -35,7 +37,7 @@ Just use `const bstring` instead.
 The bstring library is available as a binary package in various distributions.
 The shared library and development headers can be installed with their respective package manager.
 
-This is the easiest option if you have the option for your distribution.
+This is the easiest choice if you have the option for your distribution.
 
 The current packaging status as reported by repology.org:
 
@@ -51,24 +53,24 @@ while the documentation generation requires [Doxygen][].
 
 Configure the `build` directory with Meson.
 
-    $ meson setup build
+    meson setup build
 
 Alternatively, enable building the documentation and test suite.
 
-    $ meson setup build -Denable-docs=true -Denable-tests=true
+    meson setup build -Denable-docs=true -Denable-tests=true
 
 Then compile and install.
 
-    $ meson compile -C build
-    $ sudo meson install -C build
+    meson compile -C build
+    sudo meson install -C build
 
 A test suite is available if Check is is installed.
 
-    $ meson test -C build
+    meson test -C build
 
 If Valgrind is installed the test suite can be checked for memory leaks.
 
-    $ meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
+    meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
 
 ## Documentation
 
