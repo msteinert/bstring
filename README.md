@@ -5,12 +5,20 @@
 [![SonarQube Maintainability](https://sonarcloud.io/api/project_badges/measure?project=msteinert_bstring&metric=sqale_rating)](https://sonarcloud.io/project/overview?id=msteinert_bstring)
 [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/msteinert/bstring?label=openssf+scorecard&style=flat)](https://scorecard.dev/viewer/?uri=github.com/msteinert/bstring)
 
-The bstring library provides rich and memory safe string processing functionality to the C language.
+The Better String Library is an abstraction of a string data type which is
+superior to the C standard library char buffer string type.
+Among the features achieved are:
 
-At the heart of the bstring library is the management of `bstring` objects which are a significant
-improvement over `NULL` terminated char buffers.
+- Substantial mitigation of buffer overflow/overrun problems and other
+  failures that result from erroneous usage of the common C string
+  library functions
+- Significantly simplified string manipulation
+- High performance interoperability with other source/libraries which
+  expect '\0' terminated char buffers
+- Improved overall performance of common string operations
+- Functional equivalency with other more modern languages
 
-## Fork
+## bstring fork
 
 This is a fork of Paul Hsieh's [Better String Library][]. The following
 features (or mis-features, depending on your point of view) are included:
@@ -19,7 +27,8 @@ features (or mis-features, depending on your point of view) are included:
 2. Improved test suite using the [Check][] library
 3. Continuous integration via GitHub Actions, including memory profiling with [Valgrind][]
 4. Remove C++ wrapper code, returning this to a pure C library
-5. Documentation generation with [Doxygen][]
+5. No UTF8 string manipulation support
+6. Documentation generation with [Doxygen][]
 
 Currently this fork should be binary-compatible with the original code. The
 only source incompatibility is the removal of the `const_bstring` type.
@@ -34,10 +43,8 @@ Just use `const bstring` instead.
 
 ## Get bstring
 
-The bstring library is available as a binary package in various distributions.
+Another advantage of this fork is that unlike the original, it is widely available as a binary package in various distributions.
 The shared library and development headers can be installed with their respective package manager.
-
-This is the easiest choice if you have the option for your distribution.
 
 The current packaging status as reported by repology.org:
 
@@ -45,7 +52,7 @@ The current packaging status as reported by repology.org:
 
 ## Building
 
-The repository currently includes a [Meson][]+[Ninja][] build system.
+The bstring library can be built using the [Meson][]+[Ninja][] build system.
 
 The library itself doesn't have any dependencies beyond a C compiler,
 but the test suite requires the [Check][] unit testing framework,
@@ -70,7 +77,7 @@ A test suite is available if Check is is installed.
 
 If Valgrind is installed the test suite can be checked for memory leaks.
 
-    meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
+    meson test --wrapper='valgrind --leak-check=full' -C build
 
 ## Documentation
 
