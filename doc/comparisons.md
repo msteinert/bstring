@@ -4,7 +4,7 @@ Better String Library Comparisons
 by Paul Hsieh
 
 The bstring library is an attempt to provide improved string processing
-functionality to the C and C++ language. At the heart of the bstring library
+functionality to the C language. At the heart of the bstring library
 is the management of `bstring`s which are a significant improvement over
 `'\0'` terminated char buffers. See the accompanying documenation for more
 information.
@@ -14,7 +14,7 @@ Comparison With Microsoft's CString Class
 
 The bstring library has significant advantages over CString:
 
-1. Bstrlib is a C-library as well as a C++ library (using the C++ wrapper)
+1. Bstrlib is a cross-platform, portable C-library
 
    Thus it is compatible with more programming environments and available to
    a wider population of programmers.
@@ -141,10 +141,7 @@ parameter does, and would require macro tricks to implement).
 
 The Bstrlib C API takes the position that error handling needs to be done at
 the callsite, and just tries to make it as painless as possible. Furthermore,
-error modes are removed by supporting auto-growing strings and aliasing. For
-capturing errors in more central code fragments, Bstrlib's C++ API uses
-exception handling extensively, which is superior to the leaf-only error
-handler approach.
+error modes are removed by supporting auto-growing strings and aliasing.
 
 Comparison With Managed String Library CERT Proposal
 ----------------------------------------------------

@@ -7,7 +7,7 @@ Introduction
 ------------
 
 The Better String library (hereafter referred to as Bstrlib) is an attempt to
-provide improved string processing functionality to the C and C++ languages.
+provide improved string processing functionality to the C language.
 At the heart of the Bstrlib is the management of "bstring"s which are a
 significant improvement over '\0' terminated char buffers. See the
 accompanying documenation file bstrlib.txt for more information.
@@ -113,7 +113,7 @@ image in the heap except for the allocated bstring that is returned.
 
 Bstrlib does not do anything out of the ordinary to attempt to deal with the
 standard problem of memory leaking (losing references to allocated memory)
-when programming in the C and C++ languages. However, it does not compound
+when programming in the C language. However, it does not compound
 the problem any more than exists either, as it doesn't have any intrinsic
 inescapable leaks in it. Bstrlib does not preclude the use of automatic
 garbage collection mechanisms such as the Boehm garbage collector.
@@ -193,11 +193,3 @@ carefully auditted by anyone using a system in which `CHAR_BIT` is not 8.
 Bstrlib uses ctype.h functions to ensure that it remains portable to non-
 ASCII systems. It also checks range to make sure it is well defined even for
 data that ANSI does not define for the ctype functions.
-
-Obscure Issues
---------------
-
-### Data attributes
-
-There is no support for a Perl-like "taint" attribute, although this is a
-fairly straightforward exercise using C++'s type system.
