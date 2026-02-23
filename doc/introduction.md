@@ -327,7 +327,7 @@ object in a multithreaded environment.
 Problems Not Solved
 -------------------
 
-Bstrlib is written for the C languages, which have inherent weaknesses that
+Bstrlib is written for the C language, which has inherent weaknesses that
 cannot be easily solved:
 
 1. Memory leaks: Forgetting to call `bdestroy` on a bstring that is about to
@@ -348,6 +348,29 @@ Other problems not addressed:
 
 > Note: except for spotty support of wide characters, the default C standard
   library does not address any of these problems either.
+
+Unicode functions
+-----------------
+
+The two modules utf8util.c and buniutil.c implement basic functions for
+parsing and collecting Unicode data in the UTF8 format.  Unicode is
+described by a sequence of "code points" which are values between 0 and
+1114111 inclusive mapped to symbol content corresponding to nearly all
+the standardized scripts of the world.
+
+The semantics of Unicode code points is varied and complicated.  The
+base support of the better string library does not attempt to perform
+any interpretation of these code points.  The better string library
+solely provides support for iterating through unicode code points,
+appending and extracting code points to and from bstrings, and parsing
+UTF8 and UTF16 from raw data.
+
+The types cpUcs4 and cpUcs2 respectively are defined as 4 byte and 2 byte
+encoding formats corresponding to UCS4 and UCS2 respectively.  To test
+if a raw code point is valid, the macro isLegalUnicodeCodePoint() has
+been defined.  The utf8 iterator is defined by struct utf8Iterator.  To
+test if the iterator has more code points to walk through the macro
+utf8IteratorNoMore() has been defined.
 
 The `bstest` Module
 -------------------
@@ -871,3 +894,4 @@ and testing of the Better String Library:
 * Richard A. Smith
 * Simon Ekstrom
 * Wayne Scott
+* Zed A. Shaw
