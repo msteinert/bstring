@@ -17,6 +17,7 @@ Among the features achieved are:
   expect '\0' terminated char buffers
 - Improved overall performance of common string operations
 - Functional equivalency with other more modern languages
+- Optional API for manipulating UTF-8 encoded strings
 
 ## bstring fork
 
@@ -27,8 +28,7 @@ features (or mis-features, depending on your point of view) are included:
 2. Improved test suite using the [Check][] library
 3. Continuous integration via GitHub Actions, including memory profiling with [Valgrind][]
 4. Remove C++ wrapper code, returning this to a pure C library
-5. No UTF8 string manipulation support
-6. Documentation generation with [Doxygen][]
+5. Documentation generation with [Doxygen][]
 
 Currently this fork should be binary-compatible with the original code. The
 only source incompatibility is the removal of the `const_bstring` type.

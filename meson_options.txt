@@ -16,3 +16,9 @@ option(
     value: false,
     description: 'Build unit tests',
 )
+option(
+    'enable-utf8',
+    type: 'boolean',
+    value: true,
+    description: 'Build bstring library with UTF-8 support',
+)
