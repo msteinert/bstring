@@ -184,6 +184,7 @@ utf8IteratorGetNextCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 	long v;
 	int i;
 	int ofs;
+	int invalid;
 
 	if (NULL == iter || iter->next < 0) return errCh;
 	if (iter->next >= iter->slen) {
@@ -197,39 +198,64 @@ utf8IteratorGetNextCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 	iter->error = 0;
 	c = chrs[0];
 	ofs = 0;
+	invalid = 0;
 
 	if (c < 0xC0 || c > 0xFD) {
-		if (c >= 0x80) goto ErrMode;
-		v = c;
-		ofs = 1;
+		if (c >= 0x80) {
+			invalid = 1;
+		} else {
+			v = c;
+			ofs = 1;
+		}
 	} else if (c < 0xE0) {
-		if (iter->next >= iter->slen + 1) goto ErrMode;
-		v = (c << 6u) - (0x0C0 << 6u);
-		c = (unsigned char) ((unsigned) chrs[1] - 0x080);
-		v += c;
-		if (c >= 0x40 || v < 0x80) goto ErrMode;
-		ofs = 2;
+		if (iter->next + 1 >= iter->slen) {
+			invalid = 1;
+		} else {
+			v = (c << 6u) - (0x0C0 << 6u);
+			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
+			v += c;
+			if (c >= 0x40 || v < 0x80) {
+				invalid = 1;
+			} else {
+				ofs = 2;
+			}
+		}
 	} else if (c < 0xF0) {
-		if (iter->next >= iter->slen + 2) goto ErrMode;
-		v = (c << 12) - (0x0E0 << 12u);
-		c = (unsigned char) ((unsigned) chrs[1] - 0x080);
-		d = (unsigned char) ((unsigned) chrs[2] - 0x080);
-		v += (c << 6u) + d;
-		if ((c|d) >= 0x40 || v < 0x800 ||
-		    !isLegalUnicodeCodePoint(v)) goto ErrMode;
-		ofs = 3;
+		if (iter->next + 2 >= iter->slen) {
+			invalid = 1;
+		} else {
+			v = (c << 12) - (0x0E0 << 12u);
+			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
+			d = (unsigned char) ((unsigned) chrs[2] - 0x080);
+			v += (c << 6u) + d;
+			if ((c|d) >= 0x40 || v < 0x800 ||
+			    !isLegalUnicodeCodePoint(v)) {
+				invalid = 1;
+			} else {
+				ofs = 3;
+			}
+		}
 	} else if (c < 0xF8) {
-		if (iter->next >= iter->slen + 3) goto ErrMode;
-		v = (c << 18) - (0x0F0 << 18u);
-		c = (unsigned char) ((unsigned) chrs[1] - 0x080);
-		d = (unsigned char) ((unsigned) chrs[2] - 0x080);
-		e = (unsigned char) ((unsigned) chrs[3] - 0x080);
-		v += (c << 12u) + (d << 6u) + e;
-		if ((c|d|e) >= 0x40 || v < 0x10000 ||
-		    !isLegalUnicodeCodePoint(v)) goto ErrMode;
-		ofs = 4;
+		if (iter->next + 3 >= iter->slen) {
+			invalid = 1;
+		} else {
+			v = (c << 18) - (0x0F0 << 18u);
+			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
+			d = (unsigned char) ((unsigned) chrs[2] - 0x080);
+			e = (unsigned char) ((unsigned) chrs[3] - 0x080);
+			v += (c << 12u) + (d << 6u) + e;
+			if ((c|d|e) >= 0x40 || v < 0x10000 ||
+			    !isLegalUnicodeCodePoint(v)) {
+				invalid = 1;
+			} else {
+				ofs = 4;
+			}
+		}
 	} else { /* 5 and 6 byte encodings are invalid */
-	ErrMode:;
+		invalid = 1;
+	}
+
+	if (invalid) {
 		iter->error = 1;
 		v = errCh;
 		for (i = iter->next+1; i < iter->slen; i++) {
@@ -261,6 +287,7 @@ utf8IteratorGetCurrCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 	unsigned char d;
 	unsigned char e;
 	long v;
+	int invalid;
 
 	if (NULL == iter || iter->next < 0) return errCh;
 	if (iter->next >= iter->slen) {
@@ -273,35 +300,51 @@ utf8IteratorGetCurrCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 
 	iter->error = 0;
 	c = chrs[0];
+	invalid = 0;
 
 	if (c < 0xC0 || c > 0xFD) {
-		if (c >= 0x80) goto ErrMode;
-		v = c;
+		if (c >= 0x80) {
+			invalid = 1;
+		} else {
+			v = c;
+		}
 	} else if (c < 0xE0) {
-		if (iter->next >= iter->slen + 1) goto ErrMode;
-		v = (c << 6u) - (0x0C0 << 6u);
-		c = (unsigned char) ((unsigned) chrs[1] - 0x080);
-		v += c;
-		if (c >= 0x40 || v < 0x80) goto ErrMode;
+		if (iter->next + 1 >= iter->slen) {
+			invalid = 1;
+		} else {
+			v = (c << 6u) - (0x0C0 << 6u);
+			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
+			v += c;
+			if (c >= 0x40 || v < 0x80) invalid = 1;
+		}
 	} else if (c < 0xF0) {
-		if (iter->next >= iter->slen + 2) goto ErrMode;
-		v = (c << 12lu) - (0x0E0 << 12u);
-		c = (unsigned char) ((unsigned) chrs[1] - 0x080);
-		d = (unsigned char) ((unsigned) chrs[2] - 0x080);
-		v += (c << 6u) + d;
-		if ((c|d) >= 0x40 || v < 0x800 ||
-		    !isLegalUnicodeCodePoint(v)) goto ErrMode;
+		if (iter->next + 2 >= iter->slen) {
+			invalid = 1;
+		} else {
+			v = (c << 12lu) - (0x0E0 << 12u);
+			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
+			d = (unsigned char) ((unsigned) chrs[2] - 0x080);
+			v += (c << 6u) + d;
+			if ((c|d) >= 0x40 || v < 0x800 ||
+			    !isLegalUnicodeCodePoint(v)) invalid = 1;
+		}
 	} else if (c < 0xF8) {
-		if (iter->next >= iter->slen + 3) goto ErrMode;
-		v = (c << 18lu) - (0x0F0 << 18u);
-		c = (unsigned char) ((unsigned) chrs[1] - 0x080);
-		d = (unsigned char) ((unsigned) chrs[2] - 0x080);
-		e = (unsigned char) ((unsigned) chrs[3] - 0x080);
-		v += (c << 12lu) + (d << 6u) + e;
-		if ((c|d|e) >= 0x40 || v < 0x10000 ||
-		    !isLegalUnicodeCodePoint(v)) goto ErrMode;
+		if (iter->next + 3 >= iter->slen) {
+			invalid = 1;
+		} else {
+			v = (c << 18lu) - (0x0F0 << 18u);
+			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
+			d = (unsigned char) ((unsigned) chrs[2] - 0x080);
+			e = (unsigned char) ((unsigned) chrs[3] - 0x080);
+			v += (c << 12lu) + (d << 6u) + e;
+			if ((c|d|e) >= 0x40 || v < 0x10000 ||
+			    !isLegalUnicodeCodePoint(v)) invalid = 1;
+		}
 	} else { /* 5 and 6 byte encodings are invalid */
-	ErrMode:;
+		invalid = 1;
+	}
+
+	if (invalid) {
 		iter->error = 1;
 		v = errCh;
 	}
