@@ -83,7 +83,8 @@ typedef unsigned char cpUcs2;
 struct utf8Iterator {
 	unsigned char *data;
 	int slen;
-	int start, next;
+	int start;
+	int next;
 	int error;
 };
 
@@ -96,8 +97,8 @@ BSTR_PUBLIC cpUcs4 utf8IteratorGetNextCodePoint(struct utf8Iterator *iter,
                                                 cpUcs4 errCh);
 BSTR_PUBLIC cpUcs4 utf8IteratorGetCurrCodePoint(struct utf8Iterator *iter,
                                                 cpUcs4 errCh);
-BSTR_PUBLIC int utf8ScanBackwardsForCodePoint(unsigned char *msg, int len,
-                                              int pos, cpUcs4 *out);
+BSTR_PUBLIC int utf8ScanBackwardsForCodePoint(const unsigned char *msg,
+											  int len, int pos, cpUcs4 *out);
 
 #ifdef __cplusplus
 }
