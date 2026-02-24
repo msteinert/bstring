@@ -289,36 +289,51 @@ buAppendBlkUTF16(bstring bu, const cpUcs2 *utf16, int len, cpUcs2 *bom,
 	}
 
 	cc = 0;
-	for (; i < len; i++) {
-		cpUcs4 c;
+	while (i < len) {
 		cpUcs4 v;
+		int invalid = 0;
+
 		v = endSwap(utf16[i], sm);
+		i++;
 
 		if ((v | 0x7FF) == 0xDFFF) { /* Deal with surrogate pairs */
-			if (v >= 0xDC00 || i >= len) {
-			ErrMode:;
-				if (~0 == errCh) {
-				ErrReturn:;
-					bu->slen = oldSlen;
-					return BSTR_ERR;
-				}
-				v = errCh;
+			if (v >= 0xDC00) {
+				invalid = 1; /* Isolated low surrogate */
+			} else if (i >= len) {
+				invalid = 1; /* Unterminated high surrogate */
 			} else {
-				i++;
-				if ((c = endSwap(utf16[i], sm) - 0xDC00) > 0x3FF)
-					goto ErrMode;
-				v = ((v - 0xD800) << 10) + c + 0x10000;
+				cpUcs4 c = endSwap(utf16[i], sm);
+				if (c < 0xDC00 || c > 0xDFFF) {
+					invalid = 1;
+				} else {
+					i++;
+					v = ((v - 0xD800) << 10) + (c - 0xDC00) + 0x10000;
+				}
 			}
 		}
+
+		if (invalid) {
+			if (~0 == errCh) {
+				bu->slen = oldSlen;
+				return BSTR_ERR;
+			}
+			v = errCh;
+		}
+
 		buff[cc] = v;
 		cc++;
 		if (cc >= TEMP_UCS4_BUFFER_SIZE) {
-			if (0 > buAppendBlkUcs4(bu, buff, cc, errCh))
-				goto ErrReturn;
+			if (0 > buAppendBlkUcs4(bu, buff, cc, errCh)) {
+				bu->slen = oldSlen;
+				return BSTR_ERR;
+			}
 			cc = 0;
 		}
 	}
-	if (cc > 0 && 0 > buAppendBlkUcs4(bu, buff, cc, errCh)) goto ErrReturn;
+	if (cc > 0 && 0 > buAppendBlkUcs4(bu, buff, cc, errCh)) {
+		bu->slen = oldSlen;
+		return BSTR_ERR;
+	}
 
 	return BSTR_OK;
 }
