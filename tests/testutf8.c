@@ -838,6 +838,40 @@ START_TEST(core_013)
 }
 END_TEST
 
+/* -----------------------------------------------------------------------
+ * core_013: utf8ScanBackwardsForCodePoint — invalid continuation bytes
+ *
+ * Each case starts at a lead byte but includes one or more non-continuation
+ * trailing bytes. Scanner must reject these and return an error.
+ * ----------------------------------------------------------------------- */
+START_TEST(core_014)
+{
+	cpUcs4 out = 0;
+	int ret;
+
+	/* Invalid 2-byte sequence: second byte must be 10xxxxxx */
+	{
+		unsigned char data[] = { 0xC2, 0x41 };
+		ret = utf8ScanBackwardsForCodePoint(data, 2, 0, &out);
+		ck_assert(ret < 0);
+	}
+
+	/* Invalid 3-byte sequence: middle byte must be 10xxxxxx */
+	{
+		unsigned char data[] = { 0xE2, 0x28, 0xAC };
+		ret = utf8ScanBackwardsForCodePoint(data, 3, 0, &out);
+		ck_assert(ret < 0);
+	}
+
+	/* Invalid 4-byte sequence: third byte must be 10xxxxxx */
+	{
+		unsigned char data[] = { 0xF0, 0x9F, 0x41, 0x80 };
+		ret = utf8ScanBackwardsForCodePoint(data, 4, 0, &out);
+		ck_assert(ret < 0);
+	}
+}
+END_TEST
+
 int
 main(void)
 {
@@ -859,6 +893,7 @@ main(void)
 	tcase_add_test(core, core_011);
 	tcase_add_test(core, core_012);
 	tcase_add_test(core, core_013);
+	tcase_add_test(core, core_014);
 	suite_add_tcase(suite, core);
 	/* Run tests */
 	SRunner *runner = srunner_create(suite);

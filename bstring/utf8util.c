@@ -97,7 +97,6 @@ utf8ScanBackwardsForCodePoint(const unsigned char *msg, int len, int pos,
 		return 0;
 	} else if (msg[pos] < 0xC0) {
 		if (0 == pos) return -__LINE__;
-		ret = -__LINE__;
 		if (msg[pos-1] >= 0xC1 && msg[pos-1] < 0xF8) {
 			pos--;
 			ret = 1;
@@ -119,6 +118,7 @@ utf8ScanBackwardsForCodePoint(const unsigned char *msg, int len, int pos,
 	}
 	if (msg[pos] < 0xE0) {
 		if (pos + 1 >= len) return -__LINE__;
+		if ((msg[pos+1] & 0xC0) != 0x80) return -__LINE__;
 		v1 = msg[pos]   & ~0xE0;
 		v2 = msg[pos+1] & ~0xC0;
 		v1 = (v1 << 6) + v2;
@@ -128,6 +128,8 @@ utf8ScanBackwardsForCodePoint(const unsigned char *msg, int len, int pos,
 	}
 	if (msg[pos] < 0xF0) {
 		if (pos + 2 >= len) return -__LINE__;
+		if ((msg[pos+1] & 0xC0) != 0x80) return -__LINE__;
+		if ((msg[pos+2] & 0xC0) != 0x80) return -__LINE__;
 		v1 = msg[pos]   & ~0xF0;
 		v2 = msg[pos+1] & ~0xC0;
 		v3 = msg[pos+2] & ~0xC0;
@@ -141,6 +143,9 @@ utf8ScanBackwardsForCodePoint(const unsigned char *msg, int len, int pos,
 	if (msg[pos] >= 0xF8) return -__LINE__;
 
 	if (pos + 3 >= len) return -__LINE__;
+	if ((msg[pos+1] & 0xC0) != 0x80) return -__LINE__;
+	if ((msg[pos+2] & 0xC0) != 0x80) return -__LINE__;
+	if ((msg[pos+3] & 0xC0) != 0x80) return -__LINE__;
 	v1 = msg[pos]   & ~0xF8;
 	v2 = msg[pos+1] & ~0xC0;
 	v3 = msg[pos+2] & ~0xC0;
