@@ -224,9 +224,93 @@ START_TEST(core_004)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_005: utf8IteratorGetCurrCodePoint — peek without advancing
+ * core_005: utf8IteratorGetNextCodePoint — truncated sequence bounds checks
+ *
+ * The backing arrays contain full valid code points, but slen is set so the
+ * sequence is truncated at the end. Iterator must treat each as invalid and
+ * return errCh instead of decoding bytes past slen.
  * ----------------------------------------------------------------------- */
 START_TEST(core_005)
+{
+	struct utf8Iterator iter;
+	cpUcs4 cp;
+
+	{
+		unsigned char data[] = { 0xC2, 0xA9 };
+		utf8IteratorInit(&iter, data, 1);
+		cp = utf8IteratorGetNextCodePoint(&iter, '?');
+		ck_assert_int_eq(cp, '?');
+		ck_assert_int_eq(iter.error, 1);
+		ck_assert_int_eq(iter.start, 0);
+		ck_assert_int_eq(iter.next, 1);
+	}
+
+	{
+		unsigned char data[] = { 0xE2, 0x82, 0xAC };
+		utf8IteratorInit(&iter, data, 2);
+		cp = utf8IteratorGetNextCodePoint(&iter, '?');
+		ck_assert_int_eq(cp, '?');
+		ck_assert_int_eq(iter.error, 1);
+		ck_assert_int_eq(iter.start, 0);
+		ck_assert_int_eq(iter.next, 2);
+	}
+
+	{
+		unsigned char data[] = { 0xF0, 0x9F, 0x98, 0x80 };
+		utf8IteratorInit(&iter, data, 3);
+		cp = utf8IteratorGetNextCodePoint(&iter, '?');
+		ck_assert_int_eq(cp, '?');
+		ck_assert_int_eq(iter.error, 1);
+		ck_assert_int_eq(iter.start, 0);
+		ck_assert_int_eq(iter.next, 3);
+	}
+}
+END_TEST
+
+/* -----------------------------------------------------------------------
+ * core_006: utf8IteratorGetCurrCodePoint — truncated sequence bounds checks
+ *
+ * Peek must never decode bytes beyond slen. For each truncated sequence, it
+ * should return errCh, set iter.error, and leave iter.next unchanged.
+ * ----------------------------------------------------------------------- */
+START_TEST(core_006)
+{
+	struct utf8Iterator iter;
+	cpUcs4 cp;
+
+	{
+		unsigned char data[] = { 0xC2, 0xA9 };
+		utf8IteratorInit(&iter, data, 1);
+		cp = utf8IteratorGetCurrCodePoint(&iter, '?');
+		ck_assert_int_eq(cp, '?');
+		ck_assert_int_eq(iter.error, 1);
+		ck_assert_int_eq(iter.next, 0);
+	}
+
+	{
+		unsigned char data[] = { 0xE2, 0x82, 0xAC };
+		utf8IteratorInit(&iter, data, 2);
+		cp = utf8IteratorGetCurrCodePoint(&iter, '?');
+		ck_assert_int_eq(cp, '?');
+		ck_assert_int_eq(iter.error, 1);
+		ck_assert_int_eq(iter.next, 0);
+	}
+
+	{
+		unsigned char data[] = { 0xF0, 0x9F, 0x98, 0x80 };
+		utf8IteratorInit(&iter, data, 3);
+		cp = utf8IteratorGetCurrCodePoint(&iter, '?');
+		ck_assert_int_eq(cp, '?');
+		ck_assert_int_eq(iter.error, 1);
+		ck_assert_int_eq(iter.next, 0);
+	}
+}
+END_TEST
+
+/* -----------------------------------------------------------------------
+ * core_007: utf8IteratorGetCurrCodePoint — peek without advancing
+ * ----------------------------------------------------------------------- */
+START_TEST(core_007)
 {
 	struct utf8Iterator iter;
 	unsigned char data[] = { 0xC2, 0xA9, 0x41 }; /* © A */
@@ -258,11 +342,11 @@ START_TEST(core_005)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_006: utf8ScanBackwardsForCodePoint — various positions
+ * core_008: utf8ScanBackwardsForCodePoint — various positions
  *
  *   Data: © (0xC2 0xA9) at bytes 0-1, then 'A' (0x41) at byte 2
  * ----------------------------------------------------------------------- */
-START_TEST(core_006)
+START_TEST(core_008)
 {
 	unsigned char data[] = { 0xC2, 0xA9, 0x41 }; /* © A */
 	cpUcs4 out;
@@ -298,9 +382,9 @@ START_TEST(core_006)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_007: buIsUTF8Content
+ * core_009: buIsUTF8Content
  * ----------------------------------------------------------------------- */
-START_TEST(core_007)
+START_TEST(core_009)
 {
 	bstring b;
 	int ret;
@@ -360,9 +444,9 @@ START_TEST(core_007)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_008: buAppendBlkUcs4 — UCS-4 array → UTF-8 bstring
+ * core_010: buAppendBlkUcs4 — UCS-4 array → UTF-8 bstring
  * ----------------------------------------------------------------------- */
-START_TEST(core_008)
+START_TEST(core_010)
 {
 	bstring b;
 	int ret;
@@ -458,9 +542,9 @@ START_TEST(core_008)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_009: buGetBlkUTF16 — UTF-8 bstring → UTF-16 array
+ * core_011: buGetBlkUTF16 — UTF-8 bstring → UTF-16 array
  * ----------------------------------------------------------------------- */
-START_TEST(core_009)
+START_TEST(core_011)
 {
 	cpUcs2 buf[16];
 	int ret;
@@ -537,9 +621,9 @@ START_TEST(core_009)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_010: buAppendBlkUTF16 — UTF-16 array → UTF-8 bstring
+ * core_012: buAppendBlkUTF16 — UTF-16 array → UTF-8 bstring
  * ----------------------------------------------------------------------- */
-START_TEST(core_010)
+START_TEST(core_012)
 {
 	bstring b;
 	int ret;
@@ -726,7 +810,7 @@ START_TEST(core_010)
 END_TEST
 
 /* -----------------------------------------------------------------------
- * core_011: regression guard
+ * core_013: regression guard
  *
  * Guard against regressions for:
  *   high surrogate followed by non-low surrogate.
@@ -734,7 +818,7 @@ END_TEST
  * Expected behavior is:
  *   first code unit substituted with errCh, second processed normally.
  * ----------------------------------------------------------------------- */
-START_TEST(core_011)
+START_TEST(core_013)
 {
 	bstring b;
 	int ret;
@@ -773,6 +857,8 @@ main(void)
 	tcase_add_test(core, core_009);
 	tcase_add_test(core, core_010);
 	tcase_add_test(core, core_011);
+	tcase_add_test(core, core_012);
+	tcase_add_test(core, core_013);
 	suite_add_tcase(suite, core);
 	/* Run tests */
 	SRunner *runner = srunner_create(suite);
