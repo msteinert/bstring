@@ -637,6 +637,120 @@ START_TEST(core_010)
 		ck_assert_int_eq(b->data[0], 'A');
 		bdestroy(b);
 	}
+
+	/* Invalid low surrogate alone with valid errCh → substituted */
+	{
+		cpUcs2 u[] = { 0xDC00 };
+		b = bfromcstr("");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 1, NULL, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(b->slen, 1);
+		ck_assert_int_eq(b->data[0], '?');
+		bdestroy(b);
+	}
+
+	/* Invalid low surrogate then ASCII with valid errCh */
+	{
+		cpUcs2 u[] = { 0xDC00, 0x0041 };
+		unsigned char expected[] = { '?', 'A' };
+		b = bfromcstr("");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 2, NULL, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(b->slen, 2);
+		ret = memcmp(b->data, expected, 2);
+		ck_assert_int_eq(ret, 0);
+		bdestroy(b);
+	}
+
+	/* Invalid surrogate with invalid errCh → BSTR_ERR and rollback */
+	{
+		cpUcs2 u[] = { 0xDC00 };
+		b = bfromcstr("pre");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 1, NULL, 0xD800); /* invalid errCh */
+		ck_assert_int_eq(ret, BSTR_ERR);
+		ck_assert_int_eq(b->slen, 3); /* unchanged */
+		ck_assert_int_eq(b->data[0], 'p');
+		ck_assert_int_eq(b->data[1], 'r');
+		ck_assert_int_eq(b->data[2], 'e');
+		bdestroy(b);
+	}
+
+	/* bom out-parameter gets set when BOM appears in stream */
+	{
+		cpUcs2 in_bom = 0;
+		cpUcs2 u[] = { 0xFEFF, 0x0041 };
+		b = bfromcstr("");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 2, &in_bom, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(in_bom, 0xFEFF);
+		ck_assert_int_eq(b->slen, 1);
+		ck_assert_int_eq(b->data[0], 'A');
+		bdestroy(b);
+	}
+
+	/* Pre-seeded bom controls endianness even without BOM in input */
+	{
+		cpUcs2 in_bom = 0xFFFE;
+		cpUcs2 u[] = { 0x4100 }; /* bytes for 0x0041 in opposite endian */
+		b = bfromcstr("");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 1, &in_bom, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(in_bom, 0xFFFE); /* preserved */
+		ck_assert_int_eq(b->slen, 1);
+		ck_assert_int_eq(b->data[0], 'A');
+		bdestroy(b);
+	}
+
+	/* Larger than TEMP_UCS4_BUFFER_SIZE exercises internal flush path */
+	{
+		cpUcs2 u[80];
+		for (int j = 0; j < 80; j++) {
+			u[j] = (cpUcs2)('A' + (j % 26));
+		}
+		b = bfromcstr("");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 80, NULL, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(b->slen, 80);
+		for (int j = 0; j < 80; j++) {
+			ck_assert_int_eq(b->data[j], 'A' + (j % 26));
+		}
+		bdestroy(b);
+	}
+}
+END_TEST
+
+/* -----------------------------------------------------------------------
+ * core_011: regression guard
+ *
+ * Guard against regressions for:
+ *   high surrogate followed by non-low surrogate.
+ *
+ * Expected behavior is:
+ *   first code unit substituted with errCh, second processed normally.
+ * ----------------------------------------------------------------------- */
+START_TEST(core_011)
+{
+	bstring b;
+	int ret;
+
+	{
+		cpUcs2 u[] = { 0xD83D, 0x0041 };
+		unsigned char expected[] = { '?', 'A' };
+		b = bfromcstr("");
+		ck_assert(b != NULL);
+		ret = buAppendBlkUTF16(b, u, 2, NULL, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(b->slen, 2);
+		ret = memcmp(b->data, expected, 2);
+		ck_assert_int_eq(ret, 0);
+		bdestroy(b);
+	}
 }
 END_TEST
 
@@ -658,6 +772,7 @@ main(void)
 	tcase_add_test(core, core_008);
 	tcase_add_test(core, core_009);
 	tcase_add_test(core, core_010);
+	tcase_add_test(core, core_011);
 	suite_add_tcase(suite, core);
 	/* Run tests */
 	SRunner *runner = srunner_create(suite);
