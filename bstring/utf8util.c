@@ -78,10 +78,14 @@ utf8IteratorUninit(struct utf8Iterator *iter)
 }
 
 int
-utf8ScanBackwardsForCodePoint(unsigned char *msg, int len, int pos,
+utf8ScanBackwardsForCodePoint(const unsigned char *msg, int len, int pos,
                                cpUcs4 *out)
 {
-	cpUcs4 v1, v2, v3, v4, x;
+	cpUcs4 v1;
+	cpUcs4 v2;
+	cpUcs4 v3;
+	cpUcs4 v4;
+	cpUcs4 x;
 	int ret;
 	if (NULL == msg || len < 0 || (unsigned) pos >= (unsigned) len) {
 		return -__LINE__;
@@ -173,10 +177,13 @@ U-04000000 - U-7FFFFFFF:  1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
 cpUcs4
 utf8IteratorGetNextCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 {
-	unsigned char *chrs;
-	unsigned char c, d, e;
+	const unsigned char *chrs;
+	unsigned char c;
+	unsigned char d;
+	unsigned char e;
 	long v;
-	int i, ofs;
+	int i;
+	int ofs;
 
 	if (NULL == iter || iter->next < 0) return errCh;
 	if (iter->next >= iter->slen) {
@@ -249,8 +256,10 @@ utf8IteratorGetNextCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 cpUcs4
 utf8IteratorGetCurrCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 {
-	unsigned char *chrs;
-	unsigned char c, d, e;
+	const unsigned char *chrs;
+	unsigned char c;
+	unsigned char d;
+	unsigned char e;
 	long v;
 
 	if (NULL == iter || iter->next < 0) return errCh;

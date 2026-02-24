@@ -78,7 +78,8 @@ buGetBlkUTF16(/* @out */ cpUcs2 *ucs2, int len, cpUcs4 errCh,
 	struct tagbstring t;
 	struct utf8Iterator iter;
 	cpUcs4 ucs4;
-	int i, j;
+	int i;
+	int j;
 
 	if (!isLegalUnicodeCodePoint(errCh))
 		errCh = UNICODE__CODE_POINT__REPLACEMENT_CHARACTER;
@@ -99,9 +100,10 @@ buGetBlkUTF16(/* @out */ cpUcs2 *ucs2, int len, cpUcs4 errCh,
 	utf8IteratorInit(&iter, t.data, t.slen);
 
 	ucs4 = BSTR_ERR;
-	for (i=0; 0 < len && iter.next < iter.slen &&
-	          0 <= (ucs4 = utf8IteratorGetNextCodePoint(&iter, errCh));
-	     i++) {
+	for (i=0; 0 < len && iter.next < iter.slen; i++) {
+		ucs4 = utf8IteratorGetNextCodePoint(&iter, errCh);
+		if (0 > ucs4) break;
+
 		if (ucs4 < 0x10000) {
 			*ucs2++ = (cpUcs2) ucs4;
 			len--;
@@ -155,13 +157,14 @@ UTF-32: U-000000 - U-10FFFF
 int
 buAppendBlkUcs4(bstring b, const cpUcs4 *bu, int len, cpUcs4 errCh)
 {
-	int i, oldSlen;
+	int oldSlen;
 
-	if (NULL == bu || NULL == b || 0 > len ||
-	    0 > (oldSlen = blengthe(b, -1))) return BSTR_ERR;
+	if (NULL == bu || NULL == b || 0 > len) return BSTR_ERR;
+	oldSlen = blengthe(b, -1);
+	if (0 > oldSlen) return BSTR_ERR;
 	if (!isLegalUnicodeCodePoint(errCh)) errCh = ~0;
 
-	for (i=0; i < len; i++) {
+	for (int i=0; i < len; i++) {
 		unsigned char c[6];
 		cpUcs4 v = bu[i];
 
@@ -255,7 +258,10 @@ buAppendBlkUTF16(bstring bu, const cpUcs2 *utf16, int len, cpUcs2 *bom,
                  cpUcs4 errCh)
 {
 	cpUcs4 buff[TEMP_UCS4_BUFFER_SIZE];
-	int cc, i, sm, oldSlen;
+	int cc;
+	int i;
+	int sm;
+	int oldSlen;
 
 	if (NULL == bdata(bu) || NULL == utf16 || len < 0) return BSTR_ERR;
 	if (!isLegalUnicodeCodePoint(errCh)) errCh = ~0;
@@ -284,7 +290,8 @@ buAppendBlkUTF16(bstring bu, const cpUcs2 *utf16, int len, cpUcs2 *bom,
 
 	cc = 0;
 	for (; i < len; i++) {
-		cpUcs4 c, v;
+		cpUcs4 c;
+		cpUcs4 v;
 		v = endSwap(utf16[i], sm);
 
 		if ((v | 0x7FF) == 0xDFFF) { /* Deal with surrogate pairs */
