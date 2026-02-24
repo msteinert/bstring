@@ -326,7 +326,7 @@ utf8IteratorGetCurrCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 		if (iter->next + 2 >= iter->slen) {
 			invalid = 1;
 		} else {
-			v = (c << 12lu) - (0x0E0 << 12u);
+			v = (c << 12UL) - (0x0E0 << 12u);
 			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
 			d = (unsigned char) ((unsigned) chrs[2] - 0x080);
 			v += (c << 6u) + d;
@@ -337,11 +337,11 @@ utf8IteratorGetCurrCodePoint(struct utf8Iterator *iter, cpUcs4 errCh)
 		if (iter->next + 3 >= iter->slen) {
 			invalid = 1;
 		} else {
-			v = (c << 18lu) - (0x0F0 << 18u);
+			v = (c << 18UL) - (0x0F0 << 18u);
 			c = (unsigned char) ((unsigned) chrs[1] - 0x080);
 			d = (unsigned char) ((unsigned) chrs[2] - 0x080);
 			e = (unsigned char) ((unsigned) chrs[3] - 0x080);
-			v += (c << 12lu) + (d << 6u) + e;
+			v += (c << 12UL) + (d << 6u) + e;
 			if ((c|d|e) >= 0x40 || v < 0x10000 ||
 			    !isLegalUnicodeCodePoint(v)) invalid = 1;
 		}
