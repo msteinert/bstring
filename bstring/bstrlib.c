@@ -60,7 +60,7 @@ do { \
 	if ((L) > 0) { \
 		memmove((D), (S), (L)); \
 	} \
-} while (0);
+} while (0)
 
 /**
  * Compute the snapped size for a given requested size.

@@ -1688,7 +1688,7 @@ do { \
 		(t).slen = 0; \
 	} \
 	(t).mlen = -__LINE__; \
-} while (0);
+} while (0)
 
 /**
  * Fill in the tagbstring t with the data buffer s with length len after it
@@ -1718,7 +1718,7 @@ do { \
 	(t).data = bstrtmp_s + bstrtmp_idx; \
 	(t).slen = bstrtmp_len - bstrtmp_idx; \
 	(t).mlen = -__LINE__; \
-} while (0);
+} while (0)
 
 /**
  * Fill in the tagbstring t with the data buffer s with length len after it
@@ -1748,7 +1748,7 @@ do { \
 	(t).data = bstrtmp_s; \
 	(t).slen = bstrtmp_len + 1; \
 	(t).mlen = -__LINE__; \
-} while (0);
+} while (0)
 
 /**
  * Fill in the tagbstring t with the data buffer s with length len after it
@@ -1783,7 +1783,7 @@ do { \
 	(t).data = bstrtmp_s + bstrtmp_idx; \
 	(t).slen = bstrtmp_len + 1 - bstrtmp_idx; \
 	(t).mlen = -__LINE__; \
-} while (0);
+} while (0)
 
 /* Write protection macros */
 
@@ -1800,7 +1800,7 @@ do { \
 	if ((t).mlen >=  0) { \
 		(t).mlen = -1; \
 	} \
-} while (0);
+} while (0)
 
 /**
  * Allow bstring to be written to via the bstrlib API.
@@ -1819,7 +1819,7 @@ do { \
 	if ((t).mlen == -1) { \
 		(t).mlen = (t).slen + ((t).slen == 0); \
 	} \
-} while (0);
+} while (0)
 
 /**
  * Returns 1 if the bstring is write protected, otherwise 0 is returned.
