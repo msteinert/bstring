@@ -3075,6 +3075,222 @@ START_TEST(core_046)
 }
 END_TEST
 
+/* biseqblk */
+
+static void
+test47_0(const bstring b, const unsigned char *blk, int len, int res)
+{
+	int ret = biseqblk(b, blk, len);
+	ck_assert_int_eq(ret, res);
+}
+
+START_TEST(core_047)
+{
+	/* tests with NULL */
+	test47_0(NULL, NULL, 0, BSTR_ERR);
+	test47_0(&emptyBstring, NULL, 0, BSTR_ERR);
+	test47_0(NULL, emptyBstring.data, 0, BSTR_ERR);
+	test47_0(&shortBstring, NULL, shortBstring.slen, BSTR_ERR);
+	test47_0(NULL, shortBstring.data, 0, BSTR_ERR);
+	test47_0(&badBstring1, badBstring1.data, badBstring1.slen, BSTR_ERR);
+	test47_0(&badBstring2, badBstring2.data, badBstring2.slen, BSTR_ERR);
+	test47_0(&shortBstring, badBstring2.data, badBstring2.slen, BSTR_ERR);
+	test47_0(&badBstring2, shortBstring.data, shortBstring.slen, BSTR_ERR);
+	/* normal operation tests */
+	test47_0(&emptyBstring, emptyBstring.data, emptyBstring.slen, 1);
+	test47_0(&shortBstring, emptyBstring.data, emptyBstring.slen, 0);
+	test47_0(&emptyBstring, shortBstring.data, shortBstring.slen, 0);
+	test47_0(&shortBstring, shortBstring.data, shortBstring.slen, 1);
+	{
+		bstring b = bstrcpy(&shortBstring);
+		ck_assert(b != NULL);
+		b->data[1]++;
+		test47_0(b, shortBstring.data, shortBstring.slen, 0);
+		bdestroy(b);
+	}
+	test47_0(&shortBstring, longBstring.data, longBstring.slen, 0);
+	test47_0(&longBstring, shortBstring.data, shortBstring.slen, 0);
+}
+END_TEST
+
+/* biseqcaselessblk */
+
+static void
+test48_0(const bstring b, const unsigned char *blk, int len, int res)
+{
+	int ret = biseqcaselessblk(b, blk, len);
+	ck_assert_int_eq(ret, res);
+}
+
+START_TEST(core_048)
+{
+	struct tagbstring t0 = bsStatic("bOgUs");
+	struct tagbstring t1 = bsStatic("bOgUR");
+	struct tagbstring t2 = bsStatic("bOgUt");
+	/* tests with NULL */
+	test48_0(NULL, NULL, 0, BSTR_ERR);
+	test48_0(&emptyBstring, NULL, 0, BSTR_ERR);
+	test48_0(NULL, emptyBstring.data, 0, BSTR_ERR);
+	test48_0(&emptyBstring, badBstring1.data, emptyBstring.slen, BSTR_ERR);
+	test48_0(&badBstring1, emptyBstring.data, badBstring1.slen, BSTR_ERR);
+	test48_0(&shortBstring, badBstring2.data, badBstring2.slen, BSTR_ERR);
+	test48_0(&badBstring2, shortBstring.data, badBstring2.slen, BSTR_ERR);
+	/* normal operation tests */
+	test48_0(&emptyBstring, emptyBstring.data, emptyBstring.slen, 1);
+	test48_0(&shortBstring, t0.data, t0.slen, 1);
+	test48_0(&shortBstring, t1.data, t1.slen, 0);
+	test48_0(&shortBstring, t2.data, t2.slen, 0);
+}
+END_TEST
+
+/* binsertblk */
+
+static void
+test49_0(bstring b0, int pos, const void *blk, int len,
+         unsigned char fill, const char *res, int reslen)
+{
+	bstring b2;
+	int ret = 0;
+	if (b0 && b0->data && b0->slen >= 0 &&
+	    blk && len >= 0) {
+		b2 = bstrcpy(b0);
+		if (b2 == NULL) {
+			ck_abort();
+			return;
+		}
+		bwriteprotect(*b2);
+		ret = binsertblk(b2, pos, blk, len, fill);
+		ck_assert_int_ne(ret, 0);
+		ret = biseq(b0, b2);
+		ck_assert_int_eq(ret, 1);
+		bwriteallow(*b2);
+			ret = binsertblk(b2, pos, blk, len, fill);
+			if (res == NULL) {
+				ck_assert_int_eq(ret, BSTR_ERR);
+			} else {
+				ck_assert_int_eq(ret, BSTR_OK);
+				ck_assert_int_ge(reslen, 0);
+				ck_assert_int_eq(b2->slen, reslen);
+				ret = memcmp(b2->data, res, reslen);
+				ck_assert_int_eq(ret, 0);
+				ck_assert_int_eq(b2->data[b2->slen], '\0');
+			}
+		ret = bdestroy(b2);
+		ck_assert_int_eq(ret, BSTR_OK);
+	} else {
+		ret = binsertblk(b0, pos, blk, len, fill);
+		ck_assert_int_eq(ret, BSTR_ERR);
+	}
+}
+
+START_TEST(core_049)
+{
+	/* tests with NULL */
+	test49_0(NULL, 0, NULL, 0, '?', NULL, -1);
+	test49_0(NULL, 0, "", 0, '?', NULL, -1);
+	test49_0(&badBstring1, 0, NULL, 0, '?', NULL, -1);
+	test49_0(&badBstring1, 0, badBstring1.data, 4, '?', NULL, -1);
+	test49_0(&badBstring2, 0, NULL, 0, '?', NULL, -1);
+	test49_0(&badBstring2, 0, badBstring2.data, 5, '?', NULL, -1);
+	/* normal operation tests */
+	test49_0(&emptyBstring, 0, "", 0, '?', "", (int)(sizeof("") - 1));
+	test49_0(&emptyBstring, 5, "", 0, '?', "?????", (int)(sizeof("?????") - 1));
+	test49_0(&emptyBstring, 5, SHORT_STRING, 5, '?', "?????bogus",
+	         (int)(sizeof("?????bogus") - 1));
+	test49_0(&shortBstring, 0, "", 0, '?', "bogus", (int)(sizeof("bogus") - 1));
+	test49_0(&emptyBstring, 0, SHORT_STRING, 5, '?', "bogus",
+	         (int)(sizeof("bogus") - 1));
+	test49_0(&shortBstring, 0, SHORT_STRING, 5, '?', "bogusbogus",
+	         (int)(sizeof("bogusbogus") - 1));
+	test49_0(&shortBstring, -1, SHORT_STRING, 5, '?', NULL, -1);
+	test49_0(&shortBstring, 2, SHORT_STRING, 5, '?', "bobogusgus",
+	         (int)(sizeof("bobogusgus") - 1));
+	test49_0(&shortBstring, 6, SHORT_STRING, 5, '?', "bogus?bogus",
+	         (int)(sizeof("bogus?bogus") - 1));
+	/* alias test: insert substring of self */
+	{
+		bstring b0 = bfromcstr("aaaaabbbbb");
+		ck_assert(b0 != NULL);
+		b0->slen = 6;
+		int ret = binsertblk(b0, 2, b0->data + 4, 4, '?');
+		ck_assert_int_eq(ret, BSTR_OK);
+		ck_assert_int_eq(biseqcstr(b0, "aaabbbaaab"), 1);
+		bdestroy(b0);
+	}
+}
+END_TEST
+
+/* bjoinblk */
+
+START_TEST(core_050)
+{
+	struct bstrList *l;
+	bstring b;
+	bstring c;
+	int ret;
+	/* error cases */
+	ck_assert(bjoinblk(NULL, ",", 1) == NULL);
+	ck_assert(bjoinblk(NULL, NULL, 0) == NULL);
+	/* empty list */
+	l = bstrListCreate();
+	ck_assert(l != NULL);
+	c = bjoinblk(l, ",", 1);
+	ck_assert(c != NULL);
+	ck_assert_int_eq(c->slen, 0);
+	bdestroy(c);
+	bstrListDestroy(l);
+	/* split and rejoin with blk separator */
+	{
+		b = bfromcstr("one,two,three");
+		ck_assert(b != NULL);
+		l = bsplit(b, ',');
+		ck_assert(l != NULL);
+		ck_assert_int_eq(l->qty, 3);
+		c = bjoin(l, NULL);
+		ck_assert(c != NULL);
+		ck_assert_int_eq(biseqcstr(c, "onetwothree"), 1);
+		ck_assert_int_eq(c->data[c->slen], '\0');
+		bdestroy(c);
+		c = bjoinblk(l, ",", 1);
+		ck_assert(c != NULL);
+		ret = biseq(c, b);
+		ck_assert_int_eq(ret, 1);
+		ck_assert_int_eq(c->data[c->slen], '\0');
+		bdestroy(c);
+		/* rejoin with zero-length separator */
+		c = bjoinblk(l, "", 0);
+		ck_assert(c != NULL);
+		ck_assert_int_eq(biseqcstr(c, "onetwothree"), 1);
+		ck_assert_int_eq(c->data[c->slen], '\0');
+		bdestroy(c);
+		/* rejoin with multi-char separator */
+		c = bjoinblk(l, "-->", 3);
+		ck_assert(c != NULL);
+		ck_assert_int_eq(biseqcstr(c, "one-->two-->three"), 1);
+		ck_assert_int_eq(c->data[c->slen], '\0');
+		bdestroy(c);
+		bstrListDestroy(l);
+		bdestroy(b);
+	}
+	/* single entry list */
+	{
+		l = bstrListCreate();
+		ck_assert(l != NULL);
+		bstrListAlloc(l, 2);
+		l->entry[0] = bfromcstr("only");
+		l->qty = 1;
+		c = bjoinblk(l, ",", 1);
+		ck_assert(c != NULL);
+		ck_assert_int_eq(biseqcstr(c, "only"), 1);
+		ck_assert_int_eq(c->data[c->slen], '\0');
+		bdestroy(c);
+		bdestroy(l->entry[0]);
+		l->qty = 0;
+		bstrListDestroy(l);
+	}
+}
+END_TEST
+
 int
 main(void)
 {
@@ -3129,6 +3345,10 @@ main(void)
 	tcase_add_test(core, core_044);
 	tcase_add_test(core, core_045);
 	tcase_add_test(core, core_046);
+	tcase_add_test(core, core_047);
+	tcase_add_test(core, core_048);
+	tcase_add_test(core, core_049);
+	tcase_add_test(core, core_050);
 	suite_add_tcase(suite, core);
 	/* Run tests */
 	SRunner *runner = srunner_create(suite);
