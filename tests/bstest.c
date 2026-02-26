@@ -3225,7 +3225,8 @@ END_TEST
 START_TEST(core_050)
 {
 	struct bstrList *l;
-	bstring b, c;
+	bstring b;
+	bstring c;
 	int ret;
 	/* error cases */
 	ck_assert(bjoinblk(NULL, ",", 1) == NULL);
