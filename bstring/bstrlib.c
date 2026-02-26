@@ -2413,7 +2413,10 @@ bjoinblk(const struct bstrList *bl, const void *blk, int len)
 bstring
 bjoin(const struct bstrList *bl, const bstring sep)
 {
-	if (sep != NULL && (sep->slen < 0 || sep->data == NULL)) {
+	if (sep == NULL) {
+		return bjoinblk(bl, NULL, 0);
+	}
+	if (sep->slen < 0 || (sep->slen > 0 && sep->data == NULL)) {
 		return NULL;
 	}
 	return bjoinblk(bl, sep->data, sep->slen);
