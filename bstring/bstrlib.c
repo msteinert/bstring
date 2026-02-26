@@ -686,7 +686,7 @@ biseqcaselessblk(const bstring b, const void *blk, int len)
 		return 1;
 	}
 	for (i = 0; i < len; i++) {
-		if (b->data[i] != ((unsigned char *)blk)[i]) {
+		if (b->data[i] != ((const unsigned char *)blk)[i]) {
 			unsigned char c = (unsigned char)downcase(b->data[i]);
 			if (c != (unsigned char)downcase(((unsigned char *)blk)[i])) {
 				return 0;
@@ -836,7 +836,6 @@ biseq(const bstring b0, const bstring b1)
 int
 bisstemeqblk(const bstring b0, const void *blk, int len)
 {
-	int i;
 	if (!bdata(b0) || b0->slen < 0 || !blk || len < 0) {
 		return BSTR_ERR;
 	}
@@ -846,7 +845,7 @@ bisstemeqblk(const bstring b0, const void *blk, int len)
 	if (b0->data == (const unsigned char *)blk || len == 0) {
 		return 1;
 	}
-	for (i = 0; i < len; i ++) {
+	for (int i = 0; i < len; i ++) {
 		if (b0->data[i] != ((const unsigned char *)blk)[i]) {
 			return BSTR_OK;
 		}
@@ -1515,7 +1514,7 @@ binsertblk(bstring b, int pos, const void *blk, int len,
 		return BSTR_ERR; /* Integer wrap around. */
 	}
 	/* Aliasing case */
-	if (((size_t)((unsigned char *)blk + len)) >= ((size_t)b->data) &&
+	if (((size_t)((const unsigned char *)blk + len)) >= ((size_t)b->data) &&
 	    ((size_t)blk) < ((size_t)(b->data + b->mlen))) {
 		if (NULL == (aux = (unsigned char *)malloc(len))) {
 			return BSTR_ERR;
@@ -1525,7 +1524,7 @@ binsertblk(bstring b, int pos, const void *blk, int len,
 	if (l > d) {
 		/* Inserting past the end of the string */
 		if (balloc(b, l + 1) != BSTR_OK) {
-			if (aux != (unsigned char *)blk) {
+			if (aux != (const unsigned char *)blk) {
 				free(aux);
 			}
 			return BSTR_ERR;
@@ -1536,7 +1535,7 @@ binsertblk(bstring b, int pos, const void *blk, int len,
 	} else {
 		/* Inserting in the middle of the string */
 		if (balloc(b, d + 1) != BSTR_OK) {
-			if (aux != (unsigned char *)blk) {
+			if (aux != (const unsigned char *)blk) {
 				free(aux);
 			}
 			return BSTR_ERR;
@@ -1546,7 +1545,7 @@ binsertblk(bstring b, int pos, const void *blk, int len,
 	}
 	bBlockCopy(b->data + pos, aux, len);
 	b->data[b->slen] = (unsigned char)'\0';
-	if (aux != (unsigned char *)blk) {
+	if (aux != (const unsigned char *)blk) {
 		free(aux);
 	}
 	return BSTR_OK;
