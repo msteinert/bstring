@@ -3245,6 +3245,11 @@ START_TEST(core_050)
 		l = bsplit(b, ',');
 		ck_assert(l != NULL);
 		ck_assert_int_eq(l->qty, 3);
+		c = bjoin(l, NULL);
+		ck_assert(c != NULL);
+		ck_assert_int_eq(biseqcstr(c, "onetwothree"), 1);
+		ck_assert_int_eq(c->data[c->slen], '\0');
+		bdestroy(c);
 		c = bjoinblk(l, ",", 1);
 		ck_assert(c != NULL);
 		ret = biseq(c, b);
