@@ -22,3 +22,9 @@ option(
     value: true,
     description: 'Build bstring library with UTF-8 support',
 )
+option(
+    'reduce-namespace-pollution',
+    type: 'boolean',
+    value: true,
+    description: 'Hide backward-compatibility macros in bstraux.h',
+)
