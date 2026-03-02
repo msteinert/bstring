@@ -135,6 +135,15 @@ BSTR_PUBLIC bstring
 bfromcstralloc(int mlen, const char *str);
 
 /**
+ * Create a bstring which contains the contents of the '\\0' terminated
+ * char* buffer str. The memory buffer backing the string is at least
+ * minl characters in length, but an attempt is made to allocate up to
+ * maxl characters.
+ */
+BSTR_PUBLIC bstring
+bfromcstrrangealloc(int minl, int maxl, const char *str);
+
+/**
  * Create a bstring whose contents are described by the contiguous buffer
  * pointing to by blk with a length of len bytes.
  *

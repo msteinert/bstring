@@ -103,6 +103,57 @@ test0_1(const char *s, int len, const char *res)
 	"This is a bogus but reasonably long string.  " \
 	"Just long enough to cause some mallocing."
 
+static void
+test0_2(const char *s, int l)
+{
+	int i_count = l * 2;
+	int j_count = l * 2;
+	int k_count = l + 1;
+	int is_valgrind = getenv("VALGRIND_OPTS") != NULL;
+
+	/*
+	 * The full matrix is O(l^3) and turns into millions of allocations for
+	 * LONG_STRING. Keep exhaustive coverage for small inputs; sample evenly
+	 * for large inputs and valgrind runs.
+	 */
+	if (l > 32) {
+		i_count = 32;
+		j_count = 32;
+		k_count = 33;
+	}
+	if (is_valgrind) {
+		if (i_count > 12) i_count = 12;
+		if (j_count > 12) j_count = 12;
+		if (k_count > 10) k_count = 10;
+	}
+
+	for (int ii = 0; ii < i_count; ii++) {
+		int i = (i_count <= 1) ? 0 : (ii * ((l * 2) - 1)) / (i_count - 1);
+		for (int jj = 0; jj < j_count; jj++) {
+			int j = (j_count <= 1) ? 0 : (jj * ((l * 2) - 1)) / (j_count - 1);
+			for (int kk = 0; kk < k_count; kk++) {
+				int k = (k_count <= 1) ? 0 : (kk * l) / (k_count - 1);
+				const char *t = s ? (s + k) : NULL;
+				bstring b = bfromcstrrangealloc(i, j, t);
+				if (NULL == b) {
+					ck_assert(!(i < j && t != NULL));
+					continue;
+				}
+				if (t == NULL || b->data == NULL) {
+					bdestroy(b);
+					ck_abort();
+					return; /* Just a safeguard */
+				}
+				ck_assert_int_eq(b->slen, l - k);
+				ck_assert_int_eq(b->data[l - k], '\0');
+				ck_assert(b->mlen > b->slen);
+				ck_assert_int_eq(memcmp(t, b->data, l - k + 1), 0);
+				bdestroy(b);
+			}
+		}
+	}
+}
+
 START_TEST(core_000)
 {
 	/* tests with NULL */
@@ -121,6 +172,10 @@ START_TEST(core_000)
 	test0_1(SHORT_STRING, 30, SHORT_STRING);
 	test0_1(LONG_STRING, 0, LONG_STRING);
 	test0_1(LONG_STRING, 30, LONG_STRING);
+	/* bfromcstrrangealloc tests */
+	test0_2(NULL, 2);
+	test0_2(EMPTY_STRING, sizeof(EMPTY_STRING) - 1);
+	test0_2(LONG_STRING, sizeof(LONG_STRING) - 1);
 }
 END_TEST
 

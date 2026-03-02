@@ -66,6 +66,7 @@ do { \
 } while (0)
 
 /* Backward compatibilty with previous versions of Bstrlib */
+#if !defined(BSTRLIB_REDUCE_NAMESPACE_POLLUTION)
 #define bAssign(a, b) \
 	((bassign)((a), (b)))
 
@@ -85,7 +86,7 @@ do { \
 	((bcatblk)((b), (s), (len)))
 
 #define bCatStatic(b, s) \
-	bCatBlk((b), ("" s ""), sizeof (s) - 1)
+	bcatStatic(b, s)
 
 #define bTrunc(b, n) \
 	((btrunc)((b), (n)))
@@ -110,6 +111,7 @@ do { \
 
 #define bUuDecode(b) \
 	(bUuDecodeEx((b), NULL))
+#endif
 
 /* Unusual functions */
 
