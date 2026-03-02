@@ -48,7 +48,7 @@ jobs:
         run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -85,7 +85,7 @@ jobs:
         run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -125,7 +125,7 @@ jobs:
         run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -164,7 +164,7 @@ jobs:
         run: sudo ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -206,7 +206,7 @@ jobs:
         run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -241,7 +241,7 @@ jobs:
         run: sudo ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -274,7 +274,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -311,7 +311,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -346,7 +346,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -380,7 +380,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -420,7 +420,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -459,7 +459,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -499,7 +499,7 @@ jobs:
             ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -539,7 +539,7 @@ jobs:
         run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
@@ -568,7 +568,7 @@ jobs:
         run: meson compile -v -C build
       - name: Upload meson logs
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: meson-logs-${{ github.job }}
           path: build/meson-logs
