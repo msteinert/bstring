@@ -989,8 +989,12 @@ bSetChar(bstring b, int pos, char c)
 bstring
 bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 {
-	size_t i, m, c;
-	bstring b, t;
+	size_t i;
+	size_t m;
+	int c;
+	int done;
+	bstring b;
+	bstring t;
 	if (!vgetchar) {
 		return NULL;
 	}
@@ -998,31 +1002,29 @@ bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 	if (!b) {
 		return NULL;
 	}
-	if ((c = UCHAR_MAX + 1) == (size_t)termchar) {
-		c++;
-	}
-	for (i = 0; ; i++) {
-		if ((size_t)termchar == c ||
-		    (maxlen > 0 && i >= (size_t)maxlen)) {
-			c = (size_t)EOF;
-		} else {
-			c = vgetchar (vgcCtx);
-		}
-		if ((size_t)EOF == c) {
-			break;
+	i = 0;
+	done = 0;
+	while (!done && (maxlen <= 0 || i < (size_t)maxlen)) {
+		c = vgetchar(vgcCtx);
+		if (EOF == c) {
+			done = 1;
+			continue;
 		}
 		if (i + 1 >= (size_t)b->mlen) {
-			/* Double size, but deal with unusual case of numeric
-			 * overflows
-			 */
-			if ((m = b->mlen << 1) <= (size_t)b->mlen &&
-			    (m = b->mlen + 1024) <= (size_t)b->mlen &&
-			    (m = b->mlen + 16) <= (size_t)b->mlen &&
-			    (m = b->mlen + 1) <= (size_t)b->mlen) {
-				t = NULL;
+			/* Double size, and deal with numeric overflows */
+			if (b->mlen <= INT_MAX / 2) {
+				m = (size_t)b->mlen << 1;
+			} else if (b->mlen <= INT_MAX - 1024) {
+				m = (size_t)b->mlen + 1024;
+			} else if (b->mlen <= INT_MAX - 16) {
+				m = (size_t)b->mlen + 16;
+			} else if (b->mlen <= INT_MAX - 1) {
+				m = (size_t)b->mlen + 1;
 			} else {
-				t = bfromcstralloc ((int)m, "");
+				bSecureDestroy(b); /* Cleanse partial buffer */
+				return NULL;
 			}
+			t = bfromcstrrangealloc(b->mlen + 1, (int)m, "");
 			if (t) {
 				memcpy(t->data, b->data, i);
 			}
@@ -1032,7 +1034,8 @@ bSecureInput(int maxlen, int termchar, bNgetc vgetchar, void *vgcCtx)
 				return b;
 			}
 		}
-		b->data[i] = (unsigned char)c;
+		b->data[i++] = (unsigned char)c;
+		done = (termchar == c);
 	}
 	b->slen = (int)i;
 	b->data[i] = (unsigned char)'\0';

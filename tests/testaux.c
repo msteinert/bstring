@@ -467,7 +467,7 @@ core13_fgetc(void *ctx)
 
 START_TEST(core_013)
 {
-	struct tagbstring t0 = bsStatic("Random String");
+	struct tagbstring t0 = bsStatic("Random String, long enough to cause to reallocing");
 	struct vfgetc vctx;
 	bstring b;
 	int ret = 0;

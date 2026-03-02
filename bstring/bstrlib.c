@@ -214,35 +214,58 @@ bfromcstr(const char *str)
 }
 
 bstring
-bfromcstralloc(int mlen, const char *str)
+bfromcstrrangealloc(int minl, int maxl, const char *str)
 {
 	bstring b;
 	int i;
 	size_t j;
+
+	/* Bad parameters? */
 	if (str == NULL) {
 		return NULL;
 	}
-	j = strlen(str);
-	i = snapUpSize((int)(j + (2 - (j != 0))));
-	if (i <= (int) j) {
+	if (maxl < minl || minl < 0) {
 		return NULL;
 	}
+
+	/* Adjust lengths */
+	j = strlen(str);
+	if ((size_t)minl < (j + 1)) {
+		minl = (int)(j + 1);
+	}
+	if (maxl < minl) {
+		maxl = minl;
+	}
+	i = maxl;
+
 	b = malloc(sizeof(struct tagbstring));
 	if (b == NULL) {
 		return NULL;
 	}
 	b->slen = (int)j;
-	if (i < mlen) {
-		i = mlen;
+
+	while (1) {
+		b->data = malloc(i);
+		if (b->data != NULL) {
+			b->mlen = i;
+			break;
+		}
+		int k = (i >> 1) + (minl >> 1);
+		if (i == k || i < minl) {
+			free(b);
+			return NULL;
+		}
+		i = k;
 	}
-	b->mlen = i;
-	b->data = malloc(b->mlen);
-	if (!b->data) {
-		free(b);
-		return NULL;
-	}
-	memcpy(b->data, str, j + 1);
+
+	bBlockCopy(b->data, str, j + 1);
 	return b;
+}
+
+bstring
+bfromcstralloc(int mlen, const char *str)
+{
+	return bfromcstrrangealloc(mlen, mlen, str);
 }
 
 bstring
@@ -1642,7 +1665,7 @@ findreplaceengine(bstring b, const bstring find, const bstring repl,
 	bstring auxr = (bstring) repl;
 	if (!b || !b->data || !find ||
 	    !find->data || !repl || !repl->data ||
-	    pos < 0 || find->slen <= 0 || b->mlen < 0 ||
+	    pos < 0 || find->slen <= 0 ||
 	    b->slen > b->mlen || b->mlen <= 0 || b->slen < 0 ||
 	    repl->slen < 0) {
 		return BSTR_ERR;
