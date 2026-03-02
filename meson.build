@@ -34,6 +34,10 @@ if cc.get_id() == 'msvc'
     endforeach
 endif
 
+if get_option('reduce-namespace-pollution')
+    add_project_arguments('-DBSTRLIB_REDUCE_NAMESPACE_POLLUTION', language: 'c')
+endif
+
 add_project_arguments(warning_flags, language: 'c')
 bstring_inc = include_directories(['.', 'bstring'])
 conf_data = configuration_data()
