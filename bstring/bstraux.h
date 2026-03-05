@@ -322,6 +322,16 @@ bYEncode(const bstring src);
 BSTR_PUBLIC bstring
 bYDecode(const bstring src);
 
+/**
+ * Change the string into a version that is quotable in SGML (HTML, XML).
+ * Replaces &, ", <, > with their SGML entity equivalents.
+ *
+ * @param b the bstring to encode in-place
+ * @return BSTR_OK on success, BSTR_ERR on error
+ */
+BSTR_PUBLIC int
+bSGMLEncode(bstring b);
+
 /* Writable stream */
 typedef int
 (*bNwrite)(const void *buf, size_t elsize, size_t nelem, void *parm);
