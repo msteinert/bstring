@@ -909,6 +909,25 @@ bYDecode(const bstring src)
 	return out;
 }
 
+/*  int bSGMLEncode (bstring b)
+ *
+ *  Change the string into a version that is quotable in SGML (HTML, XML).
+ */
+int
+bSGMLEncode(bstring b)
+{
+static struct tagbstring fr[4][2] = {
+	{ bsStatic("&"),  bsStatic("&amp;")  },
+	{ bsStatic("\""), bsStatic("&quot;") },
+	{ bsStatic("<"),  bsStatic("&lt;")   },
+	{ bsStatic(">"),  bsStatic("&gt;")   } };
+	for (int i = 0; i < 4; i++) {
+		int ret = bfindreplace(b, &fr[i][0], &fr[i][1], 0);
+		if (0 > ret) return ret;
+	}
+	return 0;
+}
+
 bstring
 bStrfTime(const char * fmt, const struct tm * timeptr)
 {

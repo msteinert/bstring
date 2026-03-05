@@ -483,6 +483,33 @@ START_TEST(core_013)
 }
 END_TEST
 
+START_TEST(core_014)
+{
+	bstring b;
+
+	/* All four entities: &, ", <, > */
+	b = bfromcstr("<\"Hello, you, me, & world\">");
+	ck_assert_int_eq(bSGMLEncode(b), BSTR_OK);
+	ck_assert_int_eq(biseqcstr(b, "&lt;&quot;Hello, you, me, &amp; world&quot;&gt;"), 1);
+	bdestroy(b);
+
+	/* No special characters — string should be unchanged */
+	b = bfromcstr("Hello, world");
+	ck_assert_int_eq(bSGMLEncode(b), BSTR_OK);
+	ck_assert_int_eq(biseqcstr(b, "Hello, world"), 1);
+	bdestroy(b);
+
+	/* Empty string */
+	b = bfromcstr("");
+	ck_assert_int_eq(bSGMLEncode(b), BSTR_OK);
+	ck_assert_int_eq(biseqcstr(b, ""), 1);
+	bdestroy(b);
+
+	/* NULL input */
+	ck_assert_int_eq(bSGMLEncode(NULL), BSTR_ERR);
+}
+END_TEST
+
 int
 main(void)
 {
@@ -504,6 +531,7 @@ main(void)
 	tcase_add_test(core, core_011);
 	tcase_add_test(core, core_012);
 	tcase_add_test(core, core_013);
+	tcase_add_test(core, core_014);
 	suite_add_tcase(suite, core);
 	/* Run tests */
 	SRunner *runner = srunner_create(suite);
