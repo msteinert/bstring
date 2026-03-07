@@ -310,6 +310,7 @@ bNetStr2Bstr(const char * buff)
 	if (buff == NULL) {
 		return NULL;
 	}
+	size_t blen = strlen(buff);
 	x = 0;
 	for (i = 0; buff[i] != ':'; ++i) {
 		unsigned int v = buff[i] - '0';
@@ -317,6 +318,10 @@ bNetStr2Bstr(const char * buff)
 			return NULL;
 		}
 		x = (x * 10) + v;
+	}
+	/* Bounds check: the buffer must contain i+1+x+1 chars (digits, ':', data, ',') */
+	if ((size_t)i + 1 + (size_t)x >= blen) {
+		return NULL;
 	}
 	/* This thing has to be properly terminated */
 	if (buff[i + 1 + x] != ',') {
