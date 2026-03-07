@@ -11,6 +11,18 @@ option(
     description: 'Generate and install documentation',
 )
 option(
+    'enable-fuzzing',
+    type: 'boolean',
+    value: false,
+    description: 'Build libFuzzer fuzz targets (requires clang)',
+)
+option(
+    'fuzz-link-arg',
+    type: 'string',
+    value: '-fsanitize=fuzzer,address',
+    description: 'Linker flag used for fuzz targets (ClusterFuzzLite passes LIB_FUZZING_ENGINE here)',
+)
+option(
     'enable-tests',
     type: 'boolean',
     value: false,
