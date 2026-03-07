@@ -510,6 +510,30 @@ START_TEST(core_014)
 }
 END_TEST
 
+START_TEST(core_015)
+{
+	bstring b;
+
+	/*
+	 * Craft a buffer where:
+	 *   - The netstring claims length 5 ("5:abc"), but the actual content
+	 *     after ':' is only "abc" (3 bytes, null-terminated at index 5).
+	 *   - A ',' is planted at buff[7], which is exactly buff[i+1+x]
+	 *     (i=1, x=5) — the position the un-fixed code reads without bounds
+	 *     checking.
+	 *
+	 * Without the fix: buff[7]=',' passes the terminator check and the
+	 * function returns a non-NULL bstring containing out-of-bounds data.
+	 * With the fix: the bounds check catches i+1+x (7) >= blen (5) first
+	 * and returns NULL.
+	 */
+	char crafted[16] = "5:abc";
+	crafted[7] = ',';
+	b = bNetStr2Bstr(crafted);
+	ck_assert(b == NULL);
+}
+END_TEST
+
 START_TEST(core_016)
 {
 	/* Empty input: bUuDecodeEx must return an empty bstring (not NULL)
@@ -548,6 +572,7 @@ main(void)
 	tcase_add_test(core, core_012);
 	tcase_add_test(core, core_013);
 	tcase_add_test(core, core_014);
+	tcase_add_test(core, core_015);
 	tcase_add_test(core, core_016);
 	suite_add_tcase(suite, core);
 	/* Run tests */
