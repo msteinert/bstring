@@ -38,6 +38,16 @@ if get_option('reduce-namespace-pollution')
     add_project_arguments('-DBSTRLIB_REDUCE_NAMESPACE_POLLUTION', language: 'c')
 endif
 
+if get_option('enable-fuzzing')
+    if cc.get_id() != 'clang'
+        error('Fuzz targets require clang (set CC=clang)')
+    endif
+    # Instrument the library itself for coverage so libFuzzer can track which
+    # code paths each input explores.  The fuzz targets are linked separately
+    # with the full -fsanitize=fuzzer (or $LIB_FUZZING_ENGINE) driver.
+    add_project_arguments('-fsanitize=fuzzer-no-link', language: 'c')
+endif
+
 add_project_arguments(warning_flags, language: 'c')
 bstring_inc = include_directories(['.', 'bstring'])
 conf_data = configuration_data()
@@ -70,6 +80,10 @@ if get_option('enable-tests')
     else
         error('Tests requested but check library not found')
     endif
+endif
+
+if get_option('enable-fuzzing')
+    subdir('fuzz')
 endif
 
 doxygen = find_program('doxygen', required: false)
