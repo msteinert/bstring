@@ -648,10 +648,16 @@ exit:
    return ret;
 }
 
+struct bsUuCtx {
+	struct bUuInOut io;
+	struct bStream * sInp;
+};
+
 bstring
 bUuDecodeEx(const bstring src, int *badlines)
 {
 	struct bStream *s, *d;
+	struct bsUuCtx *ctx;
 	struct tagbstring t;
 	bstring b;
 
@@ -668,11 +674,22 @@ bUuDecodeEx(const bstring src, int *badlines)
 	if (NULL == b) {
 		goto error;
 	}
-	if (0 > bsread(b, d, INT_MAX)) {
+	if (src->slen > 0 && 0 > bsread(b, d, src->slen)) {
 		goto error;
 	}
 exit:
-	bsclose(d);
+	/*
+	 * bsUuDecodePart frees ctx->io.dst and ctx->io.src when it signals
+	 * EOF (nulling both pointers), but leaves ctx itself for us to free.
+	 * If the stream was never read (e.g. empty input), all three are still
+	 * live.  Either way, bsclose returns the ctx pointer and we own it.
+	 */
+	ctx = (struct bsUuCtx *)bsclose(d);
+	if (ctx) {
+		bdestroy(ctx->io.dst);
+		bdestroy(ctx->io.src);
+		free(ctx);
+	}
 	bsclose(s);
 	return b;
 error:
@@ -680,11 +697,6 @@ error:
 	b = NULL;
 	goto exit;
 }
-
-struct bsUuCtx {
-	struct bUuInOut io;
-	struct bStream * sInp;
-};
 
 static size_t
 bsUuDecodePart(void *buff, size_t elsize, size_t nelem, void *parm)
@@ -746,10 +758,11 @@ done:
 		     return tsz;
 	     }
      }
-     /* Deallocate once EOF becomes triggered */
+     /* Release stream buffers on EOF; ctx itself is owned by bUuDecodeEx. */
      bdestroy(ctx->io.dst);
+     ctx->io.dst = NULL;
      bdestroy(ctx->io.src);
-     free(ctx);
+     ctx->io.src = NULL;
      return 0;
 }
 
