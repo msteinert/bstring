@@ -311,12 +311,21 @@ bNetStr2Bstr(const char * buff)
 		return NULL;
 	}
 	x = 0;
-	for (i = 0; buff[i] != ':'; ++i) {
+	for (i = 0; i < 11 && buff[i] != ':'; ++i) {
 		unsigned int v = buff[i] - '0';
 		if (v > 9 || x > ((INT_MAX - (signed int)v) / 10)) {
 			return NULL;
 		}
 		x = (x * 10) + v;
+	}
+	if (buff[i] != ':') {
+		return NULL;
+	}
+	/* Ensure the buffer spans at least i+1+x+1 bytes (digits, ':', data, ',')
+	 * without scanning past that bound. A null byte before the expected comma
+	 * position means the netstring is truncated. */
+	if (memchr(buff, '\0', (size_t)i + 2 + (size_t)x) != NULL) {
+		return NULL;
 	}
 	/* This thing has to be properly terminated */
 	if (buff[i + 1 + x] != ',') {
