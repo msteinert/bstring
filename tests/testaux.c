@@ -510,6 +510,22 @@ START_TEST(core_014)
 }
 END_TEST
 
+START_TEST(core_016)
+{
+	/* Empty input: bUuDecodeEx must return an empty bstring (not NULL)
+	 * and must not leak the internal decode context.  Before the fix,
+	 * bsread was called with INT_MAX on empty input, immediately returned
+	 * BSTR_ERR, and the function took the error path — returning NULL and
+	 * leaking ctx, ctx->io.dst and ctx->io.src. */
+	struct tagbstring empty = bsStatic("");
+	int err = 0;
+	bstring c = bUuDecodeEx(&empty, &err);
+	ck_assert_ptr_nonnull(c);
+	ck_assert_int_eq(c->slen, 0);
+	bdestroy(c);
+}
+END_TEST
+
 int
 main(void)
 {
@@ -532,6 +548,7 @@ main(void)
 	tcase_add_test(core, core_012);
 	tcase_add_test(core, core_013);
 	tcase_add_test(core, core_014);
+	tcase_add_test(core, core_016);
 	suite_add_tcase(suite, core);
 	/* Run tests */
 	SRunner *runner = srunner_create(suite);
