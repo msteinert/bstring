@@ -44,8 +44,6 @@ jobs:
         run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: meson install -C build
-      - name: Uninstall
-        run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -81,8 +79,6 @@ jobs:
         run: meson test -C build
       - name: Install
         run: meson install -C build
-      - name: Uninstall
-        run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -121,8 +117,6 @@ jobs:
         run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: meson install -C build
-      - name: Uninstall
-        run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -160,8 +154,6 @@ jobs:
         run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: sudo meson install -C build
-      - name: Uninstall
-        run: sudo ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -202,8 +194,6 @@ jobs:
         run: meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
       - name: Install
         run: meson install -C build
-      - name: Uninstall
-        run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -237,8 +227,6 @@ jobs:
         run: meson test -C build
       - name: Install
         run: sudo meson install -C build
-      - name: Uninstall
-        run: sudo ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -271,7 +259,6 @@ jobs:
             meson compile -C build
             meson test -C build
             meson install -C build
-            ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -305,10 +292,9 @@ jobs:
             meson setup build \
               -Denable-tests=true
             meson compile -C build
-            meson test -C build
-            meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build
-            meson install -C build
-            ninja -C build uninstall
+            meson test -C build --no-rebuild
+            meson test --wrapper='valgrind --leak-check=full --error-exitcode=1' -C build --no-rebuild
+            meson install -C build --no-rebuild
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -341,9 +327,8 @@ jobs:
             meson setup build \
               -Denable-tests=true
             meson compile -C build
-            meson test -C build
-            meson install -C build
-            ninja -C build uninstall
+            meson test -C build --no-rebuild
+            meson install -C build --no-rebuild
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -375,9 +360,8 @@ jobs:
             meson setup build \
               -Denable-tests=true
             meson compile -C build
-            meson test -C build
-            meson install -C build
-            ninja -C build uninstall
+            meson test -C build --no-rebuild
+            meson install -C build --no-rebuild
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -417,7 +401,6 @@ jobs:
             meson compile -C build
             meson test -C build
             meson install -C build
-            ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -456,7 +439,6 @@ jobs:
             meson compile -C build
             meson test -C build
             meson install -C build
-            ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -496,7 +478,6 @@ jobs:
             meson compile -C build
             meson test -C build
             meson install -C build
-            ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -535,8 +516,6 @@ jobs:
         run: meson test -C build
       - name: Install
         run: meson install -C build
-      - name: Uninstall
-        run: ninja -C build uninstall
       - name: Upload meson logs
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
