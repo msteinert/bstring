@@ -1,7 +1,7 @@
 project(
     'bstring',
     'c',
-    version: '1.0.3',
+    version: '1.1.0',
     default_options: ['warning_level=3', 'c_std=c99']
 )
 cc = meson.get_compiler('c')
