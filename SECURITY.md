@@ -1,17 +1,14 @@
 # Security Policy
 
 The bstring project is committed to shipping a resilient and memory safe library.
-We take any potential security vulnerabilities very seriously.
+We take any exploitable security vulnerabilities very seriously.
 
 ## Supported Versions
 
-The table below indicate versions of this library that are guaranteed to get security patches.
+The latest stable version of the bstring library is supported with security patches.
 
-| Version | Supported |
-| ------- | --------- |
-| 1.0.x   | ✓         |
-
-We recommend always using the latest stable version to ensure you have the most recent security improvements and bug fixes.
+If you are using an older version, we recommend upgrading as soon as possible
+so that you have the most recent security improvements and bug fixes.
 
 ## Reporting a Vulnerability
 
