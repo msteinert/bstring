@@ -17,10 +17,10 @@ option(
     description: 'Build libFuzzer fuzz targets (requires clang)',
 )
 option(
-    'fuzz-link-arg',
-    type: 'string',
-    value: '-fsanitize=fuzzer,address',
-    description: 'Linker flag used for fuzz targets (ClusterFuzzLite passes LIB_FUZZING_ENGINE here)',
+    'enable-old-api',
+    type: 'boolean',
+    value: false,
+    description: 'Enable backward compatibility macros for pre-1.0 API',
 )
 option(
     'enable-tests',
@@ -35,8 +35,8 @@ option(
     description: 'Build bstring library with UTF-8 support',
 )
 option(
-    'reduce-namespace-pollution',
-    type: 'boolean',
-    value: true,
-    description: 'Hide backward-compatibility macros in bstraux.h',
+    'fuzz-link-arg',
+    type: 'string',
+    value: '-fsanitize=fuzzer,address',
+    description: 'Linker flag used for fuzz targets (ClusterFuzzLite passes LIB_FUZZING_ENGINE here)',
 )
