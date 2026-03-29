@@ -40,10 +40,11 @@ Just use `const bstring` instead.
 [Check]: https://github.com/libcheck/check
 [Valgrind]: http://valgrind.org/
 [Doxygen]: https://www.doxygen.nl/
+[libFuzzer]: https://llvm.org/docs/LibFuzzer.html
 
 ## Get bstring
 
-Another advantage of this fork is that unlike the original, it is widely available as a binary package in various distributions.
+The bstring library is widely available as a binary package in various distributions.
 The shared library and development headers can be installed with their respective package manager.
 
 The current packaging status as reported by repology.org:
@@ -52,27 +53,34 @@ The current packaging status as reported by repology.org:
 
 ## Building
 
-The bstring library can be built using the [Meson][]+[Ninja][] build system.
-
-The library itself doesn't have any dependencies beyond a C compiler,
-but the test suite requires the [Check][] unit testing framework,
-while the documentation generation requires [Doxygen][].
+The bstring library can be built using the [Meson][]+[Ninja][] build system and a C compiler.
+See the [Porting Guide](https://mike.steinert.ca/bstring/doc/md_porting.html) for notes on compiler compatibility.
 
 Configure the `build` directory with Meson.
 
     meson setup build
-
-Alternatively, enable building the documentation and test suite.
-
-    meson setup build -Denable-docs=true -Denable-tests=true
 
 Then compile and install.
 
     meson compile -C build
     sudo meson install -C build
 
-A test suite is available if Check is is installed.
+### Build options
 
+The following build options are available:
+
+- `enable-utf8` (default: `true`): Enable UTF-8 string manipulation functions
+- `enable-docs` (default: `false`): Generate documentation with [Doxygen][]
+- `enable-tests` (default: `false`): Build the test suite with the [Check][] library
+- `enable-fuzzing` (default: `false`): Build the fuzzing targets with [libFuzzer][]
+- `enable-bgets-workaround` (default: `false`): Avoid namespace conflict with the `bgets` function in the standard C library (notably: Solaris)
+- `enable-old-api` (default: `false`): Enable backward compatibility macros for pre-1.0 API
+
+### Testing
+
+A test suite is available if the [Check][] library is is installed.
+
+    meson setup build -Denable-docs=true
     meson test -C build
 
 If Valgrind is installed the test suite can be checked for memory leaks.
