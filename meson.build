@@ -34,10 +34,6 @@ if cc.get_id() == 'msvc'
     endforeach
 endif
 
-if get_option('reduce-namespace-pollution')
-    add_project_arguments('-DBSTRLIB_REDUCE_NAMESPACE_POLLUTION', language: 'c')
-endif
-
 if get_option('enable-fuzzing')
     if cc.get_id() != 'clang'
         error('Fuzz targets require clang (set CC=clang)')
@@ -51,6 +47,10 @@ endif
 add_project_arguments(warning_flags, language: 'c')
 bstring_inc = include_directories(['.', 'bstring'])
 conf_data = configuration_data()
+
+if not get_option('enable-old-api')
+    conf_data.set('BSTRLIB_REDUCE_NAMESPACE_POLLUTION', 1)
+endif
 
 if get_option('enable-bgets-workaround')
     conf_data.set('HAVE_BGETS', '1')
