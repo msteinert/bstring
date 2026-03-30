@@ -23,7 +23,7 @@
 </header>
 
 <section id="downloads" class="clearfix">
-<a href="https://github.com/msteinert/bstring/releases/download/v1.0.3/bstring-1.0.3.tar.gz" id="download-tar-gz" class="button"><span>Latest Release</span></a>
+<a href="https://github.com/msteinert/bstring/releases/download/v1.1.0/bstring-1.1.0.tar.xz" id="download-tar-xz" class="button"><span>Latest Release</span></a>
 <a href="https://github.com/msteinert/bstring" id="view-on-github" class="button"><span>View Source</span></a>
 <a href="https://mike.steinert.ca/bstring/doc/" id="read-the-docs" class="button"><span>Read the Docs</span></a>
 </section>
@@ -41,7 +41,7 @@ as a memory safe alternative to null terminated buffers.</p>
 Compared to the original, the following features (or mis-features, depending on your point of view) are included:</p>
 
 <ol>
-<li>Build system (Autotools and Meson)</li>
+<li>Build system (Meson)</li>
 <li>Updated test suite based on <a href="http://check.sourceforge.net/">Check</a>
 </li>
 <li>Add <a href="http://valgrind.org/">Valgrind</a> to the workflow</li>
@@ -55,13 +55,13 @@ Just use <code>const bstring</code> instead.</p>
 
 <h2>Building</h2>
 
-<p>Meson+Ninja or Autotools is required to build from the source repository.</p>
+<p>Meson+Ninja is required to build from the source repository using the provided build files.</p>
 
 <p>A test suite is available if <a href="http://check.sourceforge.net/">Check</a> is is installed.</p>
 
 <p>If <a href="http://valgrind.org/">Valgrind</a> is installed the test suite can be checked for memory leaks.</p>
 
-<h3>Meson</h3>
+<p>Build and install the library.</p>
 
 <pre><code>$ meson setup build -Denable-tests=true
 $ meson compile -C build
@@ -78,24 +78,6 @@ $ meson install -C build
 <pre><code>$ meson test --wrapper='valgrind --leak-check=full' -C build
 </code></pre>
 
-<h3>Autotools</h3>
-
-<pre><code>$ autoreconf -i
-$ ./configure
-$ make
-$ make install
-</code></pre>
-
-<p>Run tests with Check.</p>
-
-<pre><code>$ make check
-</code></pre>
-
-<p>Check for memory leaks with Valgrind.</p>
-
-<pre><code>$ make memcheck
-</code></pre>
-
 <h2>Documentation</h2>
 
 <p>The original documentation has been migrated into the header files and
@@ -110,7 +92,8 @@ codebase.</p>
 
 <h2>License</h2>
 
-<p>The Better String Library is released under the <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause License</a>.</p>
+<p>The Better String Library is released under the <a href="https://opensource.org/license/BSD-3-Clause">BSD 3-Clause License</a>
+or the <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt">GNU General Public License v2</a> at the user's option.</p>
 </section>
 
 <footer>
