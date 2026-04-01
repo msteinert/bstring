@@ -41,7 +41,7 @@ jobs:
       - name: Run code coverage
         run: ninja coverage -C build
       - name: Publish test report
-        uses: mikepenz/action-junit-report@49b2ca06f62aa7ef83ae6769a2179271e160d8e4 # v6.3.1
+        uses: mikepenz/action-junit-report@bccf2e31636835cf0874589931c4116687171386 # v6.4.0
         if: success() || failure()
         with:
           report_paths: build/meson-logs/testlog.junit.xml
