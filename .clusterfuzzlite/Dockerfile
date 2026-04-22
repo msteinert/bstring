@@ -1,4 +1,4 @@
-FROM gcr.io/oss-fuzz-base/base-builder@sha256:bbcd30758c3f71243d6e57b1bce73e06c4489ded6661f51347ad4b78432812fe
+FROM gcr.io/oss-fuzz-base/base-builder@sha256:166a77e037e6d2a6d27ccde75e0a430e154ecab6274662d026598b403dadd51b
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
