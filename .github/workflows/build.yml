@@ -243,7 +243,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Build on VM
-        uses: vmactions/dragonflybsd-vm@17fba5ae01ae16ac714dead56eed198c3b2e210e # v1.2.8
+        uses: vmactions/dragonflybsd-vm@4ba8127bd95c94b66fc4b885e37c99955ba308ea # v1.3.0
         with:
           copyback: true
           prepare: |
