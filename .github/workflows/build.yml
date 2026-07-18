@@ -11,6 +11,13 @@ on:
       - synchronize
       - reopened
 
+permissions:
+  contents: read
+
+env:
+  SMARTOS_BOOTSTRAP_URL: https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/bootstrap-2025Q4-x86_64.tar.gz
+  SMARTOS_BOOTSTRAP_SHA256: 4842f72b610d44cf98560253b6bf16ff4056016e5fe2c6932bc195156ac75772
+
 jobs:
   build-alpine:
     name: Alpine Linux
@@ -379,14 +386,22 @@ jobs:
       - name: Build on VM
         uses: vmactions/omnios-vm@7f2be0b927aad1a78498c8aeeac4c4ce1fabd322 # v1.3.3
         with:
+          release: "r151056-build"
           copyback: true
           prepare: |
             set -e
             pkg install \
               build-essential \
               pkg-config
-            curl -O https://pkgsrc.smartos.org/packages/SmartOS/bootstrap/bootstrap-trunk-x86_64-20240116.tar.gz
-            tar -zxpf bootstrap-trunk-x86_64-20240116.tar.gz -C /
+            # This installs the SmartOS pkgsrc bootstrap, which is a self-contained pkgsrc environment
+            # containing a pkgin package manager and a /opt/local prefix.
+            curl --proto '=https' --location --fail -o bootstrap.tar.gz "${{ env.SMARTOS_BOOTSTRAP_URL }}"
+            bootstrap_sha256=$(digest -a sha256 bootstrap.tar.gz)
+            if [ "$bootstrap_sha256" != "${{ env.SMARTOS_BOOTSTRAP_SHA256 }}" ]; then
+              echo "bootstrap.tar.gz SHA-256 mismatch" >&2
+              exit 1
+            fi
+            tar -zxpf bootstrap.tar.gz -C /
             export PATH=/opt/local/sbin:/opt/local/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/sbin:$PATH
             pkgin -y install \
               check \
