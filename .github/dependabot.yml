@@ -4,8 +4,12 @@ updates:
     directory: "/.clusterfuzzlite"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 28
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 28
