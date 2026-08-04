@@ -550,7 +550,7 @@ jobs:
         with:
           python-version: '3.x'
       - name: Install Python Dependencies
-        run: pip install meson ninja
+        run: 'python -m pip install --only-binary :all: meson==1.7.2 ninja==1.11.1.4'
       - name: Prepare MSVC
         uses: bus1/cabuild/action/msdevshell@06ea2833eef61e9b0d0ce0d728416e617e4fb1fe # v1
         with:
