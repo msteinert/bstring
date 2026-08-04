@@ -273,7 +273,7 @@ blk2bstr(const void *blk, int len)
 {
 	bstring b;
 	int i;
-	if (blk == NULL || len < 0) {
+	if (len < 0 || (len > 0 && blk == NULL)) {
 		return NULL;
 	}
 	b = malloc(sizeof(struct tagbstring));

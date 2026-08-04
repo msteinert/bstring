@@ -147,6 +147,9 @@ bfromcstrrangealloc(int minl, int maxl, const char *str);
  * Create a bstring whose contents are described by the contiguous buffer
  * pointing to by blk with a length of len bytes.
  *
+ * If len is zero, blk may be NULL. Otherwise, blk must point to at least len
+ * bytes.
+ *
  * Note that this function creates a copy of the data in blk, rather than
  * simply referencing it. Compare with the blk2tbstr macro. If an error
  * occurs NULL is returned.
