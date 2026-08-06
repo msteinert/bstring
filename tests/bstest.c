@@ -200,7 +200,7 @@ START_TEST(core_001)
 {
 	/* tests with NULL */
 	test1_0(NULL, 10, NULL);
-	test1_0(NULL, 0, NULL);
+	test1_0(NULL, 0, "");
 	test1_0(NULL, -1, NULL);
 	/* normal operation tests */
 	test1_0(SHORT_STRING, sizeof(SHORT_STRING) - 1, SHORT_STRING);
